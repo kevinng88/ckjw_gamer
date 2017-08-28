@@ -29,11 +29,6 @@ class PlayGame{
         /////////////////Ching's section////////////////////////////
 
         //ching's code here
-<<<<<<< HEAD
-
-=======
-        //kokokokoksoko
->>>>>>> 6e170ef7c2bc7519d3aa5b5a8d21e76404053651
 
         ////////////////////////////////////////////////////////////
 
@@ -59,14 +54,8 @@ class PlayGame{
         this.firefighter.scale.x = 3;
         this.firefighter.scale.y = 3;
         this.firefighter.animations.add('walk');
-<<<<<<< HEAD
-<<<<<<< HEAD
         this.firefighter.animations.play('walk', 50, true);
-=======
-        this.firefighter.animations.play('walk', 50, true);
->>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
-=======
-        this.firefighter.animations.play('walk', 50, true); 
+
         
         //animate the small pig
         this.smallpig.scale.x = 1.5;
@@ -79,7 +68,7 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
->>>>>>> 5ab13f5fd0022b730323bad31bf78cf5079b5af3
+
 
         ////////////////////////////////////////////////////////////
 
