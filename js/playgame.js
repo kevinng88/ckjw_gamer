@@ -50,15 +50,18 @@ class PlayGame{
 
 
         /////////////////Watson's section////////////////////////////
+        // physics //
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         // interiorWall
         this.interiorWallGroup = game.add.group();
         interiorWall.enableBody = true;
         interiorWall.body.immovable = true;
 
+        wall.tint = #7f6000;
+
         // externalWall
         externalWall =
-        // physics //
-this.game.physics.enable(this.interiorWall, Phaser.Physics.ARCADE);
+
 
 
 
