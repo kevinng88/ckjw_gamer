@@ -41,13 +41,44 @@ class PlayGame{
 
 
         /////////////////Jimmy's section////////////////////////////
-        game.load.audio("bgmusic", ["assets/sounds/bgmusic.mp3"]);
-        this.bgMusic = game.add.audio("bgmusic");
+        game.load.audio("background", ["assets/sounds/background.mp3"]);
+        game.load.audio("pig", ["assets/sounds/pig.mp3"]);
+        game.load.audio("fire", ["assets/sounds/fire.mp3"]);
+        game.load.audio("deletefire", ["assets/sounds/deletefire.mp3"]);
+        game.load.audio("gameover", ["assets/sounds/gameover.mp3"]);
+        game.load.audio("hittingfire", ["assets/sounds/hittingfire.mp3"]);
+        game.load.audio("needoxygen", ["assets/sounds/needoxygen.mp3"]);
+        game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
+// The sound of background, pig and fire occurs at the same time.
+        this.bgMusic = game.add.audio("background");
         this.bgMusic.loopFull(1);
+        this.pigMusic = game.add.audio("pig");
+        this.pigMusic.loopFull(1);
+        this.fireMusic = game.add.audio("fire");
+        this.fireMusic.loopFull(1);
+// The sound occurs when fireman deletes the fire.
+        this.fireMusic.stop();
+        var deletefireSound = game.add.audio("deletefire");
+	      deletefireSound.play();
+// The sound occurs when fireman hits the fire.
+        this.fireMusic.stop();
+        var hittingfireSound = game.add.audio("hittingfire");
+	      hittingfireSound.play();
+// The sound occurs when fireman needs oxygen.
+        var needoxygenSound = game.add.audio("needoxygen");
+	      needoxygenSound.play();
+// The sound occurs when fireman catchs the pig.
+        this.pigMusic.stop();
+        var gettingpigSound = game.add.audio("gettingpig");
+	      gettingpigSound.play();
+// Game Over Sound.
         this.bgMusic.stop();
-	      var explosionSound = game.add.audio("explosion");
-	      explosionSound.play();
-
+        this.pigMusic.stop();
+        this.fireMusic.stop();
+        var gameoverSound = game.add.audio("gameover");
+	      gameoverSound.play();
+// Game Over section
+       
         ////////////////////////////////////////////////////////////
 
 
@@ -66,13 +97,13 @@ class PlayGame{
         this.firefighter.animations.play('walk', 50, true);
 >>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
 =======
-        this.firefighter.animations.play('walk', 50, true); 
-        
+        this.firefighter.animations.play('walk', 50, true);
+
         //animate the small pig
         this.smallpig.scale.x = 1.5;
         this.smallpig.scale.y = 1.5;
         this.smallpig.animations.add('walk');
-        this.smallpig.animations.play('walk', 25, true); 
+        this.smallpig.animations.play('walk', 25, true);
 
         //animate the fire
         this.s_fire.scale.x = 1.5;
