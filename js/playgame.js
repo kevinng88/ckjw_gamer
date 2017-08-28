@@ -143,11 +143,85 @@ class PlayGame{
         // physics //
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Wall
+        var wall;
         this.wall = game.add.group();
-        wall.enableBody = true;
-        wall.tint = "#7f6000";
+        this.wall.tint = "#7f6000";
+        this.wall.enableBody = true;
 
-        var bottomWall = wall.create(0, game.world.height - 30, 'bottomWall');
-        bottomWall.body.immovable = true;
 
-        ground.scale.setTo(2, 2);  //  Scale it to fit the width of the game src: phaser.io/tutorials/making-your-first-phaser-game/part3
+        var bottomWall = wall(0, game.world.height - 30, "bottomWall");
+        wall.body.immovable = true;
+
+        // keyboard control
+        this.cursors = game.input.keyboard.createCursorKeys();
+        var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+
+
+
+
+
+        ////////////////////////////////////////////////////////////
+    }
+
+
+    update(){
+
+        //Please always console teammate to put conflicts to minimum///////
+        // Watson's code
+          // fireman moving around
+        player.body.setZeroVelocity();
+
+        if(cursors.up.isDown){
+          if (cursors.up.shiftKey){
+            this.firefighter.body.moveUp(FIREMAN_RUN_SPEED);
+          }
+          this.firefighter.body.moveUp(FIREMAN_WALK_SPEED);
+        }else if(cursors.right.isDown){
+          if(cursors.right.shiftKey){
+            this.firefighter.body.moveRight(FIREMAN_RUN_SPEED);
+          }
+          this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
+        }else if (cursors.down.isDown){
+          if (cursors.down.shiftKey){
+            this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
+          }
+          this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
+        }else if (cursors.left.isDown){
+          if(cursors.left.isDown){
+            this.firefighter.left.shiftKey(FIREMAN_RUN_SPEED);
+          }
+          this.firefighter.body.moveLeft(FIREMAN_WALK_SPEED);
+        }
+
+          // firemqan extinguishing firemqan
+        // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
+        if (waterKey.isDown){
+
+        }
+
+
+    ////////////////Additional classes go here/////////////////////////
+    // Watson's code
+
+    }
+
+     updateOxygen(){
+        if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
+                OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
+                this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+        } else {
+                game.time.events.stop();
+        }
+    };
+
+    updateHealthPig(){
+        if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
+                PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
+                this.pigHealth.width = PIG_HEALTH;
+        } else {
+                game.time.events.stop();
+                this.smallpig.destroy();
+        }
+    };
+
+}
