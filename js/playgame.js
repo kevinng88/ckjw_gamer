@@ -1,14 +1,14 @@
-const FIREMAN_WALK_SPEED = 20;
+const FIREMAN_WALK_SPEED = 1;
 const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
-const SMALL_PIG_SPEED = 10;
+const SMALL_PIG_SPEED = 0.5;
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
- 
+
 const FIREMAN_CONSUME_OXYGEN = 20; // decrease per 3 seconds
-const SMALL_PIG_CONSUME_OXYGEN = '5';
+const SMALL_PIG_CONSUME_OXYGEN = 5;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
-let PIG_HEALTH = 50;  
+let PIG_HEALTH = 50;
 let OXYGEN_STARTING_VOLUMN = 500;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
@@ -119,10 +119,10 @@ class PlayGame{
         //kevin's code here
 
         //-------------------group of small pigs------------------------//
-        // currently each pig contains a 3 variable array [distance of x, distance of y, 
+        // currently each pig contains a 3 variable array [distance of x, distance of y,
         //direction in T/F], true is right, false is left
         this.pig_random_walk = {};
-       
+
         for (var i = 0; i < SMALL_PIG_COUNT; i ++){
             //for group: use create instead of add.sprite
             this.smallpig.create(game.world.randomX, game.world.randomY, 's_pigs', 0);
@@ -130,12 +130,12 @@ class PlayGame{
             this.smallpig.children[i].scale.Y = 2;
             this.pig_random_walk[i] = ([this.smallpig.children[i].x - game.rnd.integerInRange(0, 200),
                 this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
-            
+
         }
         //animate ALL pigs
         this.smallpig.callAll('animations.add', 'animations', 'walk', [0,1,2,3,4,5,6,7] , 10, true);
         this.smallpig.callAll('animations.play', 'animations', 'walk');
-        //--------------------------------------------------------------//  
+        //--------------------------------------------------------------//
 
         console.log (this.pig_random_walk);
 
@@ -157,7 +157,7 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
-        
+
 
         ////////////////////////////////////////////////////////////
 
@@ -166,7 +166,7 @@ class PlayGame{
         // physics //
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Wall
-        
+
         this.wall = game.add.group();
         this.wall.tint = "#7f6000";
         this.wall.enableBody = true;
@@ -194,7 +194,7 @@ class PlayGame{
         ////////////////Kevin's section/////////////////////////////
         this.smallpig.forEach(function(m){
             var i = this.smallpig.getIndex(m);
-            
+
             if(m.x < this.pig_random_walk[i][0]){
                 this.pig_random_walk[i][2] = false;
             }
@@ -216,37 +216,35 @@ class PlayGame{
         },this, true)
         ////////////////////////////////////////////////////////////
 
-    
+
 
         // Watson's code
           // fireman moving around
-        //this.firefighter.body.setZeroVelocity();
-
         if(this.cursors.up.isDown){
           if (this.cursors.up.shiftKey){
-            this.firefighter.body.moveUp(FIREMAN_RUN_SPEED);
+            this.firefighter.y -= FIREMAN_RUN_SPEED;
           }
-          this.firefighter.body.moveUp(FIREMAN_WALK_SPEED);
+          this.firefighter.y -= FIREMAN_WALK_SPEED;
         }else if(this.cursors.right.isDown){
-            console.log("right: ",FIREMAN_WALK_SPEED );
+            // console.log("right: ",FIREMAN_WALK_SPEED );
             if(this.cursors.right.shiftKey){
-            //this.firefighter.body.moveRight(FIREMAN_RUN_SPEED);
-            
+            this.firefighter.x += FIREMAN_RUN_SPEED;
+
           }
-          this.firefighter.x += 0.5;
+            this.firefighter.x += FIREMAN_WALK_SPEED;
          // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
         }else if (this.cursors.down.isDown){
           if (this.cursors.down.shiftKey){
             //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
-            this.firefighter.y += 2;
+            this.firefighter.y += FIREMAN_RUN_SPEED;
           }
-          this.firefighter.y += 0.5;
+          this.firefighter.y += FIREMAN_RUN_SPEED;
           //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
         }else if (this.cursors.left.isDown){
           if(this.cursors.left.shiftKey){
-            this.firefighter.body.moveLeft(FIREMAN_RUN_SPEED);
+            this.firefighter.x -= FIREMAN_RUN_SPEED;
           }
-          this.firefighter.body.moveLeft(FIREMAN_WALK_SPEED);
+          this.firefighter.x -= FIREMAN_WALK_SPEED;
         }
 
           // firemqan extinguishing firemqan
