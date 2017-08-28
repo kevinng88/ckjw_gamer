@@ -58,13 +58,13 @@ class PlayGame{
         this.firefighter.animations.play('walk', 50, true);
 >>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
 =======
-        this.firefighter.animations.play('walk', 50, true); 
-        
+        this.firefighter.animations.play('walk', 50, true);
+
         //animate the small pig
         this.smallpig.scale.x = 1.5;
         this.smallpig.scale.y = 1.5;
         this.smallpig.animations.add('walk');
-        this.smallpig.animations.play('walk', 25, true); 
+        this.smallpig.animations.play('walk', 25, true);
 
         //animate the fire
         this.s_fire.scale.x = 1.5;
