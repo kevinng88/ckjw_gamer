@@ -166,9 +166,9 @@ class PlayGame{
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Wall
         this.wall = game.add.group();
-        wall.enableBody = true;
-        wall.body.immovable = true;
-        wall.tint = "#7f6000";
+        this.wall.enableBody = true;
+        this.wall.body.immovable = true;
+        this.wall.tint = "#7f6000";
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
