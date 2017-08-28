@@ -27,7 +27,7 @@ class PlayGame{
 
 
         /////////////////Ching's section////////////////////////////
-        
+
        //Fireman Health Bar
         var healthBarBG = game.add.bitmapData(500,128); //create the red background of health bar
             healthBarBG.ctx.beginPath();
@@ -62,7 +62,7 @@ class PlayGame{
 
         game.time.events.loop(1000, this.updateHealthPig , this);
 
-        
+
         ////////////////////////////////////////////////////////////
 
 
@@ -121,7 +121,7 @@ class PlayGame{
 
         this.firefighter.animations.play('walk', 50, true);
 
-        
+
 
         //animate the small pig
         this.smallpig.scale.x = 1.5;
@@ -143,10 +143,11 @@ class PlayGame{
         // physics //
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Wall
-        this.WallGroup = game.add.group();
-        Wall.enableBody = true;
-        Wall.body.immovable = true;
+        this.wall = game.add.group();
+        wall.enableBody = true;
+        wall.body.immovable = true;
         wall.tint = "#7f6000";
+
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -198,14 +199,14 @@ class PlayGame{
     ////////////////Additional classes go here/////////////////////////
     // Watson's code
 
-    }    
+    }
 
      updateOxygen(){
         if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
                 OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
                 this.myHealth.width = OXYGEN_STARTING_VOLUMN;
         } else {
-                game.time.events.stop();        
+                game.time.events.stop();
         }
     };
 
