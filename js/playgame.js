@@ -40,9 +40,9 @@ class PlayGame{
             healthBarBG.ctx.fill();
         this.bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
 
-        var healthBar = this.game.add.bitmapData(bglife.width, bglife.height); //create the green health bar
+        var healthBar = this.game.add.bitmapData(this.bglife.width, this.bglife.height); //create the green health bar
             healthBar.ctx.beginPath();
-            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,bglife.height);
+            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,this.bglife.height);
             healthBar.ctx.fillStyle = "green";
             healthBar.ctx.fill();
         this.myHealth = game.add.sprite(100 ,100, healthBar); //set the green health bar
@@ -206,12 +206,12 @@ class PlayGame{
             if (this.pig_random_walk[i][2]){
                 m.anchor.setTo(0.5,0.5);
                 m.scale.x = -1;
-                m.x -= SMALL_PIG_SPEED/20;
+                m.x -= SMALL_PIG_SPEED;
             }
             else{
                 m.anchor.setTo(0.5,0.5);
                 m.scale.x = 1;
-                m.x += SMALL_PIG_SPEED/20;
+                m.x += SMALL_PIG_SPEED;
             }
         },this, true)
         ////////////////////////////////////////////////////////////
@@ -283,9 +283,11 @@ class PlayGame{
         if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
                 PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
                 this.pigHealth.width = PIG_HEALTH;
+                console.log(PIG_HEALTH);
         } else {
+            
                 game.time.events.stop();
-                this.smallpig.destroy();
+                //this.smallpig.destroy();
         }
     };
 
