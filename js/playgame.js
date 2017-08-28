@@ -1,13 +1,11 @@
 const FIREMAN_WALK_SPEED = '20';
-const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
+const FIREMAN_RUN_SPEED = IREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = '10';
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
 const OXYGEN_STARTING_VOLUMN = '500'
 const FIREMAN_CONSUME_OXYGEN = '20'; // decrease per 3 seconds
 const SMALL_PIG_CONSUME_OXYGEN = '5';
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
-const SMALL_PIG_COUNT = 5;
-const BIG_PIG_COUNT = 3;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -29,9 +27,42 @@ class PlayGame{
 
 
         /////////////////Ching's section////////////////////////////
+        
+       //Fireman Health Bar
+        var healthBarBG = game.add.bitmapData(500,128); //create the red background of health bar
+            healthBarBG.ctx.beginPath();
+            healthBarBG.ctx.rect(0,0,500,128);
+            healthBarBG.ctx.fillStyle = 'red';
+            healthBarBG.ctx.fill();
+        var bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
 
-        //ching's code here
+        var healthBar = this.game.add.bitmapData(bglife.width, bglife.height); //create the green health bar
+            healthBar.ctx.beginPath();
+            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,bglife.height);
+            healthBar.ctx.fillStyle = "green";
+            healthBar.ctx.fill();
+        this.myHealth = game.add.sprite(100 ,100, healthBar); //set the green health bar
 
+        game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
+
+        //Pig's Health Bar
+        var pigHealthRed = game.add.bitmapData(100,40);
+            pigHealthRed.ctx.beginPath();
+            pigHealthRed.ctx.rect(0,0,100,40);
+            pigHealthRed.ctx.fillStyle = 'red';
+            pigHealthRed.ctx.fill();
+        var pigHealthBG = game.add.sprite(this.smallpig.x, this.smallpig.y -20, pigHealthRed);
+
+        var pigHealthGreen = this.game.add.bitmapData(pigHealthBG.width, pigHealthBG.height);
+            healthBar.ctx.beginPath();
+            healthBar.ctx.rect(0,0, PIG_HEALTH ,pigHealthBG.height);
+            healthBar.ctx.fillStyle = "green";
+            healthBar.ctx.fill();
+        this.pigHealth = game.add.sprite(this.smallpig.x, this.smallpig.y -20, pigHealthGreen);
+
+        game.time.events.loop(1000, this.updateHealthPig , this);
+
+        
         ////////////////////////////////////////////////////////////
 
 
@@ -87,7 +118,10 @@ class PlayGame{
         this.firefighter.scale.x = 3;
         this.firefighter.scale.y = 3;
         this.firefighter.animations.add('walk');
+
         this.firefighter.animations.play('walk', 50, true);
+
+        
 
         //animate the small pig
         this.smallpig.scale.x = 1.5;
@@ -100,7 +134,6 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
-        var Wall;
 
 
         ////////////////////////////////////////////////////////////
@@ -154,6 +187,7 @@ class PlayGame{
           }
           this.firefighter.body.moveLeft(FIREMAN_WALK_SPEED);
         }
+
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
         if (waterKey.isDown){
@@ -161,10 +195,28 @@ class PlayGame{
         }
 
 
-
     ////////////////Additional classes go here/////////////////////////
     // Watson's code
 
+    }    
 
+     updateOxygen(){
+        if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
+                OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
+                this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+        } else {
+                game.time.events.stop();        
+        }
+    };
+
+    updateHealthPig(){
+        if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
+                PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
+                this.pigHealth.width = PIG_HEALTH;
+        } else {
+                game.time.events.stop();
+                this.smallpig.destroy();
+        }
+    };
 
 }
