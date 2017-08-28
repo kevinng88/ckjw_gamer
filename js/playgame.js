@@ -6,6 +6,8 @@ const OXYGEN_STARTING_VOLUMN = '500'
 const FIREMAN_CONSUME_OXYGEN = '20'; // decrease per 3 seconds
 const SMALL_PIG_CONSUME_OXYGEN = '5';
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
+const SMALL_PIG_COUNT = 5;
+const BIG_PIG_COUNT = 3;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -29,11 +31,6 @@ class PlayGame{
         /////////////////Ching's section////////////////////////////
 
         //ching's code here
-<<<<<<< HEAD
-
-=======
-        //kokokokoksoko
->>>>>>> 6e170ef7c2bc7519d3aa5b5a8d21e76404053651
 
         ////////////////////////////////////////////////////////////
 
@@ -59,13 +56,6 @@ class PlayGame{
         this.firefighter.scale.x = 3;
         this.firefighter.scale.y = 3;
         this.firefighter.animations.add('walk');
-<<<<<<< HEAD
-<<<<<<< HEAD
-        this.firefighter.animations.play('walk', 50, true);
-=======
-        this.firefighter.animations.play('walk', 50, true);
->>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
-=======
         this.firefighter.animations.play('walk', 50, true);
 
         //animate the small pig
@@ -79,7 +69,8 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
->>>>>>> 5ab13f5fd0022b730323bad31bf78cf5079b5af3
+        var Wall;
+
 
         ////////////////////////////////////////////////////////////
 
@@ -107,21 +98,33 @@ class PlayGame{
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code
+          // fireman moving around
         player.body.setZeroVelocity();
 
-        if (cursors.left.isDown){
-        //  run left
-          if (cursors.r.isDown){
-            player.body.moveLeft(FIREMAN_RUN_SPEED);
+        if(cursors.up.isDown){
+          if (cursors.up.shiftKey){
+            player.body.moveUp(FIREMAN_RUN_SPEED);
           }
-        // walk left
+          player.body.moveUp(FIREMAN_WALK_SPEED);
+        }else if(cursors.right.isDown){
+          if(cursors.right.shiftKey){
+            player.body.moveRight(FIREMAN_RUN_SPEED);
+          }
+          player.body.moveRight(FIREMAN_WALK_SPEED);
+        }else if (cursors.down.isDown){
+          if (cursors.down.shiftKey){
+            player.body.moveDown(FIREMAN_RUN_SPEED);
+          }
+          player.body.moveDown(FIREMAN_WALK_SPEED);
+        }else if (cursors.left.isDown){
+          if(cursors.left.isDown){
+            player.left.shiftKey(FIREMAN_RUN_SPEED);
+          }
           player.body.moveLeft(FIREMAN_WALK_SPEED);
-        }else if (cursors.right.isDown){
-          //  Move to the right
-          player.body.velocity.x = 150;
-
-          player.animations.play('right');
         }
+          // firemqan extinguishing firemqan
+        // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
+
 
 
 
