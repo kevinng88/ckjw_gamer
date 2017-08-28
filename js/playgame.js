@@ -29,7 +29,11 @@ class PlayGame{
         /////////////////Ching's section////////////////////////////
 
         //ching's code here
+<<<<<<< HEAD
+
+=======
         //kokokokoksoko
+>>>>>>> 6e170ef7c2bc7519d3aa5b5a8d21e76404053651
 
         ////////////////////////////////////////////////////////////
 
@@ -37,8 +41,12 @@ class PlayGame{
 
 
         /////////////////Jimmy's section////////////////////////////
-
-        //jimmy's code here
+        game.load.audio("bgmusic", ["assets/sounds/bgmusic.mp3"]);
+        this.bgMusic = game.add.audio("bgmusic");
+        this.bgMusic.loopFull(1);
+        this.bgMusic.stop();
+	      var explosionSound = game.add.audio("explosion");
+	      explosionSound.play();
 
         ////////////////////////////////////////////////////////////
 
