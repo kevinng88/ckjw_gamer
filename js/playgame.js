@@ -116,6 +116,7 @@ class PlayGame{
         wall.tint = "#7f6000";
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
+        var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
 
 
@@ -134,28 +135,30 @@ class PlayGame{
 
         if(cursors.up.isDown){
           if (cursors.up.shiftKey){
-            player.body.moveUp(FIREMAN_RUN_SPEED);
+            this.firefighter.body.moveUp(FIREMAN_RUN_SPEED);
           }
-          player.body.moveUp(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveUp(FIREMAN_WALK_SPEED);
         }else if(cursors.right.isDown){
           if(cursors.right.shiftKey){
-            player.body.moveRight(FIREMAN_RUN_SPEED);
+            this.firefighter.body.moveRight(FIREMAN_RUN_SPEED);
           }
-          player.body.moveRight(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
         }else if (cursors.down.isDown){
           if (cursors.down.shiftKey){
-            player.body.moveDown(FIREMAN_RUN_SPEED);
+            this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
           }
-          player.body.moveDown(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
         }else if (cursors.left.isDown){
           if(cursors.left.isDown){
-            player.left.shiftKey(FIREMAN_RUN_SPEED);
+            this.firefighter.left.shiftKey(FIREMAN_RUN_SPEED);
           }
-          player.body.moveLeft(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveLeft(FIREMAN_WALK_SPEED);
         }
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
+        if (waterKey.isDown){
 
+        }
 
 
 
