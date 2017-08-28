@@ -91,7 +91,7 @@ class PlayGame{
         this.WallGroup = game.add.group();
         Wall.enableBody = true;
         Wall.body.immovable = true;
-        wall.tint = #7f6000;
+        wall.tint = "#7f6000";
 
 
 
