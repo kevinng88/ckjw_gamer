@@ -55,20 +55,7 @@ class PlayGame{
         this.firefighter.scale.y = 3;
         this.firefighter.animations.add('walk');
         this.firefighter.animations.play('walk', 50, true);
-<<<<<<< HEAD
 
-        
-||||||| merged common ancestors
->>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
-=======
-        this.firefighter.animations.play('walk', 50, true); 
-        
-=======
->>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
-=======
-        this.firefighter.animations.play('walk', 50, true);
-
->>>>>>> 5a4fcf39e32207ff3bef8e0e52b984818686d3c5
         //animate the small pig
         this.smallpig.scale.x = 1.5;
         this.smallpig.scale.y = 1.5;
