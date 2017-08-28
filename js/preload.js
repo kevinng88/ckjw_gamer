@@ -10,14 +10,16 @@ class Preload{
         // game.load.setPreloadSprite(loadingBar);
 
 
-        //game.load.image(""."");
+        game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
+        game.load.spritesheet("fire","/assets/sprites/fire_imgs.jpg");
 
     }
 
-    // create(){
+    create(){
         
     //     game.state.start("Titlescreen");
+        game.state.start("Playgame");
 
-    // }
+    }
 
 }
