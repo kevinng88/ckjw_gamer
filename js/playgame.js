@@ -7,7 +7,7 @@ const OXYGEN_CONSUME_RATE = '';
 
 
 class PlayGame{
-
+    var interiorWall;
 
     create(){
         this.firefighter = "";      //sprite: our player in the game
@@ -47,8 +47,17 @@ class PlayGame{
 
 
         /////////////////Watson's section////////////////////////////
+        // interiorWall
+        interiorWall = game.add.group();
+        interiorWall.enableBody = true;
+        interiorWall.body.immovable = true;
 
-        //watson's code here
+        // externalWall
+        externalWall = 
+        // physics //
+this.game.physics.enable(this.interiorWall, Phaser.Physics.ARCADE);
+
+
 
         ////////////////////////////////////////////////////////////
     }
