@@ -2,3 +2,4 @@ gulpfile.js
 my_resource/*
 node_modules/*
 .gitnore
+.DS_Store

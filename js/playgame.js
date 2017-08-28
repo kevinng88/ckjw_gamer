@@ -1,11 +1,13 @@
 const FIREMAN_WALK_SPEED = '20';
-const FIREMAN_RUN_SPEED = IREMAN_WALK_SPEED * 1.5;
+const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = '10';
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
 const OXYGEN_STARTING_VOLUMN = '500'
 const FIREMAN_CONSUME_OXYGEN = '20'; // decrease per 3 seconds
 const SMALL_PIG_CONSUME_OXYGEN = '5';
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
+const SMALL_PIG_COUNT = 5;
+const BIG_PIG_COUNT = 3;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -29,11 +31,6 @@ class PlayGame{
         /////////////////Ching's section////////////////////////////
 
         //ching's code here
-<<<<<<< HEAD
-
-=======
-        //kokokokoksoko
->>>>>>> 6e170ef7c2bc7519d3aa5b5a8d21e76404053651
 
         ////////////////////////////////////////////////////////////
 
@@ -78,7 +75,7 @@ class PlayGame{
         var gameoverSound = game.add.audio("gameover");
 	      gameoverSound.play();
 // Game Over section
-       
+
         ////////////////////////////////////////////////////////////
 
 
@@ -90,13 +87,6 @@ class PlayGame{
         this.firefighter.scale.x = 3;
         this.firefighter.scale.y = 3;
         this.firefighter.animations.add('walk');
-<<<<<<< HEAD
-<<<<<<< HEAD
-        this.firefighter.animations.play('walk', 50, true);
-=======
-        this.firefighter.animations.play('walk', 50, true);
->>>>>>> 4b52244b915545d761b646e5c35981d0d7ca42f5
-=======
         this.firefighter.animations.play('walk', 50, true);
 
         //animate the small pig
@@ -110,7 +100,8 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
->>>>>>> 5ab13f5fd0022b730323bad31bf78cf5079b5af3
+        var Wall;
+
 
         ////////////////////////////////////////////////////////////
 
@@ -122,7 +113,7 @@ class PlayGame{
         this.WallGroup = game.add.group();
         Wall.enableBody = true;
         Wall.body.immovable = true;
-        wall.tint = #7f6000;
+        wall.tint = "#7f6000";
 
 
 
