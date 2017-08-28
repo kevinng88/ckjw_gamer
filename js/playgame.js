@@ -1,11 +1,13 @@
 const FIREMAN_WALK_SPEED = '20';
-const FIREMAN_RUN_SPEED = IREMAN_WALK_SPEED * 1.5;
+const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = '10';
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
 const OXYGEN_STARTING_VOLUMN = '500'
 const FIREMAN_CONSUME_OXYGEN = '20'; // decrease per 3 seconds
 const SMALL_PIG_CONSUME_OXYGEN = '5';
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
+const SMALL_PIG_COUNT = 5;
+const BIG_PIG_COUNT = 3;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -67,6 +69,7 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
+        var Wall;
 
 
         ////////////////////////////////////////////////////////////
