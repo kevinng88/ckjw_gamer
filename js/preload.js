@@ -10,14 +10,17 @@ class Preload{
         // game.load.setPreloadSprite(loadingBar);
 
 
-        //game.load.image(""."");
+        game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
+        game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
+        game.load.spritesheet("s_pigs", "/assets/sprites/red_pig.png",80, 62, 12);
 
     }
 
-    // create(){
+    create(){
         
     //     game.state.start("Titlescreen");
+        game.state.start("Playgame");
 
-    // }
+    }
 
 }
