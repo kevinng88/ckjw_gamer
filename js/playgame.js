@@ -10,7 +10,7 @@ class PlayGame{
 
 
     create(){
-        this.firefighter = "";      //sprite: our player in the game
+        this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = "";         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = "";           //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = "";           //sprite: the random fire on the map
@@ -25,7 +25,7 @@ class PlayGame{
         /////////////////Ching's section////////////////////////////
 
         //ching's code here
-        kokokokoksoko
+        //kokokokoksoko
 
         ////////////////////////////////////////////////////////////
 
@@ -42,6 +42,10 @@ class PlayGame{
         /////////////////Kevin's section////////////////////////////
 
         //kevin's code here
+        this.firefighter.scale.x = 3;
+        this.firefighter.scale.y = 3;
+        this.firefighter.animations.add('walk');
+        this.firefighter.animations.play('walk', 50, true);        
 
         ////////////////////////////////////////////////////////////
 
