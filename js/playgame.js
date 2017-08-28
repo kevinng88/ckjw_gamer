@@ -1,14 +1,15 @@
-const FIREMAN_WALK_SPEED = '20';
+const FIREMAN_WALK_SPEED = 20;
 const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
-const SMALL_PIG_SPEED = '10';
+const SMALL_PIG_SPEED = 10;
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
-const OXYGEN_STARTING_VOLUMN = '500'
-const FIREMAN_CONSUME_OXYGEN = '20'; // decrease per 3 seconds
+ 
+const FIREMAN_CONSUME_OXYGEN = 20; // decrease per 3 seconds
 const SMALL_PIG_CONSUME_OXYGEN = '5';
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
-const PIG_HEALTH = 50;  //please provide 
+let PIG_HEALTH = 50;  
+let OXYGEN_STARTING_VOLUMN = 500;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -37,7 +38,7 @@ class PlayGame{
             healthBarBG.ctx.rect(0,0,500,128);
             healthBarBG.ctx.fillStyle = 'red';
             healthBarBG.ctx.fill();
-        var bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
+        this.bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
 
         var healthBar = this.game.add.bitmapData(bglife.width, bglife.height); //create the green health bar
             healthBar.ctx.beginPath();
@@ -165,10 +166,14 @@ class PlayGame{
         // physics //
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Wall
+        
         this.wall = game.add.group();
-        wall.enableBody = true;
-        wall.body.immovable = true;
-        wall.tint = "#7f6000";
+        this.wall.tint = "#7f6000";
+        this.wall.enableBody = true;
+
+
+        var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
+        bottomWall.body.immovable = true;
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -215,35 +220,43 @@ class PlayGame{
 
         // Watson's code
           // fireman moving around
-        player.body.setZeroVelocity();
+        //this.firefighter.body.setZeroVelocity();
 
-        if(cursors.up.isDown){
-          if (cursors.up.shiftKey){
+        if(this.cursors.up.isDown){
+          if (this.cursors.up.shiftKey){
             this.firefighter.body.moveUp(FIREMAN_RUN_SPEED);
           }
           this.firefighter.body.moveUp(FIREMAN_WALK_SPEED);
-        }else if(cursors.right.isDown){
-          if(cursors.right.shiftKey){
-            this.firefighter.body.moveRight(FIREMAN_RUN_SPEED);
+        }else if(this.cursors.right.isDown){
+            console.log("right: ",FIREMAN_WALK_SPEED );
+            if(this.cursors.right.shiftKey){
+            //this.firefighter.body.moveRight(FIREMAN_RUN_SPEED);
+            
           }
-          this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
-        }else if (cursors.down.isDown){
-          if (cursors.down.shiftKey){
-            this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
+          this.firefighter.x += 0.5;
+         // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
+        }else if (this.cursors.down.isDown){
+          if (this.cursors.down.shiftKey){
+            //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
+            this.firefighter.y += 2;
           }
-          this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
-        }else if (cursors.left.isDown){
-          if(cursors.left.isDown){
-            this.firefighter.left.shiftKey(FIREMAN_RUN_SPEED);
+          this.firefighter.y += 0.5;
+          //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
+        }else if (this.cursors.left.isDown){
+          if(this.cursors.left.shiftKey){
+            this.firefighter.body.moveLeft(FIREMAN_RUN_SPEED);
           }
           this.firefighter.body.moveLeft(FIREMAN_WALK_SPEED);
         }
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
-        if (waterKey.isDown){
+        //if (waterKey.isDown){
 
-        }
+        //}
+
+        //Ching's : update the health bar position of the pig
+        
 
 
     ////////////////Additional classes go here/////////////////////////
@@ -252,13 +265,21 @@ class PlayGame{
     }
 
      updateOxygen(){
-        if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
-                OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
-                this.myHealth.width = OXYGEN_STARTING_VOLUMN;
-        } else {
-                game.time.events.stop();
+        if(this.firefighter.y > 300){
+                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
+                        OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
+                        this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+                } else if (OXYGEN_STARTING_VOLUMN === 0){
+                        game.time.events.stop();
+                }
+        } else if (this.firefighter.y<300 && this.myHealth.width >=0){
+                if(this.myHealth.width <500){
+                        OXYGEN_STARTING_VOLUMN += 1;
+                        this.myHealth.width = HEALTH;
+                }
         }
-    };
+     }
+
 
     updateHealthPig(){
         if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
