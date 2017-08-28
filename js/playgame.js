@@ -1,5 +1,5 @@
 const FIREMAN_WALK_SPEED = '20';
-const FIREMAN_RUN_SPEED = IREMAN_WALK_SPEED * 1.5;
+const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = '10';
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
 const OXYGEN_STARTING_VOLUMN = '500'
@@ -92,7 +92,8 @@ class PlayGame{
         Wall.enableBody = true;
         Wall.body.immovable = true;
         wall.tint = "#7f6000";
-
+        // keyboard control
+        this.cursors = game.input.keyboard.createCursorKeys();
 
 
 
@@ -105,17 +106,28 @@ class PlayGame{
     update(){
 
         //Please always console teammate to put conflicts to minimum///////
+        // Watson's code
+        player.body.setZeroVelocity();
 
-    }
+        if (cursors.left.isDown){
+        //  run left
+          if (cursors.r.isDown){
+            player.body.moveLeft(FIREMAN_RUN_SPEED);
+          }
+        // walk left
+          player.body.moveLeft(FIREMAN_WALK_SPEED);
+        }else if (cursors.right.isDown){
+          //  Move to the right
+          player.body.velocity.x = 150;
 
+          player.animations.play('right');
+        }
 
 
 
     ////////////////Additional classes go here/////////////////////////
     // Watson's code
-    moveFireman(){
 
-    }
 
 
 }
