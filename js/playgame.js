@@ -30,7 +30,7 @@ class PlayGame{
 
 
         /////////////////Ching's section////////////////////////////
-        
+
        //Fireman Health Bar
         var healthBarBG = game.add.bitmapData(500,128); //create the red background of health bar
             healthBarBG.ctx.beginPath();
@@ -65,7 +65,7 @@ class PlayGame{
 
         game.time.events.loop(1000, this.updateHealthPig , this);
 
-        
+
         ////////////////////////////////////////////////////////////
 
 
@@ -165,12 +165,14 @@ class PlayGame{
         // physics //
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Wall
-        this.WallGroup = game.add.group();
-        Wall.enableBody = true;
-        Wall.body.immovable = true;
+        this.wall = game.add.group();
+        wall.enableBody = true;
+        wall.body.immovable = true;
         wall.tint = "#7f6000";
+
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
+        var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
 
 
@@ -217,42 +219,44 @@ class PlayGame{
 
         if(cursors.up.isDown){
           if (cursors.up.shiftKey){
-            player.body.moveUp(FIREMAN_RUN_SPEED);
+            this.firefighter.body.moveUp(FIREMAN_RUN_SPEED);
           }
-          player.body.moveUp(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveUp(FIREMAN_WALK_SPEED);
         }else if(cursors.right.isDown){
           if(cursors.right.shiftKey){
-            player.body.moveRight(FIREMAN_RUN_SPEED);
+            this.firefighter.body.moveRight(FIREMAN_RUN_SPEED);
           }
-          player.body.moveRight(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
         }else if (cursors.down.isDown){
           if (cursors.down.shiftKey){
-            player.body.moveDown(FIREMAN_RUN_SPEED);
+            this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
           }
-          player.body.moveDown(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
         }else if (cursors.left.isDown){
           if(cursors.left.isDown){
-            player.left.shiftKey(FIREMAN_RUN_SPEED);
+            this.firefighter.left.shiftKey(FIREMAN_RUN_SPEED);
           }
-          player.body.moveLeft(FIREMAN_WALK_SPEED);
+          this.firefighter.body.moveLeft(FIREMAN_WALK_SPEED);
         }
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
+        if (waterKey.isDown){
 
+        }
 
 
     ////////////////Additional classes go here/////////////////////////
     // Watson's code
 
-    }    
+    }
 
      updateOxygen(){
         if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
                 OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
                 this.myHealth.width = OXYGEN_STARTING_VOLUMN;
         } else {
-                game.time.events.stop();        
+                game.time.events.stop();
         }
     };
 
