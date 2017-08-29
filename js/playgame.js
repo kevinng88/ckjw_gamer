@@ -164,9 +164,11 @@ class PlayGame{
 
 
         /////////////////Watson's section////////////////////////////
-        // physics //
+        // ---------------- physics  ---------------- //
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        // Wall
+        // ---------------- Screen
+        game.world.collideWorldBounds = true;
+        // ---------------- Wall
 
         this.wall = game.add.group();
         this.wall.tint = "#7f6000";
@@ -180,7 +182,8 @@ class PlayGame{
         this.cursors = game.input.keyboard.createCursorKeys();
         var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
-
+        // ---------------- maze ------------------- //
+        
 
 
 
