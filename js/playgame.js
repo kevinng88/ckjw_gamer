@@ -183,24 +183,25 @@ class PlayGame{
         /////////////////Watson's section////////////////////////////
         // ---------------- physics  ---------------- //
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        // ---------------- Screen
+        // ---------------- world bounds  ---------------- // 
         game.world.collideWorldBounds = true;
-        // ---------------- Wall
+        // ---------------- Wall ---------------- //
 
         this.wall = game.add.group();
         this.wall.tint = "#7f6000";
         this.wall.enableBody = true;
 
 
-        var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
+        var bottomWall = this.wall.create(1, game.world.height - 30, "bottomWall");
         bottomWall.body.immovable = true;
+
+        var interiorWall = this.wall.create(0.4, game world.height - )
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
-        
 
 
 
