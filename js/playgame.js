@@ -20,7 +20,7 @@ class PlayGame{
     create(){
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
-        this.bigpig = game.add.sprite(100, 100, 's_pigv');           //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
+        this.bigpig = game.add.sprite(100, 100, 's_pigv');            //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.sprite(40, 300, 'fire');           //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
