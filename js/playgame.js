@@ -10,6 +10,7 @@ const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
 let PIG_HEALTH = 50;
 let OXYGEN_STARTING_VOLUMN = 500;
+const SPEED_ADD_PIG = 3000;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -39,33 +40,33 @@ class PlayGame{
             healthBarBG.ctx.rect(0,0,500,50);
             healthBarBG.ctx.fillStyle = 'red';
             healthBarBG.ctx.fill();
-        this.bglife = game.add.sprite(100,30, healthBarBG); // set the red health bar
+        this.bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
 
-        var healthBar = this.game.add.bitmapData(this.bglife.width, this.bglife.height); //create the green health bar
+        var healthBar = this.game.add.bitmapData(500, 50); //create the green health bar
             healthBar.ctx.beginPath();
-            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,this.bglife.height);
+            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,50);
             healthBar.ctx.fillStyle = "green";
             healthBar.ctx.fill();
-        this.myHealth = game.add.sprite(100 ,30, healthBar); //set the green health bar
+        this.myHealth = game.add.sprite(100 ,100, healthBar); //set the green health bar
 
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
         //Pig's Health Bar
-        var pigHealthRed = game.add.bitmapData(100,40);
-            pigHealthRed.ctx.beginPath();
-            pigHealthRed.ctx.rect(0,0,100,40);
-            pigHealthRed.ctx.fillStyle = 'red';
-            pigHealthRed.ctx.fill();
-        var pigHealthBG = game.add.sprite(this.smallpig.x, this.smallpig.y -20, pigHealthRed);
+        this.pigHealthRed = game.add.bitmapData(100,40);
+            this.pigHealthRed.ctx.beginPath();
+            this.pigHealthRed.ctx.rect(0,0,100,40);
+            this.pigHealthRed.ctx.fillStyle = 'red';
+            this.pigHealthRed.ctx.fill();
 
-        var pigHealthGreen = this.game.add.bitmapData(pigHealthBG.width, pigHealthBG.height);
-            healthBar.ctx.beginPath();
-            healthBar.ctx.rect(0,0, PIG_HEALTH ,pigHealthBG.height);
-            healthBar.ctx.fillStyle = "green";
-            healthBar.ctx.fill();
-        this.pigHealth = game.add.sprite(this.smallpig.x, this.smallpig.y -20, pigHealthGreen);
+          this.pigHealthGreen = this.game.add.bitmapData(100, 40);
+            this.pigHealthGreen.ctx.beginPath();
+            this.pigHealthGreen.ctx.rect(0,0, PIG_HEALTH ,40);
+            this.pigHealthGreen.ctx.fillStyle = "green";
+            this.pigHealthGreen.ctx.fill();
 
-        game.time.events.loop(1000, this.updateHealthPig , this);
+        game.time.events.loop(SPEED_ADD_PIG, this.addPig , this);
+            this.pigss_BG = game.add.group();
+            this.pigss_alive = game.add.group();
 
 
         ////////////////////////////////////////////////////////////
@@ -131,6 +132,10 @@ class PlayGame{
             this.smallpig.children[i].scale.Y = 2;
             this.pig_random_walk[i] = ([this.smallpig.children[i].x - game.rnd.integerInRange(0, 200),
                 this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
+            this.pigHealthBG = game.add.sprite(0, 0, this.pigHealthRed);
+            this.pigss_BG.add(this.pigHealthBG);
+            this.myHealth = game.add.sprite(0, 0, this.pigHealthGreen);
+            this.pigss_alive.add(this.myHealth);
 
         }
         //animate ALL pigs
@@ -167,6 +172,7 @@ class PlayGame{
         f_fighting(this.s_fire.children[3], false);
         
 
+        //this.smallpig.add(300,300, 's_pigv', 0);
 
     
 
@@ -187,24 +193,24 @@ class PlayGame{
         /////////////////Watson's section////////////////////////////
         // ---------------- physics  ---------------- //
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        // ---------------- Screen
+        // ---------------- world bounds  ---------------- // 
         game.world.collideWorldBounds = true;
-        // ---------------- Wall
+        // ---------------- Wall ---------------- //
 
         this.wall = game.add.group();
-        this.wall.tint = "#7f6000";
         this.wall.enableBody = true;
-
+        this.wall.setAll('body.immovable', true);
+        this.wall.setAll('tint', 0x963103);
 
         var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
-        bottomWall.body.immovable = true;
+      
+
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
-        
 
 
 
@@ -271,6 +277,8 @@ class PlayGame{
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
         }
+            // fireman facing
+
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
@@ -279,6 +287,14 @@ class PlayGame{
         //}
 
         //Ching's : update the health bar position of the pig
+        for (var i=0; i<SMALL_PIG_COUNT; i++){
+            if(this.pig_random_walk.children[i] != undefined){
+                this.pigss_BG.children[i].x = this.pig_random_walk.children[i].x;
+                this.pigss_BG.children[i].y = this.pig_random_walk.children[i].y- 30;
+                this.pigss_alive.children[i].x = this.pig_random_walk.children[i].x;
+                this.pigss_alive.children[i].y = this.pig_random_walk.children[i].y -30;
+            }
+        }
         
 
 
@@ -298,10 +314,11 @@ class PlayGame{
         } else if (this.firefighter.y<300 && this.myHealth.width >=0){
                 if(this.myHealth.width <500){
                         OXYGEN_STARTING_VOLUMN += 1;
-                        this.myHealth.width = HEALTH;
+                        this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
         }
      }
+
 
 
     updateHealthPig(){
