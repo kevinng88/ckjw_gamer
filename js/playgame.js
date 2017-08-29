@@ -39,21 +39,21 @@ class PlayGame{
             healthBarBG.ctx.rect(0,0,500,50);
             healthBarBG.ctx.fillStyle = 'red';
             healthBarBG.ctx.fill();
-        this.bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
+        this.bglife = game.add.sprite(100,50, healthBarBG); // set the red health bar
 
         var healthBar = this.game.add.bitmapData(500, 50); //create the green health bar
             healthBar.ctx.beginPath();
-            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,50);
+            healthBar.ctx.rect(0,0, OXYGEN_STARTING_VOLUMN ,50);
             healthBar.ctx.fillStyle = "green";
             healthBar.ctx.fill();
-        this.myHealth = game.add.sprite(100 ,100, healthBar); //set the green health bar
+        this.myHealth = game.add.sprite(100 ,50, healthBar); //set the green health bar
 
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
         //Pig's Health Bar
         this.pigHealthRed = game.add.bitmapData(100,40);
             this.pigHealthRed.ctx.beginPath();
-            this.pigHealthRed.ctx.rect(0,0,100,40);
+            this.pigHealthRed.ctx.rect(0,0,PIG_HEALTH,40);
             this.pigHealthRed.ctx.fillStyle = 'red';
             this.pigHealthRed.ctx.fill();
 
@@ -63,9 +63,7 @@ class PlayGame{
             this.pigHealthGreen.ctx.fillStyle = "green";
             this.pigHealthGreen.ctx.fill();
 
-        game.time.events.loop(SPEED_ADD_PIG, this.addPig , this);
-            this.pigss_BG = game.add.group();
-            this.pigss_alive = game.add.group();
+        
 
 
         ////////////////////////////////////////////////////////////
@@ -123,18 +121,22 @@ class PlayGame{
         // currently each pig contains a 3 variable array [distance of x, distance of y,
         //direction in T/F], true is right, false is left
         this.pig_random_walk = {};
+        this.pigss_BG = game.add.group();
+        this.pigss_alive = game.add.group();
 
         for (var i = 0; i < SMALL_PIG_COUNT; i ++){
+                var RANDOMX = game.world.randomX;
+                var RANDOMY = game.world.randomY;
             //for group: use create instead of add.sprite
-            this.smallpig.create(game.world.randomX, game.world.randomY, 's_pigs', 0);
+            this.smallpig.create(RANDOMX, RANDOMY, 's_pigs', 0);
             this.smallpig.children[i].scale.x = 2;
             this.smallpig.children[i].scale.Y = 2;
             this.pig_random_walk[i] = ([this.smallpig.children[i].x - game.rnd.integerInRange(0, 200),
                 this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
-            this.pigHealthBG = game.add.sprite(0, 0, this.pigHealthRed);
+            this.pigHealthBG = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthRed);
             this.pigss_BG.add(this.pigHealthBG);
-            this.myHealth = game.add.sprite(0, 0, this.pigHealthGreen);
-            this.pigss_alive.add(this.myHealth);
+            this.PIG_Health = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthGreen);
+            this.pigss_alive.add(this.PIG_Health);
 
         }
         //animate ALL pigs
@@ -265,13 +267,11 @@ class PlayGame{
         //}
 
         //Ching's : update the health bar position of the pig
-        for (var i=0; i<SMALL_PIG_COUNT; i++){
-            if(this.pig_random_walk.children[i] != undefined){
-                this.pigss_BG.children[i].x = this.pig_random_walk.children[i].x;
-                this.pigss_BG.children[i].y = this.pig_random_walk.children[i].y- 30;
-                this.pigss_alive.children[i].x = this.pig_random_walk.children[i].x;
-                this.pigss_alive.children[i].y = this.pig_random_walk.children[i].y -30;
-            }
+        for (var i = 0; i<SMALL_PIG_COUNT; i++){
+                this.pigss_BG.children[i].x = this.smallpig.children[i].x - 40;
+                this.pigss_BG.children[i].y = this.smallpig.children[i].y- 60;
+                this.pigss_alive.children[i].x = this.smallpig.children[i].x -40;
+                this.pigss_alive.children[i].y = this.smallpig.children[i].y -60;
         }
         
 
@@ -285,30 +285,30 @@ class PlayGame{
         if(this.firefighter.y > 300){
                 if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
                         OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
-                        this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+                        return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 } else if (OXYGEN_STARTING_VOLUMN === 0){
                         game.time.events.stop();
                 }
         } else if (this.firefighter.y<300 && this.myHealth.width >=0){
                 if(this.myHealth.width <500){
-                        OXYGEN_STARTING_VOLUMN += 1;
-                        this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+                        OXYGEN_STARTING_VOLUMN += 30;
+                        return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
         }
      }
 
 
 
-    updateHealthPig(){
-        if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
-                PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
-                this.pigHealth.width = PIG_HEALTH;
-                console.log(PIG_HEALTH);
-        } else {
+    // updateHealthPig(){
+    //     if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
+    //             PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
+    //             this.pigHealth.width = PIG_HEALTH;
+    //             console.log(PIG_HEALTH);
+    //     } else {
             
-                game.time.events.stop();
-                //this.smallpig.destroy();
-        }
-    };
+    //             game.time.events.stop();
+    //             //this.smallpig.destroy();
+    //     }
+    // };
 
 }
