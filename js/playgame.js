@@ -25,12 +25,22 @@ class PlayGame{
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
-        this.oxygen = "";           //integer: level of oxygen consumed by firefighter
+        
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //////////additional variables go here/////////////
 
+        //////////grobal physics setting///////////////
+        game.physics.enable([this.firefighter, this.smallpig, this.bigpig, this.s_fire], Phaser.Physics.ARCADE);
+        this.firefighter.enableBody = true;
+        this.smallpig.enableBody = true;
+        this.bigpig.enableBody = true;
+        this.s_fire.enableBody = true;
+        this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
+        this.smallpig.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bigpig.physicsBodyType = Phaser.Physics.ARCADE;
+        this.s_fire.physicsBodyType = Phaser.Physics.ARCADE;
 
         /////////////////Ching's section////////////////////////////
 
@@ -225,6 +235,20 @@ class PlayGame{
         //Please always console teammate to put conflicts to minimum///////
 
         ////////////////Kevin's section/////////////////////////////
+        game.physics.arcade.overlap(this.firefighter, this.smallpig, function(){
+            console.log("get pig!");
+        }, null, this);
+
+        game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
+            console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+            pig_burn(pig);
+        }, null, this)
+
+        // game.physics.arcade.overlap(this.firefighter, this.s_fire, function(){
+        //     console.log("---------:(((((-------get hit!");
+        // }, null, this)
+
+
         this.smallpig.forEach(function(m){
             var i = this.smallpig.getIndex(m);
 
