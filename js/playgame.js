@@ -52,15 +52,15 @@ class PlayGame{
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
         //Pig's Health Bar
-        this.pigHealthRed = game.add.bitmapData(100,40);
+        this.pigHealthRed = game.add.bitmapData(100,10);
             this.pigHealthRed.ctx.beginPath();
-            this.pigHealthRed.ctx.rect(0,0,PIG_HEALTH,40);
+            this.pigHealthRed.ctx.rect(0,0,PIG_HEALTH,10);
             this.pigHealthRed.ctx.fillStyle = 'red';
             this.pigHealthRed.ctx.fill();
 
-          this.pigHealthGreen = this.game.add.bitmapData(100, 40);
+          this.pigHealthGreen = this.game.add.bitmapData(100, 10);
             this.pigHealthGreen.ctx.beginPath();
-            this.pigHealthGreen.ctx.rect(0,0, PIG_HEALTH ,40);
+            this.pigHealthGreen.ctx.rect(0,0, PIG_HEALTH ,10);
             this.pigHealthGreen.ctx.fillStyle = "green";
             this.pigHealthGreen.ctx.fill();
 
