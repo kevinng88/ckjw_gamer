@@ -110,6 +110,13 @@ class PlayGame{
         var gameoverSound = game.add.audio("gameover");
 	      gameoverSound.play();
 // Game Over section
+// Weapon
+        this.weapon = game.add.weapon(30, 'water');
+        this.weapon.bulletKillType= Phaser.Weapon.KILL_WORLD_BOUNDS;
+        this.weapon.bulletSpeed=1000;
+        this.weapon.fireRate=100;
+        this.weapon.trackSprite(this.firefighter,40,60,false);
+        this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
         ////////////////////////////////////////////////////////////
 
@@ -247,6 +254,28 @@ class PlayGame{
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
         }
+          if (this.waterButton.isDown)
+          {
+            if (this.cursors.down.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+            this.weapon.fire();
+          }
+          else if (this.cursors.up.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_UP;
+            this.weapon.fire();
+          }
+          else if (this.cursors.left.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_LEFT;
+            this.weapon.fire();
+          }
+          else if (this.cursors.right.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
+            this.weapon.fire();
+          }
+          else{
+            this.weapon.fire();
+          }
+          }
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
@@ -255,12 +284,15 @@ class PlayGame{
         //}
 
         //Ching's : update the health bar position of the pig
-        
+
 
 
     ////////////////Additional classes go here/////////////////////////
     // Watson's code
 
+    }
+    vender(){
+        this.weapon.debug();
     }
 
      updateOxygen(){
@@ -286,7 +318,7 @@ class PlayGame{
                 this.pigHealth.width = PIG_HEALTH;
                 console.log(PIG_HEALTH);
         } else {
-            
+
                 game.time.events.stop();
                 //this.smallpig.destroy();
         }

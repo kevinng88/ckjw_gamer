@@ -1,0 +1,8 @@
+class GameOver {
+    preload(){
+
+    }
+    create(){
+      
+    }
+}
