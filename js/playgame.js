@@ -39,14 +39,14 @@ class PlayGame{
             healthBarBG.ctx.rect(0,0,500,50);
             healthBarBG.ctx.fillStyle = 'red';
             healthBarBG.ctx.fill();
-        this.bglife = game.add.sprite(100,30, healthBarBG); // set the red health bar
+        this.bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
 
-        var healthBar = this.game.add.bitmapData(this.bglife.width, this.bglife.height); //create the green health bar
+        var healthBar = this.game.add.bitmapData(500, 50); //create the green health bar
             healthBar.ctx.beginPath();
-            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,this.bglife.height);
+            healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,50);
             healthBar.ctx.fillStyle = "green";
             healthBar.ctx.fill();
-        this.myHealth = game.add.sprite(100 ,30, healthBar); //set the green health bar
+        this.myHealth = game.add.sprite(100 ,100, healthBar); //set the green health bar
 
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
@@ -131,9 +131,9 @@ class PlayGame{
             this.smallpig.children[i].scale.Y = 2;
             this.pig_random_walk[i] = ([this.smallpig.children[i].x - game.rnd.integerInRange(0, 200),
                 this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
-            this.pigHealthBG = game.add.sprite(x, y-40, this.pigHealthRed);
+            this.pigHealthBG = game.add.sprite(0, 0, this.pigHealthRed);
             this.pigss_BG.add(this.pigHealthBG);
-            this.myHealth = game.add.sprite(x, y-40, this.pigHealthGreen);
+            this.myHealth = game.add.sprite(0, 0, this.pigHealthGreen);
             this.pigss_alive.add(this.myHealth);
 
         }
