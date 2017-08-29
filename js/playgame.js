@@ -226,24 +226,24 @@ class PlayGame{
 
         // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
       
-        walls = game.add.group();
-        walls.enableBody = true;
+        this.walls = game.add.group();
+        this.walls.enableBody = true;
         this.walls.setAll('body.immovable', true);
         this.walls.setAll('tint', 0x963103);
 
         // Here we create the ground.
-        var bottomWall = walls.create(0, game.world.height - 32, 'wall');
+        var bottomWall = this.walls.create(0, game.world.height - 32, 'wall');
 
         bottomWall.scale.setTo(20, 1);
 
     
 
-
-        var ledge = platforms.create(400, 400, 'wall');
+        this.platforms = game.add.group();
+        var ledge = this.platforms.create(400, 400, 'wall');
 
         ledge.body.immovable = true;
 
-        ledge = platforms.create(-150, -150, 'wall');
+        ledge = this.platforms.create(-150, -150, 'wall');
 
         ledge.body.immovable = true;
 
