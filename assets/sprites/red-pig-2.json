@@ -10,10 +10,10 @@
     },
     {
         "filename": "pig01",
-        "frame": {"x":76,"y":6,"w":55,"h":86},
+        "frame": {"x":70,"y":6,"w":55,"h":86},
         "rotated": false,
         "trimmed": true,
-        "spriteSourceSize": {"x":76,"y":6,"w":55,"h":86},
+        "spriteSourceSize": {"x":14,"y":6,"w":55,"h":86},
         "sourceSize": {"w":55,"h":86}
     },
     {

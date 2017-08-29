@@ -21,7 +21,8 @@ class Preload{
 
 
     create(){
-        game.state.start("TitleScreen");
+        //game.state.start("TitleScreen");
+        game.state.start("PlayGame")
     }
 
 }
