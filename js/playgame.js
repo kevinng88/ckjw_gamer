@@ -21,12 +21,13 @@ class PlayGame{
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
-        this.s_fire = game.add.sprite(40, 300, 'fire');           //sprite: the random fire on the map
+        this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
         this.oxygen = "";           //integer: level of oxygen consumed by firefighter
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
+        game.stage.backgroundColor = '#337799';             //temp color to see effects
         //////////additional variables go here/////////////
 
 
@@ -137,39 +138,47 @@ class PlayGame{
         this.smallpig.callAll('animations.play', 'animations', 'walk');
         //--------------------------------------------------------------//
 
+        //-------------------group of fire------------------------//
+        
+        
+                for (var i = 0; i < 5; i ++){
+                    //for group: use create instead of add.sprite
+                    this.s_fire.create(game.world.randomX, game.world.randomY, 'fire', 0);
+                    this.s_fire.children[i].scale.x = 1.2;
+                    this.s_fire.children[i].scale.Y = 1.2;
+                           
+                }
+                //animate ALL fire
+                this.s_fire.callAll('animations.add', 'animations', 'burn', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , 50, true);
+                this.s_fire.callAll('animations.play', 'animations', 'burn');
 
+                
+                //--------------------------------------------------------------//
+
+
+
+        //////// template of animation /////////////////
+        //pig animation
         this.bigpig.animations.add("burn", [0,1]);
         pig_burn(this.bigpig);
         
+        // [[testing when fire fighting]] //
+        f_fighting(this.s_fire.children[2], false);
+        f_fighting(this.s_fire.children[3], false);
+        
 
+
+    
 
         //animate the firfighter
         this.firefighter.scale.x = 3;
         this.firefighter.scale.y = 3;
         this.firefighter.animations.add('walk');
-
         this.firefighter.animations.play('walk', 50, true);
 
-        //animate one small pig
-        // this.smallpig.scale.x = 1.5;
-        // this.smallpig.scale.y = 1.5;
-        // this.smallpig.animations.add('walk');
-        // this.smallpig.animations.play('walk', 25, true);
-
-        //animate the fire
-        this.s_fire.scale.x = 1.5;
-        this.s_fire.scale.y = 1.5;
-        this.s_fire.animations.add('burn');
-        this.s_fire.animations.play('burn', 50, true);
+        
  
-        function pig_burn(pig){
-            pig.animations.play("burn", 10, true);
-            game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true) ;
-            game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
-            game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
-            //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
-
-        }
+        
 
 
         ////////////////////////////////////////////////////////////
@@ -308,3 +317,41 @@ class PlayGame{
     };
 
 }
+
+
+
+///////////////////////////Kevin's function///////////////////////////////////
+
+
+function pig_burn(pig){
+    pig.animations.play("burn", 10, true);
+    game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true) ;
+    game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
+    game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
+    //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
+
+}
+
+function f_fighting(fire, destroy_fire) {
+    
+    //adding of smoke emmitter
+    if (!destroy_fire) {
+        var s_emitter = game.add.emitter(fire.x + 100, fire.y + 200, 2000);
+        s_emitter.makeParticles('smoke');
+        s_emitter.setScale(0.01, 0.26, 0.01, 0.26, 800);
+        s_emitter.gravity = -200;
+        s_emitter.alpha = 0.4;
+        s_emitter.setRotation(0, 10);
+
+
+        game.add.tween(fire.scale).to({ y: 3, x: 1.5 }, 1000, "Linear", true);
+        s_emitter.start(false, 0, 0);
+    }
+    else {
+    
+        s_emitter.destroy();
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
