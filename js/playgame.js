@@ -221,7 +221,7 @@ class PlayGame{
         // this.walls.setAll('body.immovable', true);
         // this.walls.setAll('tint', 0x963103);
 
-<<<<<<< HEAD
+
         // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
       
         walls = game.add.group();
@@ -244,10 +244,10 @@ class PlayGame{
         ledge = platforms.create(-150, -150, 'wall');
 
         ledge.body.immovable = true;
-=======
+
         var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
 
->>>>>>> 5a30ec843caabe832f4f12cf5a2ccc64e6ad8a9e
+
 
 
         // keyboard control
