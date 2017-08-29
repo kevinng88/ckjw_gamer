@@ -4,8 +4,6 @@ class TitleScreen {
           game.stage.backgroundColor = "#434343";
       //  Jimmy's section: background image
           var bmpText= game.add.bitmapText(80, 320, 'carrier_command', 'Start Game!', 40);
-          bmpText.inputEnabled = true;
-          bmpText.input.enableDrag();
       //  Jimmy's section: playbutton
           var playButton = game.add.button(game.width / 2, game.height - 150, "playbutton", this.startGame);
           playButton.anchor.set(0.5);

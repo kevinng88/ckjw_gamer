@@ -74,7 +74,7 @@ class PlayGame{
             this.pigHealthGreen.ctx.fillStyle = "green";
             this.pigHealthGreen.ctx.fill();
 
-        
+
 
 
         ////////////////////////////////////////////////////////////
@@ -120,6 +120,13 @@ class PlayGame{
         var gameoverSound = game.add.audio("gameover");
 	      gameoverSound.play();
 // Game Over section
+// Weapon
+        this.weapon = game.add.weapon(30, 'water');
+        this.weapon.bulletKillType= Phaser.Weapon.KILL_WORLD_BOUNDS;
+        this.weapon.bulletSpeed=1000;
+        this.weapon.fireRate=100;
+        this.weapon.trackSprite(this.firefighter,40,60,false);
+        this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
         ////////////////////////////////////////////////////////////
 
@@ -156,20 +163,20 @@ class PlayGame{
         //--------------------------------------------------------------//
 
         //-------------------group of fire------------------------//
-        
-        
+
+
                 for (var i = 0; i < 5; i ++){
                     //for group: use create instead of add.sprite
                     this.s_fire.create(game.world.randomX, game.world.randomY, 'fire', 0);
                     this.s_fire.children[i].scale.x = 1.2;
                     this.s_fire.children[i].scale.Y = 1.2;
-                           
+
                 }
                 //animate ALL fire
                 this.s_fire.callAll('animations.add', 'animations', 'burn', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , 50, true);
                 this.s_fire.callAll('animations.play', 'animations', 'burn');
 
-                
+
                 //--------------------------------------------------------------//
 
 
@@ -178,15 +185,15 @@ class PlayGame{
         //pig animation
         this.bigpig.animations.add("burn", [0,1]);
         pig_burn(this.bigpig);
-        
+
         // [[testing when fire fighting]] //
         f_fighting(this.s_fire.children[2], false);
         f_fighting(this.s_fire.children[3], false);
-        
+
 
         //this.smallpig.add(300,300, 's_pigv', 0);
 
-    
+
 
         //animate the firfighter
         this.firefighter.scale.x = 3;
@@ -194,9 +201,9 @@ class PlayGame{
         this.firefighter.animations.add('walk');
         this.firefighter.animations.play('walk', 50, true);
 
-        
- 
-        
+
+
+
 
 
         ////////////////////////////////////////////////////////////
@@ -205,7 +212,7 @@ class PlayGame{
         /////////////////Watson's section////////////////////////////
         // ---------------- physics  ---------------- //
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        // ---------------- world bounds  ---------------- // 
+        // ---------------- world bounds  ---------------- //
         game.world.collideWorldBounds = true;
         // ---------------- Wall ---------------- //
 
@@ -215,7 +222,7 @@ class PlayGame{
         this.wall.setAll('tint', 0x963103);
 
         var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
-      
+
 
 
         // keyboard control
@@ -303,8 +310,28 @@ class PlayGame{
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
         }
-            // fireman facing
-
+          if (this.waterButton.isDown)
+          {
+            if (this.cursors.down.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+            this.weapon.fire();
+          }
+          else if (this.cursors.up.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_UP;
+            this.weapon.fire();
+          }
+          else if (this.cursors.left.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_LEFT;
+            this.weapon.fire();
+          }
+          else if (this.cursors.right.isDown){
+            this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
+            this.weapon.fire();
+          }
+          else{
+            this.weapon.fire();
+          }
+          }
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
@@ -313,18 +340,25 @@ class PlayGame{
         //}
 
         //Ching's : update the health bar position of the pig
+
+
+
         for (var i = 0; i<SMALL_PIG_COUNT; i++){
                 this.pigss_BG.children[i].x = this.smallpig.children[i].x - 40;
                 this.pigss_BG.children[i].y = this.smallpig.children[i].y- 60;
                 this.pigss_alive.children[i].x = this.smallpig.children[i].x -40;
                 this.pigss_alive.children[i].y = this.smallpig.children[i].y -60;
         }
-        
+
+
 
 
     ////////////////Additional classes go here/////////////////////////
     // Watson's code
 
+    }
+    vender(){
+        this.weapon.debug();
     }
 
      updateOxygen(){
@@ -345,13 +379,26 @@ class PlayGame{
 
 
 
+    updateHealthPig(){
+        if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
+                PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
+                this.pigHealth.width = PIG_HEALTH;
+                console.log(PIG_HEALTH);
+        } else {
+
+                game.time.events.stop();
+                //this.smallpig.destroy();
+        }
+    };
+
+
     // updateHealthPig(){
     //     if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
     //             PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
     //             this.pigHealth.width = PIG_HEALTH;
     //             console.log(PIG_HEALTH);
     //     } else {
-            
+
     //             game.time.events.stop();
     //             //this.smallpig.destroy();
     //     }
@@ -364,6 +411,7 @@ class PlayGame{
 ///////////////////////////Kevin's function///////////////////////////////////
 
 
+
 function pig_burn(pig){
     pig.animations.play("burn", 10, true);
     game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true) ;
@@ -374,7 +422,7 @@ function pig_burn(pig){
 }
 
 function f_fighting(fire, destroy_fire) {
-    
+
     //adding of smoke emmitter
     if (!destroy_fire) {
         var s_emitter = game.add.emitter(fire.x + 100, fire.y + 200, 2000);
@@ -389,7 +437,7 @@ function f_fighting(fire, destroy_fire) {
         s_emitter.start(false, 0, 0);
     }
     else {
-    
+
         s_emitter.destroy();
     }
 }
