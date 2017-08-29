@@ -21,7 +21,7 @@ class PlayGame{
     create(){
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
-        this.bigpig = game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
+        this.bigpig = game.add.sprite(100, 100, 's_pigv');            //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.sprite(40, 300, 'fire');           //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
@@ -143,10 +143,7 @@ class PlayGame{
         //--------------------------------------------------------------//
 
 
-        this.bigpig.animations.add("burn", [0,1]);
-        pig_burn(this.bigpig);
-        
-
+        //this.smallpig.add(300,300, 's_pigv', 0);
 
         //animate the firfighter
         this.firefighter.scale.x = 3;
@@ -166,15 +163,6 @@ class PlayGame{
         this.s_fire.scale.y = 1.5;
         this.s_fire.animations.add('burn');
         this.s_fire.animations.play('burn', 50, true);
- 
-        function pig_burn(pig){
-            pig.animations.play("burn", 10, true);
-            game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true) ;
-            game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
-            game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
-            //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
-
-        }
 
 
         ////////////////////////////////////////////////////////////
@@ -188,14 +176,13 @@ class PlayGame{
         // ---------------- Wall ---------------- //
 
         this.wall = game.add.group();
-        this.wall.tint = "#7f6000";
         this.wall.enableBody = true;
+        this.wall.setAll('body.immovable', true);
+        this.wall.setAll('tint', 0x963103);
 
+        var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
+      
 
-        var bottomWall = this.wall.create(1, game.world.height - 30, "bottomWall");
-        bottomWall.body.immovable = true;
-
-        var interiorWall = this.wall.create(0.4, game world.height - )
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -268,6 +255,8 @@ class PlayGame{
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
         }
+            // fireman facing
+
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
