@@ -9,7 +9,7 @@ class Preload{
         // loadingBar.anchor.setTo(0.5,0.5);
         // game.load.setPreloadSprite(loadingBar);
         // Jimmy's section: background image
-        game.load.bitmapFont('carrier_command', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
+        game.load.bitmapFont('carrier_command', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/bitmapFonts/carrier_command.xml');
         // Jimmy's section: playbutton
         game.load.image("playbutton", "assets/sprites/playbutton.png");
         game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
@@ -18,25 +18,9 @@ class Preload{
 
     }
 
+
     create(){
-    //  Jimmy's section: background color
-        game.stage.backgroundColor = "#434343";
-    // Jimmy's section: background image
-        bmpText= game.add.bitmapText(10, 100, 'carrier_command', 'Start Game !', 34);
-    // Jimmy's section: playbutton
-        var playButton = game.add.button(game.width / 2, game.height - 150, "playbutton", this.startGame);
-        playButton.anchor.set(0.5);
-        var tween = game.add.tween(playButton).to({
-    			width: 220,
-    			height:220
-    		}, 1500, "Linear", true, 0, -1);
-    		tween.yoyo(true);
-    //     game.state.start("Titlescreen");
-
-
-    }
-    startGame(){
-        game.state.start("Playgame");
+        game.state.start("TitleScreen");
     }
 
 }
