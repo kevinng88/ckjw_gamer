@@ -169,19 +169,39 @@ class PlayGame{
 
 
         /////////////////Watson's section////////////////////////////
-        // ---------------- physics  ---------------- //
+        // ---------------- initiating physics  ---------------- //
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // ---------------- world bounds  ---------------- // 
         game.world.collideWorldBounds = true;
         // ---------------- Wall ---------------- //
 
-        this.wall = game.add.group();
-        this.wall.enableBody = true;
-        this.wall.setAll('body.immovable', true);
-        this.wall.setAll('tint', 0x963103);
+        // this.walls = game.add.group();
+        // this.walls.enableBody = true;
+        // this.walls.setAll('body.immovable', true);
+        // this.walls.setAll('tint', 0x963103);
 
-        var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
+        // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
       
+        walls = game.add.group();
+        walls.enableBody = true;
+        this.walls.setAll('body.immovable', true);
+        this.walls.setAll('tint', 0x963103);
+
+        // Here we create the ground.
+        var bottomWall = walls.create(0, game.world.height - 32, 'wall');
+
+        bottomWall.scale.setTo(20, 1);
+
+    
+
+
+        var ledge = platforms.create(400, 400, 'wall');
+
+        ledge.body.immovable = true;
+
+        ledge = platforms.create(-150, -150, 'wall');
+
+        ledge.body.immovable = true;
 
 
         // keyboard control
@@ -199,6 +219,9 @@ class PlayGame{
     update(){
 
         //Please always console teammate to put conflicts to minimum///////
+        // Watson's code //
+            game.physics.arcade.collide(this.firefighter, this.walls);
+            game.physics.arcade.collide()
 
         ////////////////Kevin's section/////////////////////////////
         this.smallpig.forEach(function(m){
