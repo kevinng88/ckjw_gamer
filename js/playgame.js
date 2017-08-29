@@ -20,7 +20,7 @@ class PlayGame{
     create(){
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
-        this.bigpig = "";           //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
+        this.bigpig = game.add.sprite(100, 100, 's_pigv');           //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.sprite(40, 300, 'fire');           //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
@@ -33,19 +33,19 @@ class PlayGame{
         /////////////////Ching's section////////////////////////////
 
        //Fireman Health Bar
-        var healthBarBG = game.add.bitmapData(500,128); //create the red background of health bar
+        var healthBarBG = game.add.bitmapData(500,50); //create the red background of health bar
             healthBarBG.ctx.beginPath();
-            healthBarBG.ctx.rect(0,0,500,128);
+            healthBarBG.ctx.rect(0,0,500,50);
             healthBarBG.ctx.fillStyle = 'red';
             healthBarBG.ctx.fill();
-        this.bglife = game.add.sprite(100,100, healthBarBG); // set the red health bar
+        this.bglife = game.add.sprite(100,30, healthBarBG); // set the red health bar
 
         var healthBar = this.game.add.bitmapData(this.bglife.width, this.bglife.height); //create the green health bar
             healthBar.ctx.beginPath();
             healthBar.ctx.rect(0,0, OXYGEN_CONSUMPTION ,this.bglife.height);
             healthBar.ctx.fillStyle = "green";
             healthBar.ctx.fill();
-        this.myHealth = game.add.sprite(100 ,100, healthBar); //set the green health bar
+        this.myHealth = game.add.sprite(100 ,30, healthBar); //set the green health bar
 
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
@@ -137,7 +137,8 @@ class PlayGame{
         this.smallpig.callAll('animations.play', 'animations', 'walk');
         //--------------------------------------------------------------//
 
-        console.log (this.pig_random_walk);
+
+        //this.smallpig.add(300,300, 's_pigv', 0);
 
         //animate the firfighter
         this.firefighter.scale.x = 3;

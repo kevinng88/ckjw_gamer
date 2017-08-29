@@ -13,7 +13,7 @@ class Preload{
         game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
         game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
         game.load.spritesheet("s_pigs", "/assets/sprites/red_pig.png",80, 62, 12);
-        game.load.spritesheet("s_pigs_ver", "/assets/sprites/red_pig_vertical.png",52, 25, 3);
+        game.load.atlasJSONHash('s_pigv', '/assets/sprites/red-pig-2.png', '/assets/sprites/red-pig-2.json');
 
     }
 
