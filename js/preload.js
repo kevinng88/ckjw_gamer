@@ -12,8 +12,12 @@ class Preload{
         game.load.bitmapFont('carrier_command', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/bitmapFonts/carrier_command.xml');
         // Jimmy's section: playbutton
         game.load.image("playbutton", "assets/sprites/playbutton.png");
+
         // Jimmy's section: water image
         game.load.image("water", "assets/sprites/water.png");
+
+        game.load.image("smoke", "assets/sprites/smoke.png");
+
         game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
         game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
         game.load.spritesheet("s_pigs", "/assets/sprites/red_pig.png",80, 62, 12);
@@ -22,7 +26,8 @@ class Preload{
 
 
     create(){
-        game.state.start("TitleScreen");
+        //game.state.start("TitleScreen");
+        game.state.start("PlayGame")
     }
 
 }
