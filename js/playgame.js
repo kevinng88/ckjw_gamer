@@ -255,8 +255,26 @@ class PlayGame{
         var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
+        var walls = game.add.group();
+        walls.enableBody = true;
+        // divide the screen into 20 * 30 grids
+        var grid = game.world.width / 20; 
+        // using array to store each wall position and size and then build them through a for loop
+        // an element in this arrat consists of four required values and one optional value: 
+        // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
+        var wallPositionSize = [
+            //the external wall
+            [0, 8, 1, 22, "westWall"],
+            [19, 8, 1, 22, "eastWall"],
+            [0, 29, 20, 1, "southWall"],
+        ]
 
 
+        for(var i = 0; i < wallPositionSize.length; i++){
+            var wall = platforms.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+            wall.body.immovable = true;
+        }
 
         ////////////////////////////////////////////////////////////
     }
