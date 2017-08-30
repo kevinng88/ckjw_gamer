@@ -226,39 +226,36 @@ class PlayGame{
 
         // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
       
-        this.walls = game.add.group();
-        this.walls.enableBody = true;
-        this.walls.setAll('body.immovable', true);
-        this.walls.setAll('tint', 0x963103);
-
-        // Here we create the ground.
-        var bottomWall = this.walls.create(0, game.world.height - 32, 'wall');
-
-        bottomWall.scale.setTo(20, 1);
-
-    
-
-        this.platforms = game.add.group();
-        var ledge = this.platforms.create(400, 400, 'wall');
-
-        // ledge.body.immovable = true;
-
-        ledge = this.platforms.create(-150, -150, 'wall');
-
-        // ledge.body.immovable = true;
-
-        // var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
-
-
-
+        // walls = game.add.group();
+        // walls.enableBody = true;
+        // this.walls.setAll('body.immovable', true);
+        // this.walls.setAll('tint', 0x963103);
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
+        var walls = game.add.group();
+        walls.enableBody = true;
+        // divide the screen into 20 * 30 grids
+        var grid = game.world.width / 20; 
+        // using array to store each wall position and size and then build them through a for loop
+        // an element in this arrat consists of four required values and one optional value: 
+        // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
+        var wallPositionSize = [
+            //the external wall
+            [0, 8, 1, 22, "westWall"],
+            [19, 8, 1, 22, "eastWall"],
+            [0, 29, 20, 1, "southWall"],
+        ]
 
 
+        for(var i = 0; i < wallPositionSize.length; i++){
+            var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+            wall.body.immovable = true;
+        }
 
         ////////////////////////////////////////////////////////////
     }
@@ -268,8 +265,8 @@ class PlayGame{
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code //
-            game.physics.arcade.collide(this.firefighter, this.walls);
-            game.physics.arcade.collide()
+            // game.physics.arcade.collide(this.firefighter, this.walls);
+            // game.physics.arcade.collide()
 
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(){
