@@ -1,4 +1,4 @@
-const FIREMAN_WALK_SPEED = 10;
+const FIREMAN_WALK_SPEED = 3;
 const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = 0.5;
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
@@ -9,6 +9,7 @@ const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
 let PIG_HEALTH = 50;
+const PIG_HIT_FIRE_HURT = 0.2;
 let OXYGEN_STARTING_VOLUMN = 500;
 const SPEED_ADD_PIG = 3000;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
@@ -21,13 +22,14 @@ class PlayGame{
     create(){
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
-        this.bigpig = game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
+        this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
         this.weapon = game.add.weapon(300, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
+        this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //////////additional variables go here/////////////
 
@@ -64,13 +66,13 @@ class PlayGame{
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
         //Pig's Health Bar
-        this.pigHealthRed = game.add.bitmapData(100,10);
+        this.pigHealthRed = game.add.bitmapData(50,10);
             this.pigHealthRed.ctx.beginPath();
             this.pigHealthRed.ctx.rect(0,0,PIG_HEALTH,10);
             this.pigHealthRed.ctx.fillStyle = 'red';
             this.pigHealthRed.ctx.fill();
 
-          this.pigHealthGreen = this.game.add.bitmapData(100, 10);
+          this.pigHealthGreen = this.game.add.bitmapData(50, 10);
             this.pigHealthGreen.ctx.beginPath();
             this.pigHealthGreen.ctx.rect(0,0, PIG_HEALTH ,10);
             this.pigHealthGreen.ctx.fillStyle = "green";
@@ -155,8 +157,8 @@ class PlayGame{
                 this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
             this.pigHealthBG = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthRed);
             this.pigss_BG.add(this.pigHealthBG);
-            this.PIG_Health = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthGreen);
-            this.pigss_alive.add(this.PIG_Health);
+            this.PigHealth = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthGreen);
+            this.pigss_alive.add(this.PigHealth);
 
         }
         //animate ALL pigs
@@ -184,9 +186,9 @@ class PlayGame{
 
 
         //////// template of animation /////////////////
-        //pig animation
-        this.bigpig.animations.add("burn", [0,1]);
-        pig_burn(this.bigpig);
+        //pig BURN animation
+        //this.bigpig.animations.add("burn", [0,1]);
+        //pig_burn(this.bigpig);
 
         // [[testing when fire fighting]] //
         //f_fighting(this.s_fire.children[2], false);
@@ -265,21 +267,35 @@ class PlayGame{
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code //
-            // game.physics.arcade.collide(this.firefighter, this.walls);
-            // game.physics.arcade.collide()
+        //     game.physics.arcade.collide(this.firefighter, this.walls);
+        //     game.physics.arcade.collide()
 
         ////////////////Kevin's section/////////////////////////////
-        game.physics.arcade.overlap(this.firefighter, this.smallpig, function(){
-          //  console.log("get pig!");
+        game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
+
+            //this function will kill 1 pig, then reset in another position, return the number of pig
+            this.score_s_pig = pig_regeneration(pig, this.score_s_pig, this.show_score);
+
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
-          //  console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+           console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
+            console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
+                if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
+                        this.smallpig.children[this.smallpig.getIndex(pig)].kill();
+                        this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
+                        this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
+                        console.log("PIG DIED DUE TO FIRE");
+                } else if(PIG_HEALTH >= 0){
+                        PIG_HEALTH -= PIG_HIT_FIRE_HURT;
+                        return this.pigss_alive.children[this.smallpig.getIndex(pig)].width = PIG_HEALTH;
+                }
+
         }, null, this)
 
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
-            console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
+            //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
         }, null, this)
 
@@ -394,13 +410,15 @@ class PlayGame{
 
      updateOxygen(){
         if(this.firefighter.y > 300){
-                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
+                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION < 0){
+                        this.myHealth.destroy();
+                        console.log("GAME OVER");
+                        game.time.events.stop();
+                } else if(OXYGEN_STARTING_VOLUMN>= 0){
                         OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
-                } else if (OXYGEN_STARTING_VOLUMN === 0){
-                        game.time.events.stop();
                 }
-        } else if (this.firefighter.y<300 && this.myHealth.width >=0){
+        } else if (this.firefighter.y<300 && this.myHealth.width >0){
                 if(this.myHealth.width <500){
                         OXYGEN_STARTING_VOLUMN += 30;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
@@ -410,30 +428,6 @@ class PlayGame{
 
 
 
-    updateHealthPig(){
-        if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
-                PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
-                this.pigHealth.width = PIG_HEALTH;
-                console.log(PIG_HEALTH);
-        } else {
-
-                game.time.events.stop();
-                //this.smallpig.destroy();
-        }
-    };
-
-
-    // updateHealthPig(){
-    //     if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
-    //             PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
-    //             this.pigHealth.width = PIG_HEALTH;
-    //             console.log(PIG_HEALTH);
-    //     } else {
-
-    //             game.time.events.stop();
-    //             //this.smallpig.destroy();
-    //     }
-    // };
 
 }
 
@@ -476,6 +470,32 @@ function f_fighting(fire, destroy_fire) {
 function man_burn(man){
     game.add.tween(man.scale).to({x: 1.8, y: 1.8}, 500, Phaser.Easing.Linear.None, true,0,0,true);
     //game.add.tween(man).from({tint: 0xffffff}, 100, Phaser.Easing.Linear.None, true);
+}
+
+function pig_regeneration(pig, score, text){
+
+    //use kill because the array actually won't change in length, only alive() switch to false
+    pig.kill();
+    score ++;
+    console.log(score);
+
+    text.setText("SMALL PIG COLLECTED: " + score);
+
+
+    //regenerate the pig again.....
+    //////////////////////REGENERATE INTERVAL IS 1s to 7s)
+    //for animation start (
+    var t = game.rnd.integerInRange(1000, 7000);
+    console.log(t);
+    game.time.events.add(t,function(){
+    //console.log("come", this.smallpig.getIndex(pig))
+    pig.reset(game.world.randomX, game.world.randomY);
+    game.add.tween(pig).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t)}
+    , this);
+    console.log(pig);
+
+    return score;
+
 }
 
 
