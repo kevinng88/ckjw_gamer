@@ -15,7 +15,8 @@ let OXYGEN_STARTING_VOLUMN = 500;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
 var timeLeft = 300;
-const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
+let caughtNumber = 0;
+let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * caughtNumber /*+ BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 0.9;
 const FTR_SCALE_Y = 0.9;
@@ -325,8 +326,7 @@ class PlayGame{
             //this function will kill 1 pig, then reset in another position, return the number of pig
 
             this.score_s_pig = pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_BG, this.pigss_alive);
-            // this.pigss_alive.children[this.smallpig.getIndex(pig)].reset();
-            // this.pigss_BG.children[this.smallpig.getIndex(pig)].reset();
+            
             
 
         }, null, this);
@@ -337,7 +337,7 @@ class PlayGame{
             // console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
-
+                }
             //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
                         pig.kill();
@@ -487,19 +487,24 @@ class PlayGame{
 
      updateOxygen(){
         if(this.firefighter.y > 300){
-                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION < 0){
+                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
                         game.time.events.stop();
                 } else if(OXYGEN_STARTING_VOLUMN>= 0){
-                        OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
+                        OXYGEN_STARTING_VOLUMN -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
+                        // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
         } else if (this.firefighter.y<300 && this.myHealth.width >0){
-                if(this.myHealth.width <500){
+                caughtNumber = 0;
+                if(this.myHealth.width + 30 > 500){
+                    return this.myHealth.width = 500;
+                }else if(this.myHealth.width <500){
                         OXYGEN_STARTING_VOLUMN += 30;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
+                return OXYGEN_CONSUMPTION = 20;
         }
      }
 
@@ -584,7 +589,10 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
     pig.kill();
     
     score ++;
-    console.log(score);
+    // console.log(score);
+    console.log("this pig is caught");
+    caughtNumber += 1;
+    // console.log("Number of pig caught: ",caughtNumber);
 
     text.setText("SMALL PIG COLLECTED: " + score);
 
@@ -599,7 +607,7 @@ function pig_regeneration(pig, pig_grp, /*score, text,*/ red_bar, green_bar){
     //////////////////////REGENERATE INTERVAL IS 1s to 7s)
     //for animation start (
     var t = game.rnd.integerInRange(1000, 7000);
-    console.log(t);
+    // console.log(t);
     game.time.events.add(t, function () {
         var px = game.world.randomX;
         var py = game.world.randomY;
