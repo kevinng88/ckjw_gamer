@@ -25,22 +25,24 @@ class PlayGame{
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
-        
+        this.weapon = game.add.weapon(30, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //////////additional variables go here/////////////
 
         //////////grobal physics setting///////////////
-        game.physics.enable([this.firefighter, this.smallpig, this.bigpig, this.s_fire], Phaser.Physics.ARCADE);
+        game.physics.enable([this.firefighter, this.smallpig, this.bigpig, this.s_fire, this.weapon], Phaser.Physics.ARCADE);
         this.firefighter.enableBody = true;
         this.smallpig.enableBody = true;
         this.bigpig.enableBody = true;
         this.s_fire.enableBody = true;
+        this.weapon.enableBody = true;
         this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
         this.smallpig.physicsBodyType = Phaser.Physics.ARCADE;
         this.bigpig.physicsBodyType = Phaser.Physics.ARCADE;
         this.s_fire.physicsBodyType = Phaser.Physics.ARCADE;
+        this.weapon.physicsBodyType = Phaser.Physics.ARCADE;
 
         /////////////////Ching's section////////////////////////////
 
@@ -121,7 +123,7 @@ class PlayGame{
 	      gameoverSound.play();
 // Game Over section
 // Weapon
-        this.weapon = game.add.weapon(30, 'water');
+        ///this.weapon = game.add.weapon(30, 'water');      //by Kevin: Jimmy I move it up so that I can add physics
         this.weapon.bulletKillType= Phaser.Weapon.KILL_WORLD_BOUNDS;
         this.weapon.bulletSpeed=1000;
         this.weapon.fireRate=100;
@@ -187,17 +189,17 @@ class PlayGame{
         pig_burn(this.bigpig);
 
         // [[testing when fire fighting]] //
-        f_fighting(this.s_fire.children[2], false);
-        f_fighting(this.s_fire.children[3], false);
+        //f_fighting(this.s_fire.children[2], false);
+       //f_fighting(this.s_fire.children[3], false);
 
 
         //this.smallpig.add(300,300, 's_pigv', 0);
 
 
 
-        //animate the firfighter
-        this.firefighter.scale.x = 3;
-        this.firefighter.scale.y = 3;
+        //animate the firefighter
+        this.firefighter.scale.x = 1.5;
+        this.firefighter.scale.y = 1.5;
         this.firefighter.animations.add('walk');
         this.firefighter.animations.play('walk', 50, true);
 
@@ -210,8 +212,8 @@ class PlayGame{
 
 
         /////////////////Watson's section////////////////////////////
-        // ---------------- initiating physics  ---------------- //
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        // ---------------- physics  ---------------- //
+        //game.physics.startSystem(Phaser.Physics.ARCADE);
         // ---------------- world bounds  ---------------- //
         game.world.collideWorldBounds = true;
         // ---------------- Wall ---------------- //
@@ -252,7 +254,7 @@ class PlayGame{
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
-        var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+        //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
         var walls = game.add.group();
@@ -289,17 +291,26 @@ class PlayGame{
 
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(){
-            console.log("get pig!");
+          //  console.log("get pig!");
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
-            console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+          //  console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
         }, null, this)
 
-        // game.physics.arcade.overlap(this.firefighter, this.s_fire, function(){
-        //     console.log("---------:(((((-------get hit!");
-        // }, null, this)
+        game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
+            console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
+            man_burn(fighter);
+        }, null, this)
+
+        game.physics.arcade.overlap(this.weapon, this.s_fire, function(){
+            console.log("FIGHTING WATEEEEEEEEEEEEEEEEEEER!!!!!!!!");
+            f_fighting(this.s_fire, false);
+        }, null, this);
+
+
+        //f_fighting(this.s_fire.children[3], false);
 
 
         this.smallpig.forEach(function(m){
@@ -403,8 +414,10 @@ class PlayGame{
 
 
     }
-    vender(){
+    render(){
         this.weapon.debug();
+        
+
     }
 
      updateOxygen(){
@@ -486,6 +499,11 @@ function f_fighting(fire, destroy_fire) {
 
         s_emitter.destroy();
     }
+}
+
+function man_burn(man){
+    game.add.tween(man.scale).to({x: 1.8, y: 1.8}, 500, Phaser.Easing.Linear.None, true,0,0,true);
+    //game.add.tween(man).from({tint: 0xffffff}, 100, Phaser.Easing.Linear.None, true);
 }
 
 
