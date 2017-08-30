@@ -459,7 +459,7 @@ class PlayGame{
 
 function pig_burn(pig){
     pig.animations.play("burn", 10, true);
-    game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true) ;
+    game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true,0,0,true) ;
     game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
     game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
     //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
@@ -485,7 +485,7 @@ function f_fighting(fire, state, attack, destroy_fire) {
     }
    else if(state) {
         fire.damage(0.5);
-        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 10, "Linear", true);
+        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 100, "Linear", true,0,0,true);
         var sx = fire.scale.x - 0.05;
         var sy = fire.scale.y - 0.1;
         console.log("scale: ",sx,sy);    
@@ -496,7 +496,7 @@ function f_fighting(fire, state, attack, destroy_fire) {
         grd.addColorStop(1, '#004CB3');
         t.fill = grd;
         game.add.tween(t).to({y: fire.y -200},1000, "Linear", true);
-        game.add.tween(t).to({alpha: 0.2},2000, "Linear", true);
+        game.add.tween(t).to({alpha: 0.2},2000, "Linear", true);        //???
 
    }
     //else if()//2 sec later, heal to 100
