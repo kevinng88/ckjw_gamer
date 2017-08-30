@@ -305,15 +305,13 @@ class PlayGame{
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
            //console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
-<<<<<<< HEAD
             // console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
-=======
+
             //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
                         pig.kill();
->>>>>>> 230f14e493daddac2fa61f9b4e641bd2d194f5f5
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
                         pig_regeneration(pig, this.smallpig, this.pigss_BG, this.pigss_alive);
