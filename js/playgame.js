@@ -8,6 +8,7 @@ const SMALL_PIG_CONSUME_OXYGEN = 5;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
+const FIRE_COUNT = 5;
 let PIG_HEALTH = 50;
 const PIG_HIT_FIRE_HURT = 0.2;
 let OXYGEN_STARTING_VOLUMN = 500;
@@ -25,7 +26,7 @@ class PlayGame{
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
-        this.water = "";            //sprite: the water spread from firefighter
+        this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(300, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
@@ -174,8 +175,13 @@ class PlayGame{
                     this.s_fire.create(game.world.randomX, game.world.randomY, 'fire', 0);
                     this.s_fire.children[i].scale.x = 1.2;
                     this.s_fire.children[i].scale.Y = 1.2;
-
+                    this.water_state.push(false);
+                    this.s_fire.children[i].setHealth(500);
+                    this.s_fire.children[i].anchor.setTo(0.5,1);        //needed for making scale work
                 }
+                
+                //set health of fire
+                
                 //animate ALL fire
                 this.s_fire.callAll('animations.add', 'animations', 'burn', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , 50, true);
                 this.s_fire.callAll('animations.play', 'animations', 'burn');
@@ -189,11 +195,6 @@ class PlayGame{
         //pig BURN animation
         //this.bigpig.animations.add("burn", [0,1]);
         //pig_burn(this.bigpig);
-
-        // [[testing when fire fighting]] //
-        //f_fighting(this.s_fire.children[2], false);
-       //f_fighting(this.s_fire.children[3], false);
-
 
         //this.smallpig.add(300,300, 's_pigv', 0);
 
@@ -280,9 +281,9 @@ class PlayGame{
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
-           console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+           //console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
-            console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
+            //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
@@ -300,13 +301,18 @@ class PlayGame{
             man_burn(fighter);
         }, null, this)
 
-        game.physics.arcade.overlap(this.weapon, this.s_fire, function(){
-            console.log("FIGHTING WATEEEEEEEEEEEEEEEEEEER!!!!!!!!");
-            f_fighting(this.s_fire, false);
+
+        var wf = game.physics.arcade.overlap(this.weapon.bullets, this.s_fire, function(weapon, fire){
+            console.log("FIGHTING WATEEEEEEEEEEEEEEEEEEER!!!!!!!!", this.s_fire.getIndex(fire));
+
+            var attack = true;
+            var i = this.s_fire.getIndex(fire);
+            this.water_state[i] = f_fighting(fire, this.water_state[i], attack, false);
+            console.log(this.water_state);
+
         }, null, this);
+        
 
-
-        //f_fighting(this.s_fire.children[3], false);
 
 
         this.smallpig.forEach(function(m){
@@ -447,10 +453,12 @@ function pig_burn(pig){
 
 }
 
-function f_fighting(fire, destroy_fire) {
+function f_fighting(fire, state, attack, destroy_fire) {
 
+    console.log("health: "  + fire.health);
     //adding of smoke emmitter
-    if (!destroy_fire) {
+    if (!destroy_fire && !state) {
+        state = true;
         var s_emitter = game.add.emitter(fire.x + 100, fire.y + 200, 2000);
         s_emitter.makeParticles('smoke');
         s_emitter.setScale(0.01, 0.26, 0.01, 0.26, 800);
@@ -462,10 +470,31 @@ function f_fighting(fire, destroy_fire) {
         game.add.tween(fire.scale).to({ y: 3, x: 1.5 }, 1000, "Linear", true);
         s_emitter.start(false, 0, 0);
     }
-    else {
+   else if(state) {
+        fire.damage(0.5);
+        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 10, "Linear", true);
+        var sx = fire.scale.x - 0.05;
+        var sy = fire.scale.y - 0.1;
+        console.log("scale: ",sx,sy);    
+        game.add.tween(fire.scale).to({y: sy, x: sx },10, "Linear", true );
+        var t = game.add.text(fire.x + 50, fire.y -100, fire.health);
+        var grd = t.context.createLinearGradient(0, 0, 0, t.canvas.height);
+        grd.addColorStop(0, '#8ED6FF');   
+        grd.addColorStop(1, '#004CB3');
+        t.fill = grd;
+        game.add.tween(t).to({y: fire.y -200},1000, "Linear", true);
+        game.add.tween(t).to({alpha: 0.2},2000, "Linear", true);
 
-        s_emitter.destroy();
-    }
+   }
+    //else if()//2 sec later, heal to 100
+    //    game.add.tween(fire.scale).to({ y: 1, x: 1.1 }, 500, "Linear", true);
+        //s_emitter.destroy();
+    //}
+    //else{
+        //fire.kill();
+    //}
+
+    return state;
 }
 
 function man_burn(man){
