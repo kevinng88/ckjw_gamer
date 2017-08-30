@@ -20,10 +20,12 @@ const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * S
 class PlayGame{
 
     create(){
+
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
+        this.walls = game.add.group();
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
         this.weapon = game.add.weapon(300, 'water'); //weapon is the water
@@ -40,6 +42,7 @@ class PlayGame{
         this.bigpig.enableBody = true;
         this.s_fire.enableBody = true;
         this.weapon.enableBody = true;
+        this.walls.enableBody = true;
         this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
         this.smallpig.physicsBodyType = Phaser.Physics.ARCADE;
         this.bigpig.physicsBodyType = Phaser.Physics.ARCADE;
@@ -217,27 +220,20 @@ class PlayGame{
         // ---------------- physics  ---------------- //
         //game.physics.startSystem(Phaser.Physics.ARCADE);
         // ---------------- world bounds  ---------------- //
-        game.world.collideWorldBounds = true;
+        // this.game.world.bounds = true;
+        this.firefighter.body.collideWorldBounds = true;
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
-        var walls = game.add.group();
-        walls.enableBody = true;
-        // divide the screen into 20 * 30 grids
-        var grid = game.world.width / 20;
-        // using array to store each wall position and size and then build them through a for loop
-        // an element in this arrat consists of four required values and one optional value:
-        // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
-        // ---------------- maze ------------------- //
         // first, gridify the whole map
         var grid = game.world.width / 20;
         // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
+
         var walls = game.add.group();
         walls.enableBody = true;
-
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
         // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
@@ -274,8 +270,10 @@ class PlayGame{
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code //
-        //     game.physics.arcade.collide(this.firefighter, this.walls);
-        //     game.physics.arcade.collide()
+        game.physics.arcade.collide(this.firefighter, this.walls);
+        game.physics.arcade.collide(this.smallpig, this.walls);
+        game.physics.arcade.collide(this.bigpig, this.walls);
+
 
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
