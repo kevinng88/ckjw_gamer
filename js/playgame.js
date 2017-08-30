@@ -10,7 +10,7 @@ const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
 const FIRE_COUNT = 5;
 let PIG_HEALTH = 50;
-const PIG_HIT_FIRE_HURT = 0.2;
+const PIG_HIT_FIRE_HURT = 1;
 let OXYGEN_STARTING_VOLUMN = 500;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
@@ -292,11 +292,11 @@ class PlayGame{
            //console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
             //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
-                if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
-                        this.smallpig.children[this.smallpig.getIndex(pig)].kill();
-                        console.log(this.pigss_alive.children[this.smallpig.getIndex(pig)].kill());
+                if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
+                        pig.kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
+                        pig_kill(pig, this.smallpig, this.pigss_BG, this.pigss_alive);
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
@@ -527,11 +527,11 @@ function pig_regeneration(pig, pig_grp, score, text, red_bar, green_bar){
 
     red_bar.children[pig_grp.getIndex(pig)].kill();
     green_bar.children[pig_grp.getIndex(pig)].kill();
-    pig_kill(pig, pig_grp, score, text, red_bar, green_bar);
+    pig_kill(pig, pig_grp, /*score, text,*/ red_bar, green_bar);
     return score;
 }
 
-function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
+function pig_kill(pig, pig_grp, /*score, text,*/ red_bar, green_bar){
     // if(!green_bar.children[pig_grp.getIndex(pig)].alive){
     //     return green_bar.children[pig_grp.getIndex(pig)].width === 50;
     // }
@@ -547,6 +547,7 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
         pig.reset(px, py);
         red_bar.children[pig_grp.getIndex(pig)].reset(px, py);
         green_bar.children[pig_grp.getIndex(pig)].reset(px, py);
+        console.log("1 Pig Generate");
         game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
         game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
