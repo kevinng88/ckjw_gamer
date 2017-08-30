@@ -265,6 +265,7 @@ class PlayGame{
             this.firefighter.y -= FIREMAN_RUN_SPEED;
           }
           this.firefighter.y -= FIREMAN_WALK_SPEED;
+          this.weapon.fireAngle = Phaser.ANGLE_UP;
         }else if(this.cursors.right.isDown){
             // console.log("right: ",FIREMAN_WALK_SPEED );
             if(this.cursors.right.shiftKey){
@@ -273,6 +274,7 @@ class PlayGame{
           }
             this.firefighter.x += FIREMAN_WALK_SPEED;
          // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
+            this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
         }else if (this.cursors.down.isDown){
           if (this.cursors.down.shiftKey){
             //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
@@ -280,33 +282,16 @@ class PlayGame{
           }
           this.firefighter.y += FIREMAN_RUN_SPEED;
           //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
+          this.weapon.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
           if(this.cursors.left.shiftKey){
             this.firefighter.x -= FIREMAN_RUN_SPEED;
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
+          this.weapon.fireAngle = Phaser.ANGLE_LEFT;
         }
-          if (this.waterButton.isDown)
-          {
-            if (this.cursors.down.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+          if (this.waterButton.isDown){
             this.weapon.fire();
-          }
-          else if (this.cursors.up.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_UP;
-            this.weapon.fire();
-          }
-          else if (this.cursors.left.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_LEFT;
-            this.weapon.fire();
-          }
-          else if (this.cursors.right.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
-            this.weapon.fire();
-          }
-          else{
-            this.weapon.fire();
-          }
           }
 
           // firemqan extinguishing firemqan
