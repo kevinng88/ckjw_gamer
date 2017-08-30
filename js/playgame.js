@@ -490,11 +490,11 @@ function pig_regeneration(pig, score, text){
 
 
     //regenerate the pig again.....
-    
-    //for animation start
-    var t = game.rnd.integerInRange(3000, 10000);
+    //////////////////////REGENERATE INTERVAL IS 1s to 7s)
+    //for animation start (
+    var t = game.rnd.integerInRange(1000, 7000);
     console.log(t);
-    game.time.events.add(1000,function(){
+    game.time.events.add(t,function(){
     //console.log("come", this.smallpig.getIndex(pig))
     pig.reset(game.world.randomX, game.world.randomY);
     game.add.tween(pig).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t)}
