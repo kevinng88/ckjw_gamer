@@ -227,13 +227,14 @@ class PlayGame{
         // ---------------- world bounds  ---------------- //
         // this.game.world.bounds = true;
         this.firefighter.body.collideWorldBounds = true;
+        //this.smallpig.body.collideWorldBounds = true;
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
-        // first, gridify the whole map
+        // first, gridify the whole map. each grid should be 32px wide thus the 640px-wide map is divided into 20 grid in width.
         var grid = game.world.width / 20;
         // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
 
@@ -241,7 +242,7 @@ class PlayGame{
         walls.enableBody = true;
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
-        // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
+        // namely, [wall.x, wall.y, wall.scale.x, wall.scale.y, wallName(if any)]
         var wallPositionSize = [
           //the external wall
             [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
@@ -265,8 +266,6 @@ class PlayGame{
           wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
           wall.body.immovable = true;
         }
-
-
         ////////////////////////////////////////////////////////////
     }
 
@@ -275,10 +274,6 @@ class PlayGame{
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code //
-        game.physics.arcade.collide(this.firefighter, this.walls);
-        game.physics.arcade.collide(this.smallpig, this.walls);
-        game.physics.arcade.collide(this.bigpig, this.walls);
-
 
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
@@ -399,11 +394,6 @@ class PlayGame{
             weapon.scale.setTo(6,8);
           })
 
-          // firemqan extinguishing firemqan
-        // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
-        //if (waterKey.isDown){
-
-        //}
 
         //Ching's : update the health bar position of the pig
 
@@ -522,7 +512,6 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
     var t = game.rnd.integerInRange(1000, 7000);
     console.log(t);
     game.time.events.add(t, function () {
-        //console.log("come", this.smallpig.getIndex(pig))
         var px = game.world.randomX;
         var py = game.world.randomY;
         pig.reset(px, py);
@@ -535,7 +524,6 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
         , this);
 
     if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
-            console.log(green_bar.children[pig_grp.getIndex(pig)].width);
             return green_bar.children[pig_grp.getIndex(pig)].width = 50;
         }
         
