@@ -252,7 +252,7 @@ class PlayGame{
 
 
         for(var i = 0; i < wallPositionSize.length; i++){
-            var wall = platforms.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+            var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
             wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
             wall.body.immovable = true;
         }
