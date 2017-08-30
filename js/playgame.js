@@ -27,8 +27,8 @@ class PlayGame{
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
-        this.weapon = game.add.weapon(30, 'water'); //weapon is the water
-        this.score_s_pig = 0;      //integer: number of small-size pig collected by firefighter
+        this.weapon = game.add.weapon(300, 'water'); //weapon is the water
+        this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
@@ -129,8 +129,8 @@ class PlayGame{
         ///this.weapon = game.add.weapon(30, 'water');      //by Kevin: Jimmy I move it up so that I can add physics
         this.weapon.bulletKillType= Phaser.Weapon.KILL_WORLD_BOUNDS;
         this.weapon.bulletSpeed=1000;
-        this.weapon.fireRate=100;
-        this.weapon.trackSprite(this.firefighter,40,60,false);
+        this.weapon.fireRate=1;
+        // this.weapon.bulletAngleVariance=10;
         this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
         ////////////////////////////////////////////////////////////
@@ -219,20 +219,6 @@ class PlayGame{
         //game.physics.startSystem(Phaser.Physics.ARCADE);
         // ---------------- world bounds  ---------------- //
         game.world.collideWorldBounds = true;
-        // ---------------- Wall ---------------- //
-
-        // this.walls = game.add.group();
-        // this.walls.enableBody = true;
-        // this.walls.setAll('body.immovable', true);
-        // this.walls.setAll('tint', 0x963103);
-
-
-        // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
-      
-        // walls = game.add.group();
-        // walls.enableBody = true;
-        // this.walls.setAll('body.immovable', true);
-        // this.walls.setAll('tint', 0x963103);
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -242,23 +228,44 @@ class PlayGame{
         var walls = game.add.group();
         walls.enableBody = true;
         // divide the screen into 20 * 30 grids
-        var grid = game.world.width / 20; 
+        var grid = game.world.width / 20;
         // using array to store each wall position and size and then build them through a for loop
-        // an element in this arrat consists of four required values and one optional value: 
+        // an element in this arrat consists of four required values and one optional value:
+        // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
+        // ---------------- maze ------------------- //
+        // first, gridify the whole map
+        var grid = game.world.width / 20;
+        // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
+        var walls = game.add.group();
+        walls.enableBody = true;
+
+        // using array to store each wall position and size and then build them through a for loop
+        // an element in this arrat consists of four required values and one optional value:
         // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
         var wallPositionSize = [
-            //the external wall
-            [0, 8, 1, 22, "westWall"],
-            [19, 8, 1, 22, "eastWall"],
-            [0, 29, 20, 1, "southWall"],
-        ]
-
+          //the external wall
+            [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
+            // interior wall - left top corner
+            [6, 8, 1, 3],[9, 10, 1, 3],[3, 10, 1, 3],[3, 13, 7, 1],
+            // interior - left mid
+            [0, 16, 5, 1],[7, 14, 1, 5],[3, 19, 5, 1],
+            //[0, 23, 1, 8],
+            // interior - left bottom
+            [6, 26, 4, 1],[3, 20, 1, 7],[6, 22, 1, 4],
+            // interior center
+            [8, 19, 4, 1],[9, 20, 1, 4],[10, 16, 6, 1],
+            // interior - right bottom
+            [9, 26, 1, 3],[12, 19, 1, 7],[12, 26, 5, 1],[15, 23, 4, 1],[12, 20, 5, 1],
+            // interior - right top and mid
+            [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
+        ];
 
         for(var i = 0; i < wallPositionSize.length; i++){
-            var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
-            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
-            wall.body.immovable = true;
+          var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+          wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+          wall.body.immovable = true;
         }
+
 
         ////////////////////////////////////////////////////////////
     }
@@ -273,25 +280,33 @@ class PlayGame{
 
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
+
+            //this function will kill 1 pig, then reset in another position, return the number of pig
+
+            this.score_s_pig = pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_BG, this.pigss_alive);
+            // this.pigss_alive.children[this.smallpig.getIndex(pig)].reset();
+            // this.pigss_BG.children[this.smallpig.getIndex(pig)].reset();
             
-            //this function will kill 1 pig, then reset in another position, return the number of pig 
-            this.score_s_pig = pig_regeneration(pig, this.score_s_pig, this.show_score);
-            this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
-            this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
 
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
-           console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+        //    console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
-                if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
+                if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
+                        console.log(this.pigss_alive.children[this.smallpig.getIndex(pig)].kill());
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
                         console.log("PIG DIED DUE TO FIRE");
-                } else if(PIG_HEALTH >= 0){
-                        PIG_HEALTH -= PIG_HIT_FIRE_HURT;
-                        return this.pigss_alive.children[this.smallpig.getIndex(pig)].width = PIG_HEALTH;
+                } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
+                        
+                        return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
+                      
+
+
+                        // PIG_HEALTH -= PIG_HIT_FIRE_HURT;
+                        // return this.pigss_alive.children[this.smallpig.getIndex(pig)].width = PIG_HEALTH;
                 }
 
         }, null, this)
@@ -351,6 +366,8 @@ class PlayGame{
             this.firefighter.y -= FIREMAN_RUN_SPEED;
           }
           this.firefighter.y -= FIREMAN_WALK_SPEED;
+          this.weapon.trackSprite(this.firefighter,30,-30,false);
+          this.weapon.fireAngle = Phaser.ANGLE_UP;
         }else if(this.cursors.right.isDown){
             // console.log("right: ",FIREMAN_WALK_SPEED );
             if(this.cursors.right.shiftKey){
@@ -359,6 +376,8 @@ class PlayGame{
           }
             this.firefighter.x += FIREMAN_WALK_SPEED;
          // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
+            this.weapon.trackSprite(this.firefighter,80,30,false);
+            this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
         }else if (this.cursors.down.isDown){
           if (this.cursors.down.shiftKey){
             //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
@@ -366,34 +385,23 @@ class PlayGame{
           }
           this.firefighter.y += FIREMAN_RUN_SPEED;
           //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
+          this.weapon.trackSprite(this.firefighter,25,105,false);
+          this.weapon.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
           if(this.cursors.left.shiftKey){
             this.firefighter.x -= FIREMAN_RUN_SPEED;
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
+          this.weapon.trackSprite(this.firefighter,-20,30,false);
+          this.weapon.fireAngle = Phaser.ANGLE_LEFT;
         }
-          if (this.waterButton.isDown)
-          {
-            if (this.cursors.down.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+          if (this.waterButton.isDown){
             this.weapon.fire();
           }
-          else if (this.cursors.up.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_UP;
-            this.weapon.fire();
-          }
-          else if (this.cursors.left.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_LEFT;
-            this.weapon.fire();
-          }
-          else if (this.cursors.right.isDown){
-            this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
-            this.weapon.fire();
-          }
-          else{
-            this.weapon.fire();
-          }
-          }
+
+          this.weapon.forEach(function(weapon) {
+            weapon.scale.setTo(6,8);
+          })
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
@@ -420,8 +428,8 @@ class PlayGame{
 
     }
     render(){
-        this.weapon.debug();
         
+
 
     }
 
@@ -489,15 +497,26 @@ function man_burn(man){
     //game.add.tween(man).from({tint: 0xffffff}, 100, Phaser.Easing.Linear.None, true);
 }
 
-function pig_regeneration(pig, score, text){
-    
+function pig_regeneration(pig, pig_grp, score, text, red_bar, green_bar){
+
     //use kill because the array actually won't change in length, only alive() switch to false
     pig.kill();
+    
     score ++;
     console.log(score);
-    
+
     text.setText("SMALL PIG COLLECTED: " + score);
 
+    red_bar.children[pig_grp.getIndex(pig)].kill();
+    green_bar.children[pig_grp.getIndex(pig)].kill();
+    pig_kill(pig, pig_grp, score, text, red_bar, green_bar);
+    return score;
+}
+
+function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
+    // if(!green_bar.children[pig_grp.getIndex(pig)].alive){
+    //     return green_bar.children[pig_grp.getIndex(pig)].width === 50;
+    // }
 
     //regenerate the pig again.....
     //////////////////////REGENERATE INTERVAL IS 1s to 7s)
@@ -506,14 +525,24 @@ function pig_regeneration(pig, score, text){
     console.log(t);
     game.time.events.add(t,function(){
     //console.log("come", this.smallpig.getIndex(pig))
-    pig.reset(game.world.randomX, game.world.randomY);
+    var px = game.world.randomX;
+    var py = game.world.randomY;
+    pig.reset(px, py);
+    red_bar.children[pig_grp.getIndex(pig)].reset(px,py);    
+    green_bar.children[pig_grp.getIndex(pig)].reset(px,py);
+    if(green_bar.children[pig_grp.getIndex(pig)].width !== 50){
+        console.log(green_bar.children[pig_grp.getIndex(pig)].width);
+        return green_bar.children[pig_grp.getIndex(pig)].width = 50;}
     game.add.tween(pig).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t)}
-    , this);   
-    console.log(pig);
-    
-    return score;
+    , this);
+    // // console.log(pig);
+
+    // return green_bar.children[pig_grp.getIndex(pig)].width === 100;
+
+
 
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
