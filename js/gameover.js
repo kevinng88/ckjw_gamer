@@ -1,8 +1,8 @@
-class GameOver {
+class GameOverScreen {
     preload(){
 
     }
     create(){
-      
+
     }
 }
