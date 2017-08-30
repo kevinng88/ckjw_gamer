@@ -1,4 +1,4 @@
-const FIREMAN_WALK_SPEED = 10;
+const FIREMAN_WALK_SPEED = 3;
 const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = 0.5;
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
@@ -22,7 +22,7 @@ class PlayGame{
     create(){
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
-        this.bigpig = game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
+        this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
@@ -186,9 +186,9 @@ class PlayGame{
 
 
         //////// template of animation /////////////////
-        //pig animation
-        this.bigpig.animations.add("burn", [0,1]);
-        pig_burn(this.bigpig);
+        //pig BURN animation
+        //this.bigpig.animations.add("burn", [0,1]);
+        //pig_burn(this.bigpig);
 
         // [[testing when fire fighting]] //
         //f_fighting(this.s_fire.children[2], false);
