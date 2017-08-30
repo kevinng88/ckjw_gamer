@@ -276,6 +276,8 @@ class PlayGame{
             
             //this function will kill 1 pig, then reset in another position, return the number of pig 
             this.score_s_pig = pig_regeneration(pig, this.score_s_pig, this.show_score);
+            this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
+            this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
 
         }, null, this);
 
