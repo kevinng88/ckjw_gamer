@@ -9,6 +9,7 @@ const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
 let PIG_HEALTH = 50;
+const PIG_HIT_FIRE_HURT = 0.1;
 let OXYGEN_STARTING_VOLUMN = 500;
 const SPEED_ADD_PIG = 3000;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
@@ -274,7 +275,8 @@ class PlayGame{
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
-          //  console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+        //    console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
+            // updatePigHealth();
             pig_burn(pig);
         }, null, this)
 
@@ -401,13 +403,15 @@ class PlayGame{
 
      updateOxygen(){
         if(this.firefighter.y > 300){
-                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION >= 0){
+                if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION < 0){
+                        this.myHealth.destroy();
+                        console.log("GAME OVER");
+                        game.time.events.stop();
+                } else if(OXYGEN_STARTING_VOLUMN>= 0){
                         OXYGEN_STARTING_VOLUMN -= OXYGEN_CONSUMPTION;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
-                } else if (OXYGEN_STARTING_VOLUMN === 0){
-                        game.time.events.stop();
                 }
-        } else if (this.firefighter.y<300 && this.myHealth.width >=0){
+        } else if (this.firefighter.y<300 && this.myHealth.width >0){
                 if(this.myHealth.width <500){
                         OXYGEN_STARTING_VOLUMN += 30;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
@@ -417,30 +421,18 @@ class PlayGame{
 
 
 
-    updateHealthPig(){
-        if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
-                PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
-                this.pigHealth.width = PIG_HEALTH;
-                console.log(PIG_HEALTH);
-        } else {
-
-                game.time.events.stop();
-                //this.smallpig.destroy();
-        }
-    };
-
-
-    // updateHealthPig(){
-    //     if(PIG_HEALTH - SMALL_PIG_CONSUME_OXYGEN >= 0){
+    // updatePigHealth(){
+    //     if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
+    //         this.
+    //     }
+        
+    //     else if(PIG_HEALTH - PIG_HIT_FIRE_HURT >= 0){
     //             PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
     //             this.pigHealth.width = PIG_HEALTH;
     //             console.log(PIG_HEALTH);
-    //     } else {
-
-    //             game.time.events.stop();
-    //             //this.smallpig.destroy();
     //     }
     // };
+
 
 }
 
