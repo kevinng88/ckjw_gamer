@@ -21,10 +21,12 @@ const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * S
 class PlayGame{
 
     create(){
+
         this.firefighter = game.add.sprite(40, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
+        this.walls = game.add.group();
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(300, 'water'); //weapon is the water
@@ -41,6 +43,7 @@ class PlayGame{
         this.bigpig.enableBody = true;
         this.s_fire.enableBody = true;
         this.weapon.enableBody = true;
+        this.walls.enableBody = true;
         this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
         this.smallpig.physicsBodyType = Phaser.Physics.ARCADE;
         this.bigpig.physicsBodyType = Phaser.Physics.ARCADE;
@@ -218,47 +221,47 @@ class PlayGame{
         // ---------------- physics  ---------------- //
         //game.physics.startSystem(Phaser.Physics.ARCADE);
         // ---------------- world bounds  ---------------- //
-        game.world.collideWorldBounds = true;
-        // ---------------- Wall ---------------- //
-
-        // this.walls = game.add.group();
-        // this.walls.enableBody = true;
-        // this.walls.setAll('body.immovable', true);
-        // this.walls.setAll('tint', 0x963103);
-
-
-        // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
-
-        // walls = game.add.group();
-        // walls.enableBody = true;
-        // this.walls.setAll('body.immovable', true);
-        // this.walls.setAll('tint', 0x963103);
+        // this.game.world.bounds = true;
+        this.firefighter.body.collideWorldBounds = true;
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
         //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
+        // first, gridify the whole map
+        var grid = game.world.width / 20;
+        // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
+
         var walls = game.add.group();
         walls.enableBody = true;
-        // divide the screen into 20 * 30 grids
-        var grid = game.world.width / 20;
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
         // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
         var wallPositionSize = [
-            //the external wall
-            [0, 8, 1, 22, "westWall"],
-            [19, 8, 1, 22, "eastWall"],
-            [0, 29, 20, 1, "southWall"],
-        ]
-
+          //the external wall
+            [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
+            // interior wall - left top corner
+            [6, 8, 1, 3],[9, 10, 1, 3],[3, 10, 1, 3],[3, 13, 7, 1],
+            // interior - left mid
+            [0, 16, 5, 1],[7, 14, 1, 5],[3, 19, 5, 1],
+            //[0, 23, 1, 8],
+            // interior - left bottom
+            [6, 26, 4, 1],[3, 20, 1, 7],[6, 22, 1, 4],
+            // interior center
+            [8, 19, 4, 1],[9, 20, 1, 4],[10, 16, 6, 1],
+            // interior - right bottom
+            [9, 26, 1, 3],[12, 19, 1, 7],[12, 26, 5, 1],[15, 23, 4, 1],[12, 20, 5, 1],
+            // interior - right top and mid
+            [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
+        ];
 
         for(var i = 0; i < wallPositionSize.length; i++){
-            var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
-            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
-            wall.body.immovable = true;
+          var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+          wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+          wall.body.immovable = true;
         }
+
 
         ////////////////////////////////////////////////////////////
     }
@@ -268,8 +271,10 @@ class PlayGame{
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code //
-        //     game.physics.arcade.collide(this.firefighter, this.walls);
-        //     game.physics.arcade.collide()
+        game.physics.arcade.collide(this.firefighter, this.walls);
+        game.physics.arcade.collide(this.smallpig, this.walls);
+        game.physics.arcade.collide(this.bigpig, this.walls);
+
 
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
