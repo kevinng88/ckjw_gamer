@@ -14,10 +14,11 @@ class Preload{
         game.load.image("playbutton", "assets/sprites/playbutton.png");
 
         // Jimmy's section: water image
-        game.load.image("water", "assets/sprites/water.png");
+        //game.load.image("water", "assets/sprites/water.png");
 
 
         //Kevin's section: image, spritesheet & text
+        game.load.image("water", "assets/sprites/split.png");
         game.load.image("smoke", "assets/sprites/smoke.png");
         game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
         game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
