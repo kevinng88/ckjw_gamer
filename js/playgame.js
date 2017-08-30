@@ -9,7 +9,7 @@ const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
 let PIG_HEALTH = 50;
-const PIG_HIT_FIRE_HURT = 0.1;
+const PIG_HIT_FIRE_HURT = 0.2;
 let OXYGEN_STARTING_VOLUMN = 500;
 const SPEED_ADD_PIG = 3000;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
@@ -65,13 +65,13 @@ class PlayGame{
         game.time.events.loop(3000, this.updateOxygen , this); //loop every 3 second(3000ms) to decrease the oxygen-consumption (update in function updateOxygen)
 
         //Pig's Health Bar
-        this.pigHealthRed = game.add.bitmapData(100,10);
+        this.pigHealthRed = game.add.bitmapData(50,10);
             this.pigHealthRed.ctx.beginPath();
             this.pigHealthRed.ctx.rect(0,0,PIG_HEALTH,10);
             this.pigHealthRed.ctx.fillStyle = 'red';
             this.pigHealthRed.ctx.fill();
 
-          this.pigHealthGreen = this.game.add.bitmapData(100, 10);
+          this.pigHealthGreen = this.game.add.bitmapData(50, 10);
             this.pigHealthGreen.ctx.beginPath();
             this.pigHealthGreen.ctx.rect(0,0, PIG_HEALTH ,10);
             this.pigHealthGreen.ctx.fillStyle = "green";
@@ -156,8 +156,8 @@ class PlayGame{
                 this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
             this.pigHealthBG = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthRed);
             this.pigss_BG.add(this.pigHealthBG);
-            this.PIG_Health = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthGreen);
-            this.pigss_alive.add(this.PIG_Health);
+            this.PigHealth = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthGreen);
+            this.pigss_alive.add(this.PigHealth);
 
         }
         //animate ALL pigs
@@ -275,9 +275,19 @@ class PlayGame{
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
-        //    console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
-            // updatePigHealth();
+           console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
+            console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
+                if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
+                        this.smallpig.children[this.smallpig.getIndex(pig)].kill();
+                        this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
+                        this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
+                        console.log("PIG DIED DUE TO FIRE");
+                } else if(PIG_HEALTH >= 0){
+                        PIG_HEALTH -= PIG_HIT_FIRE_HURT;
+                        return this.pigss_alive.children[this.smallpig.getIndex(pig)].width = PIG_HEALTH;
+                }
+
         }, null, this)
 
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
@@ -420,18 +430,6 @@ class PlayGame{
      }
 
 
-
-    // updatePigHealth(){
-    //     if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
-    //         this.
-    //     }
-        
-    //     else if(PIG_HEALTH - PIG_HIT_FIRE_HURT >= 0){
-    //             PIG_HEALTH -= SMALL_PIG_CONSUME_OXYGEN;
-    //             this.pigHealth.width = PIG_HEALTH;
-    //             console.log(PIG_HEALTH);
-    //     }
-    // };
 
 
 }
