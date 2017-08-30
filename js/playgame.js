@@ -11,6 +11,7 @@ const BIG_PIG_COUNT = 3;
 let PIG_HEALTH = 50;
 const PIG_HIT_FIRE_HURT = 0.2;
 let OXYGEN_STARTING_VOLUMN = 500;
+const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
@@ -277,7 +278,6 @@ class PlayGame{
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
            console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
-            console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
@@ -293,6 +293,14 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
+                if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
+                        this.myHealth.destroy();
+                        console.log("GAME OVER");
+                        game.time.events.stop();
+                } else if(OXYGEN_STARTING_VOLUMN >= 0){
+                        OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
+                        return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+                }
         }, null, this)
 
         game.physics.arcade.overlap(this.weapon, this.s_fire, function(){
