@@ -25,7 +25,7 @@ class PlayGame{
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water = "";            //sprite: the water spread from firefighter
-        this.weapon = game.add.weapon(30, 'water'); //weapon is the water
+        this.weapon = game.add.weapon(300, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         game.stage.backgroundColor = '#337799';             //temp color to see effects
@@ -126,8 +126,8 @@ class PlayGame{
         ///this.weapon = game.add.weapon(30, 'water');      //by Kevin: Jimmy I move it up so that I can add physics
         this.weapon.bulletKillType= Phaser.Weapon.KILL_WORLD_BOUNDS;
         this.weapon.bulletSpeed=1000;
-        this.weapon.fireRate=100;
-        this.weapon.trackSprite(this.firefighter,40,60,false);
+        this.weapon.fireRate=1;
+        // this.weapon.bulletAngleVariance=10;
         this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
         ////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ class PlayGame{
 
 
         // var bottomWall = this.walls.create(0, game.world.height - 30, "bottomWall");
-      
+
         // walls = game.add.group();
         // walls.enableBody = true;
         // this.walls.setAll('body.immovable', true);
@@ -239,9 +239,9 @@ class PlayGame{
         var walls = game.add.group();
         walls.enableBody = true;
         // divide the screen into 20 * 30 grids
-        var grid = game.world.width / 20; 
+        var grid = game.world.width / 20;
         // using array to store each wall position and size and then build them through a for loop
-        // an element in this arrat consists of four required values and one optional value: 
+        // an element in this arrat consists of four required values and one optional value:
         // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
         var wallPositionSize = [
             //the external wall
@@ -325,6 +325,7 @@ class PlayGame{
             this.firefighter.y -= FIREMAN_RUN_SPEED;
           }
           this.firefighter.y -= FIREMAN_WALK_SPEED;
+          this.weapon.trackSprite(this.firefighter,30,-30,false);
           this.weapon.fireAngle = Phaser.ANGLE_UP;
         }else if(this.cursors.right.isDown){
             // console.log("right: ",FIREMAN_WALK_SPEED );
@@ -334,6 +335,7 @@ class PlayGame{
           }
             this.firefighter.x += FIREMAN_WALK_SPEED;
          // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
+            this.weapon.trackSprite(this.firefighter,80,30,false);
             this.weapon.fireAngle = Phaser.ANGLE_RIGHT;
         }else if (this.cursors.down.isDown){
           if (this.cursors.down.shiftKey){
@@ -342,17 +344,23 @@ class PlayGame{
           }
           this.firefighter.y += FIREMAN_RUN_SPEED;
           //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
+          this.weapon.trackSprite(this.firefighter,25,105,false);
           this.weapon.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
           if(this.cursors.left.shiftKey){
             this.firefighter.x -= FIREMAN_RUN_SPEED;
           }
           this.firefighter.x -= FIREMAN_WALK_SPEED;
+          this.weapon.trackSprite(this.firefighter,-20,30,false);
           this.weapon.fireAngle = Phaser.ANGLE_LEFT;
         }
           if (this.waterButton.isDown){
             this.weapon.fire();
           }
+
+          this.weapon.forEach(function(weapon) {
+            weapon.scale.setTo(6,8);
+          })
 
           // firemqan extinguishing firemqan
         // if W is Down, particle is released and fire around fireman will be extinguished in 3 seconds
@@ -380,7 +388,7 @@ class PlayGame{
     }
     render(){
         this.weapon.debug();
-        
+
 
     }
 
