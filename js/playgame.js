@@ -1,4 +1,4 @@
-const FIREMAN_WALK_SPEED = 1;
+const FIREMAN_WALK_SPEED = 10;
 const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
 const SMALL_PIG_SPEED = 0.5;
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 1.5;
@@ -241,13 +241,13 @@ class PlayGame{
         this.platforms = game.add.group();
         var ledge = this.platforms.create(400, 400, 'wall');
 
-        ledge.body.immovable = true;
+        // ledge.body.immovable = true;
 
         ledge = this.platforms.create(-150, -150, 'wall');
 
-        ledge.body.immovable = true;
+        // ledge.body.immovable = true;
 
-        var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
+        // var bottomWall = this.wall.create(0, game.world.height - 30, "bottomWall");
 
 
 
