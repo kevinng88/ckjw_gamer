@@ -231,19 +231,40 @@ class PlayGame{
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
         // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
-        var wallPositionSize = [
-            //the external wall
-            [0, 8, 1, 22, "westWall"],
-            [19, 8, 1, 22, "eastWall"],
-            [0, 29, 20, 1, "southWall"],
-        ]
+        // ---------------- maze ------------------- //
+        // first, gridify the whole map
+        var grid = game.world.width / 20;
+        // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
+        var walls = game.add.group();
+        walls.enableBody = true;
 
+        // using array to store each wall position and size and then build them through a for loop
+        // an element in this arrat consists of four required values and one optional value:
+        // namely, [wall.x, wall.y, wall.scale.x, wall.scally, wallName(if any)]
+        var wallPositionSize = [
+          //the external wall
+            [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
+            // interior wall - left top corner
+            [6, 8, 1, 3],[9, 10, 1, 3],[3, 10, 1, 3],[3, 13, 7, 1],
+            // interior - left mid
+            [0, 16, 5, 1],[7, 14, 1, 5],[3, 19, 5, 1],
+            //[0, 23, 1, 8],
+            // interior - left bottom
+            [6, 26, 4, 1],[3, 20, 1, 7],[6, 22, 1, 4],
+            // interior center
+            [8, 19, 4, 1],[9, 20, 1, 4],[10, 16, 6, 1],
+            // interior - right bottom
+            [9, 26, 1, 3],[12, 19, 1, 7],[12, 26, 5, 1],[15, 23, 4, 1],[12, 20, 5, 1],
+            // interior - right top and mid
+            [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
+        ];
 
         for(var i = 0; i < wallPositionSize.length; i++){
-            var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
-            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
-            wall.body.immovable = true;
+          var wall = walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+          wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+          wall.body.immovable = true;
         }
+
 
         ////////////////////////////////////////////////////////////
     }
