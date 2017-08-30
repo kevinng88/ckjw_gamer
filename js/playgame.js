@@ -13,6 +13,7 @@ const PIG_HIT_FIRE_HURT = 0.2;
 let OXYGEN_STARTING_VOLUMN = 500;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
+var timeLeft = 300;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
@@ -82,7 +83,10 @@ class PlayGame{
             this.pigHealthGreen.ctx.fillStyle = "green";
             this.pigHealthGreen.ctx.fill();
 
-
+        //Timer for whole game
+        this.time_finish_game = game.time.create(false);
+        this.time_finish_game.loop(1000, this.updateTimeLeft, this);
+        this.time_finish_game.start();
 
 
         ////////////////////////////////////////////////////////////
@@ -298,13 +302,7 @@ class PlayGame{
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
-                        
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
-                      
-
-
-                        // PIG_HEALTH -= PIG_HIT_FIRE_HURT;
-                        // return this.pigss_alive.children[this.smallpig.getIndex(pig)].width = PIG_HEALTH;
                 }
 
         }, null, this)
@@ -426,7 +424,7 @@ class PlayGame{
 
     }
     render(){
-        
+        game.debug.text("Time left: " + timeLeft, 32,32);
 
 
     }
@@ -449,7 +447,9 @@ class PlayGame{
         }
      }
 
-
+     updateTimeLeft(){
+        timeLeft -= 1;
+     };
 
 
 }
@@ -521,22 +521,24 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
     //for animation start (
     var t = game.rnd.integerInRange(1000, 7000);
     console.log(t);
-    game.time.events.add(t,function(){
-    //console.log("come", this.smallpig.getIndex(pig))
-    var px = game.world.randomX;
-    var py = game.world.randomY;
-    pig.reset(px, py);
-    red_bar.children[pig_grp.getIndex(pig)].reset(px,py);    
-    green_bar.children[pig_grp.getIndex(pig)].reset(px,py);
-    if(green_bar.children[pig_grp.getIndex(pig)].width !== 50){
-        console.log(green_bar.children[pig_grp.getIndex(pig)].width);
-        return green_bar.children[pig_grp.getIndex(pig)].width = 50;}
-    game.add.tween(pig).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t)}
-    , this);
-    // // console.log(pig);
+    game.time.events.add(t, function () {
+        //console.log("come", this.smallpig.getIndex(pig))
+        var px = game.world.randomX;
+        var py = game.world.randomY;
+        pig.reset(px, py);
+        red_bar.children[pig_grp.getIndex(pig)].reset(px, py);
+        green_bar.children[pig_grp.getIndex(pig)].reset(px, py);
+        game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
+        game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
+        game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
+    }
+        , this);
 
-    // return green_bar.children[pig_grp.getIndex(pig)].width === 100;
-
+    if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
+            console.log(green_bar.children[pig_grp.getIndex(pig)].width);
+            return green_bar.children[pig_grp.getIndex(pig)].width = 50;
+        }
+        
 
 
 }
