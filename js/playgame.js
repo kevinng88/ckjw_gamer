@@ -15,7 +15,8 @@ const OXYGEN_STARTING_VOLUMN = 500;
 let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
-var timeLeft = 300;
+const timeLeft = 300;
+let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
@@ -332,6 +333,13 @@ class PlayGame{
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
 
+        if (this.needOxygen && OXYGEN_NOW <= 250){
+          this.needOxygen=false;
+          var needoxygenSound = game.add.audio("needoxygen");
+          needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
+          needoxygenSound.sound=0.5;
+          needoxygenSound.play();
+        }
         game.physics.arcade.collide(this.firefighter, this.walls, function(){
             console.log('the firefighter is hitting a wall');
         });
@@ -555,18 +563,11 @@ class PlayGame{
     }
 
     render(){
-        game.debug.text("Time left: " + timeLeft, 32,32);
+        game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
         game.debug.text("You are carrying "+ caughtNumber+ " of pig, so your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber), 32, 940);
     }
 
     updateOxygen(){
-      if (this.needOxygen && OXYGEN_STARTING_VOLUMN<= 250){
-        this.needOxygen=false;
-        var needoxygenSound = game.add.audio("needoxygen");
-        needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
-        needoxygenSound.sound=0.5;
-        needoxygenSound.play();
-      }
         if(this.firefighter.y > 240){
                 if(OXYGEN_NOW - OXYGEN_CONSUMPTION /*- SMALL_PIG_CONSUME_OXYGEN*caughtNumber */< 0){
                         this.myHealth.kill();
@@ -582,8 +583,8 @@ class PlayGame{
                         var gameoverSound = game.add.audio("gameover");
                         gameoverSound.play();
                         game.state.start("GameOverScreen");
-                } else if(OXYGEN_STARTING_VOLUMN>= 0){
-                        OXYGEN_STARTING_VOLUMN -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
+                } else if(OXYGEN_NOW>= 0){
+                        OXYGEN_NOW -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
                         // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
                 }
         } else if (this.firefighter.y<240 && this.myHealth.width >0){
@@ -600,7 +601,7 @@ class PlayGame{
      }
 
      updateTimeLeft(){
-        timeLeft -= 1;
+        thisGameTimeLeft -= 1;
      };
 
 
