@@ -46,6 +46,7 @@ class PlayGame{
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.walls = game.add.group();
+        this.farmer = game.add.sprite(13 * grid, 5 * grid, 'farmer');
         this.fence = game.add.sprite(game.world.width / 2, 250);
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water_state = [];            //sprite: the fire fightering state

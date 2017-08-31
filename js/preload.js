@@ -40,6 +40,7 @@ class Preload{
         game.load.spritesheet("wall", "/assets/sprites/wall.png", 32, 32);
         game.load.spritesheet("wall", "/assets/sprites/fence.png", 32, 32);
         game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
+        game.load.spritesheet("farmer", "/assets/sprites/farmer.png", 64, 64);
         game.load.spritesheet("piglet", "/assets/sprites/piglet1.jpg", 300, 300);
         game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
         game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
