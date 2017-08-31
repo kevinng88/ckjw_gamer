@@ -7,6 +7,7 @@ window.onload = function(){
     game.state.add("TitleScreen", TitleScreen);
     game.state.add("PlayGame", PlayGame);
     game.state.add("GameOverScreen", GameOverScreen);
+    game.state.add("Instruction", Instruction);
     //game.state.add("WinGame", WinGame);
     game.state.start("Boot");
 
@@ -16,7 +17,7 @@ window.onload = function(){
 
 class Boot{
     preload(){
-        //this.game.load.image("loading", "assets/sprites/loading.png");
+        this.game.load.image("loading", "assets/sprites/loading.png");
 
     }
 
