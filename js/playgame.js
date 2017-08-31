@@ -348,7 +348,7 @@ class PlayGame{
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
                 }
-            }
+            
 
         }, null, this)
 
@@ -371,7 +371,7 @@ class PlayGame{
 
             
             var i = this.s_fire.getIndex(fire);
-            this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);
+           // this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);      //**TEMP CLOSE**
             console.log(this.water_state);
 
         }, null, this);
@@ -551,12 +551,12 @@ function f_fighting(fire, state, attack, destroy_fire) {
     }
    else if(state && attack) {
         fire.damage(0.5);
-        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(
+        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(    
             game.add.tween(fire).to({ tint : 0xffffff }, 10, "Linear", true) );
         var sx = fire.scale.x - 0.05;
         var sy = fire.scale.y - 0.1;
         console.log("scale: ",sx,sy);    
-        game.add.tween(fire.scale).to({y: sy, x: sx },10, "Linear", true );
+        game.add.tween(fire.scale).to({y: sy, x: sx },10, "Linear", true );           
         var t = game.add.text(fire.x + 50, fire.y -100, fire.health);
         var grd = t.context.createLinearGradient(0, 0, 0, t.canvas.height);
         grd.addColorStop(0, '#8ED6FF');   
