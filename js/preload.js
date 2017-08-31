@@ -15,6 +15,7 @@ class Preload{
         // Jimmy's section: water image
         //game.load.image("water", "assets/sprites/water.png");
         game.load.image("sausage", "assets/sprites/saussage.png");
+        game.load.image("flax", "assets/sprites/flax.png");
 
         //Kevin's section: image, spritesheet & text
         game.load.image("water", "assets/sprites/split.png");
