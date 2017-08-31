@@ -44,13 +44,14 @@ class PlayGame{
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.walls = game.add.group();
+        this.fence = game.add.sprite(game.world.width / 2, 250);
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(60, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
-        this.fireTruck = game.add.sprite( 3 * grid, 3 * grid, "fireTruck");
-        this.fireTruck.scale.setTo(0.07, 0.07);
+        this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
+
 
         this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
@@ -269,8 +270,6 @@ class PlayGame{
         this.firefighter.body.collideWorldBounds = true;
         this.smallpig.setAll('body.collideWorldBounds', true);
         this.firefighter.body.gravity.y = 0;
-        // -------------- wall impassible --------- //
-
 
         // keyboard control
         this.cursors = game.input.keyboard.createCursorKeys();
