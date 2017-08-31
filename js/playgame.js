@@ -15,7 +15,7 @@ const OXYGEN_STARTING_VOLUMN = 500;
 let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
-const timeLeft = 300;
+const timeLeft = 180;
 let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
@@ -333,6 +333,17 @@ class PlayGame{
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
 
+        if (thisGameTimeLeft===0) {
+          this.myHealth.width === 0;
+          console.log("GAME OVER");
+          game.time.events.stop();
+          this.bgMusic.stop();
+          this.pigMusic.stop();
+          this.fireMusic.stop();
+          var gameoverSound = game.add.audio("gameover");
+          gameoverSound.play();
+          game.state.start("GameOverScreen");
+        }
         if (this.needOxygen && OXYGEN_NOW <= 250){
           this.needOxygen=false;
           var needoxygenSound = game.add.audio("needoxygen");
@@ -430,7 +441,7 @@ class PlayGame{
                         game.state.start("GameOverScreen");
                 } else if(OXYGEN_NOW >= 0){
                         OXYGEN_NOW -= GET_HIT_FIRE;
-                        return this.myHealth.width = OXYGEN_NOW;
+                        this.myHealth.width = OXYGEN_NOW;
                 };
         }, null, this)
 
