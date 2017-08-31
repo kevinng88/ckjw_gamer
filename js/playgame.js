@@ -326,8 +326,8 @@ class PlayGame{
 
             //this function will kill 1 pig, then reset in another position, return the number of pig
             this.score_s_pig = pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
-            // var gettingpigSound = game.add.audio("gettingpig");
-            // gettingpigSound.play();
+            var gettingpigSound = game.add.audio("gettingpig");
+            gettingpigSound.play();
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
@@ -347,6 +347,7 @@ class PlayGame{
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
                 }
+            
 
         }, null, this)
 
@@ -376,7 +377,7 @@ class PlayGame{
 
 
             var i = this.s_fire.getIndex(fire);
-            this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);
+           // this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);      //**TEMP CLOSE**
             console.log(this.water_state);
 
         }, null, this);
@@ -556,7 +557,7 @@ function f_fighting(fire, state, attack, destroy_fire) {
     }
    else if(state && attack) {
         fire.damage(0.5);
-        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(
+        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(    
             game.add.tween(fire).to({ tint : 0xffffff }, 10, "Linear", true) );
         var sx = fire.scale.x - 0.05;
         var sy = fire.scale.y - 0.1;
@@ -622,15 +623,13 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
         game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
         game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
-        if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
-            green_bar.children[pig_grp.getIndex(pig)].width = 50;
-        }
     }
         , this);
+        console.log("one pig is regenerated");
 
-    // if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
-    //         return green_bar.children[pig_grp.getIndex(pig)].width = 50;
-    //     }
+    if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
+            return green_bar.children[pig_grp.getIndex(pig)].width = 50;
+        }
 
 
 
