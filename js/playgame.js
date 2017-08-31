@@ -16,7 +16,7 @@ const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
 var timeLeft = 300;
 let caughtNumber = 0;
-let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * caughtNumber /*+ BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
+let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 0.9;
 const FTR_SCALE_Y = 0.9;
@@ -489,7 +489,7 @@ class PlayGame{
     }
     render(){
         game.debug.text("Time left: " + timeLeft, 32,32);
-
+        game.debug.text("You are carrying "+ caughtNumber+ " of pig, so your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber), 32, 940);
 
     }
 
@@ -502,6 +502,7 @@ class PlayGame{
                 } else if(OXYGEN_STARTING_VOLUMN>= 0){
                         OXYGEN_STARTING_VOLUMN -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
                         // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
+                        game.add.text(32, 80, "-"+(OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber));
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
         } else if (this.firefighter.y<240 && this.myHealth.width >0){
