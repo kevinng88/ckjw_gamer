@@ -1,6 +1,7 @@
 class GameOverScreen {
         create(){
             game.stage.backgroundColor = "#434343";
+            
             var image= game.add.image(game.width/2, game.height/2 ,'sausage');
             image.anchor.set(0.5);
             // var bmpText1= game.add.bitmapText(game.width / 2, 50 , "font", "Small Pig Collected: ", 48).anchor.x = 0.5;

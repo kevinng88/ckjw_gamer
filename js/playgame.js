@@ -332,16 +332,14 @@ class PlayGame{
     update(){
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
-        // for (var i =0; i<5; i++){
-        //     if(this.smallpig.children[i].body.velocity.x  > 0){
-        //         this.smallpig.children[i].scale.x = 1;
-        //         console.log(this.smallpig.children[i].x);
-        //     } else if(this.smallpig.children[i].body.velocity.x < 0){
-        //             this.smallpig.children[i].scale.x = -1;
-        //             // this.smallpig.children[i].x = this.smallpig.children[i].x - 50;
-        //         console.log(this.smallpig.children[i].x);
-        //         }
-        // }
+
+        if (this.needOxygen && OXYGEN_NOW <= 250){
+          this.needOxygen=false;
+          var needoxygenSound = game.add.audio("needoxygen");
+          needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
+          needoxygenSound.sound=0.5;
+          needoxygenSound.play();
+        }
         game.physics.arcade.collide(this.firefighter, this.walls, function(){
             console.log('the firefighter is hitting a wall');
         });
@@ -571,13 +569,6 @@ class PlayGame{
     }
 
     updateOxygen(){
-      if (this.needOxygen && OXYGEN_STARTING_VOLUMN<= 250){
-        this.needOxygen=false;
-        var needoxygenSound = game.add.audio("needoxygen");
-        needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
-        needoxygenSound.sound=0.5;
-        needoxygenSound.play();
-      }
         if(this.firefighter.y > 240){
                 if(OXYGEN_NOW - OXYGEN_CONSUMPTION /*- SMALL_PIG_CONSUME_OXYGEN*caughtNumber */< 0){
                         this.myHealth.kill();
