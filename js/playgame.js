@@ -37,6 +37,7 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        var grid = game.world.width / 20;
         this.firefighter = game.add.sprite(60, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
@@ -47,13 +48,16 @@ class PlayGame{
         this.weapon = game.add.weapon(60, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
+        this.fireTruck = game.add.sprite( 3 * grid, 3 * grid, "fireTruck");
+        this.fireTruck.scale.setTo(0.07, 0.07);
+
         this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //background music
         this.bgMusic = game.add.audio("background");
         this.bgMusic.loopFull(1);
         this.pigMusic = game.add.audio("pig");
-        this.pigMusic.loopFull(0.1);
+        this.pigMusic.loopFull(0.2);
         this.fireMusic = game.add.audio("fire");
         this.fireMusic.loopFull(0.3);
         //////////additional variables go here/////////////
@@ -166,6 +170,7 @@ class PlayGame{
         this.getpig=true;
         this.hitfire=true;
         this.deletefire=true;
+        this.needOxygen=true;
         ////////////////////////////////////////////////////////////
 
 
@@ -272,7 +277,7 @@ class PlayGame{
 
         // ---------------- maze ------------------- //
         // first, gridify the whole map. each grid should be 32px wide thus the 640px-wide map is divided into 20 grid in width.
-        var grid = game.world.width / 20;
+        // var grid = game.world.width / 20;
         // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
@@ -360,7 +365,7 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
 
             //this function will kill 1 pig, then reset in another position, return the number of pig
-            this.score_s_pig = pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
+            this.score_s_pig = pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             if (this.getpig){
             this.getpig=false;
             var gettingpigSound = game.add.audio("gettingpig");
@@ -401,7 +406,7 @@ class PlayGame{
             this.hitfire = false;
             var hittingfireSound = game.add.audio("hitfire");
             hittingfireSound.onStop.add(function(){this.hitfire = true;}, this);
-            hittingfireSound.volume=0.1;
+            hittingfireSound.volume=0.3;
             hittingfireSound.play();
           }
             // return hitfire=false;
@@ -420,13 +425,6 @@ class PlayGame{
                         OXYGEN_NOW -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_NOW;
                 };
-            if (this.hitfire){
-            var hittingfireSound = game.add.audio("hitfire");
-            // hittingfireSound.onStop.add(hitfire, this);
-            hittingfireSound.volume=0.1;
-            hittingfireSound.play();}
-            return hitfire=false;
-
         }, null, this)
 
 
@@ -527,7 +525,7 @@ class PlayGame{
 
             var deletefireSound= game.add.audio("deletefire")
             deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
-            deletefireSound.sound=0.1;
+            deletefireSound.sound=0.5;
             deletefireSound.play();
            }
             this.weapon.fire();
@@ -563,8 +561,15 @@ class PlayGame{
     }
 
     updateOxygen(){
+      if (this.needOxygen && OXYGEN_STARTING_VOLUMN<= 250){
+        this.needOxygen=false;
+        var needoxygenSound = game.add.audio("needoxygen");
+        needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
+        needoxygenSound.sound=0.5;
+        needoxygenSound.play();
+      }
         if(this.firefighter.y > 240){
-                if(OXYGEN_NOW - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
+                if(OXYGEN_NOW - OXYGEN_CONSUMPTION /*- SMALL_PIG_CONSUME_OXYGEN*caughtNumber */< 0){
                         this.myHealth.kill();
                         console.log("GAME OVER");
                         game.time.events.stop();
@@ -572,6 +577,15 @@ class PlayGame{
                         OXYGEN_NOW -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
                         // console.log("it now consume: ", OXYGEN_NOW);
                         return this.myHealth.width = OXYGEN_NOW;
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
+                        var gameoverSound = game.add.audio("gameover");
+                        gameoverSound.play();
+                        game.state.start("GameOverScreen");
+                } else if(OXYGEN_STARTING_VOLUMN>= 0){
+                        OXYGEN_STARTING_VOLUMN -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
+                        // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
                 }
         } else if (this.firefighter.y<240 && this.myHealth.width >0){
                 caughtNumber = 0;
@@ -583,6 +597,7 @@ class PlayGame{
                 }
                 return OXYGEN_CONSUMPTION = 20;
         }
+
      }
 
      updateTimeLeft(){
@@ -695,11 +710,13 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
         pig.reset(px, py);
         red_bar.children[pig_grp.getIndex(pig)].reset(px, py);
         green_bar.children[pig_grp.getIndex(pig)].reset(px, py);
+        pig.body.velocity.x = game.rnd.integerInRange(-100,100);
+        pig.body.velocity.y = game.rnd.integerInRange(-100,100);
         }
         , this);
-        game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
-        game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
-        game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
+        game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true);
+        game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true);
+        game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true);
     // }
     //     , this);
         console.log("one pig is regenerated");
