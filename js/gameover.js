@@ -14,15 +14,10 @@ class GameOverScreen {
             }, 1500, "Linear", true, 0, -1);
             tween.yoyo(true);
             }
-<<<<<<< HEAD
-        startGame(){
-            game.state.start("Boot");
-=======
 
           startGame(){
             // this.myHealth.reset();
 
             game.state.start("TitleScreen", true, false);
->>>>>>> dbf098cfa29c8208b8e612bfb288a0c54ef3d7bd
             }
 }
