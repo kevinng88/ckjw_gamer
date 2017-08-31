@@ -25,7 +25,7 @@ class Preload{
         game.load.image("topback", "assets/sprites/top_pic1.jpg");
         game.load.image("p_head", "assets/sprites/pig_head.png");
         game.load.image("ton", "assets/sprites/weight.png");
-        game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
+        game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 40, 42, 18);
         game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
         game.load.spritesheet("s_pigs", "/assets/sprites/red_pig.png",80, 62, 12);
         // game.load.spritesheet("s_pigs_up", "/assets/sprites/red_pig_vertical.png", 54, 76, 3);

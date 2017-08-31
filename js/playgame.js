@@ -14,20 +14,21 @@ const PIG_HIT_FIRE_HURT = 1;
 let OXYGEN_STARTING_VOLUMN = 500;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
-const timeLeft = 180;
+let timeLeft = 180;   /*temp kevin*/
 let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
-const FTR_SCALE_X = 0.9;
-const FTR_SCALE_Y = 0.9;
+const FTR_SCALE_X = 1.2;
+const FTR_SCALE_Y = 1.2;
 const SPIG_SCALE_X = 0.5;
 const SPIG_SCALE_Y = 0.5;
 const BPIG_SCALE_X = 1.2;
 const BPIG_SCALE_Y = 1.2;
-const FRE_SCALE_X = 0.3;
-const FRE_SCALE_Y = 0.4;
+const FRE_SCALE_X = 0.8;
+const FRE_SCALE_Y = 0.8;
 
+/*temp kevin*/let OXYGEN_NOW = 100;
 
     // game.physics.startSystem(Phaser.Physics.ARCADE);  T1 ok
     // platforms = game.add.group(); T2 ok
@@ -125,9 +126,9 @@ class PlayGame{
             this.pigHealthGreen.ctx.fill();
 
         //Timer for whole game
-        this.time_finish_game = game.time.create(false);
-        this.time_finish_game.loop(1000, this.updateTimeLeft, this);
-        this.time_finish_game.start();
+        // this.time_finish_game = game.time.create(false);
+        // this.time_finish_game.loop(1000, this.updateTimeLeft, this);
+        // this.time_finish_game.start();
 
 
         ////////////////////////////////////////////////////////////
@@ -204,6 +205,7 @@ class PlayGame{
                 var RANDOMY = game.world.randomY;
             //for group: use create instead of add.sprite
             this.smallpig.create(RANDOMX, RANDOMY, 's_pigs', 0);
+            this.smallpig.children[i].anchor.setTo(SPIG_SCALE_X/2,SPIG_SCALE_Y);
             this.smallpig.children[i].scale.x = SPIG_SCALE_X;
             this.smallpig.children[i].scale.Y = SPIG_SCALE_Y;
             this.smallpig.children[i].body.velocity.x = game.rnd.integerInRange(-100,100);
@@ -227,6 +229,7 @@ class PlayGame{
                 for (var i = 0; i < 5; i ++){
                     //for group: use create instead of add.sprite
                     this.s_fire.create(game.world.randomX, game.world.randomY, 'fire', 0);
+                    this.s_fire.children[i].anchor.setTo(FRE_SCALE_X/2,FRE_SCALE_Y/2);
                     this.s_fire.children[i].scale.x = FRE_SCALE_X;
                     this.s_fire.children[i].scale.Y = FRE_SCALE_Y;
                     this.water_state.push(false);
@@ -257,9 +260,16 @@ class PlayGame{
         //animate the firefighter
         this.firefighter.scale.x = FTR_SCALE_X;
         this.firefighter.scale.y = FTR_SCALE_Y;
-        this.firefighter.animations.add('walk');
-        this.firefighter.animations.play('walk', 50, true);
-
+        this.firefighter.anchor.setTo(FTR_SCALE_X/2,FTR_SCALE_Y/2);
+        this.firefighter.animations.add('walk', [0,1,2,3,4,5],10, true);
+        this.firefighter.animations.add('run', [0,1,2,3,4,5],30, true);
+        this.firefighter.animations.add('up', [6,7,8,9,10,11],10, true);
+        this.firefighter.animations.add('run-up', [6,7,8,9,10,11],30, true);
+        this.firefighter.animations.add('down', [12,13,14,15,16,17],10, true);
+        this.firefighter.animations.add('run-down', [12,13,14,15,16,17],30, true);
+        
+        
+        
 
         //timer to make attack in good update rate
         this.attack = true;
@@ -353,15 +363,7 @@ class PlayGame{
 
 
         
-        ////////////////Kevin's section/////////////////////////////
-        game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
-
-
-        }, null, this); // T7
-        ////////////////Kevin's section/////////////////////////////
-       
-            //this function will kill 1 pig, then reset in another position, return the number of pig
-
+    
 
 
         //game.physics.arcade.collide(this.firefighter, this.walls);
@@ -493,23 +495,29 @@ class PlayGame{
         if(this.cursors.up.isDown){
           if (this.cursors.up.shiftKey){
             //this.firefighter.y -= FIREMAN_RUN_SPEED;
+            this.firefighter.animations.play('run-up');
             this.firefighter.body.velocity.y = -FIREMAN_RUN_SPEED;
           }
           //this.firefighter.y -= FIREMAN_WALK_SPEED;
+          this.firefighter.animations.play('up');
           this.firefighter.body.velocity.y = -FIREMAN_WALK_SPEED;
           this.weapon.trackSprite(this.firefighter,30,-30,false);
           this.weapon.fireAngle = Phaser.ANGLE_UP;
-          this.weapon2.trackSprite(this.firefighter,30,-30,false);
+          this.weapon2.trackSprite(this.firefighter,-30,30,false);
           this.weapon2.fireAngle = Phaser.ANGLE_UP;
         }else if(this.cursors.right.isDown){
             // console.log("right: ",FIREMAN_WALK_SPEED );
+            this.firefighter.scale.x = FTR_SCALE_X;
             if(this.cursors.right.shiftKey){
+            
             //this.firefighter.x += FIREMAN_RUN_SPEED;
+            this.firefighter.animations.play('run');
             this.firefighter.body.velocity.x = FIREMAN_RUN_SPEED;
 
           }
            // this.firefighter.x += FIREMAN_WALK_SPEED;
          // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
+            this.firefighter.animations.play('walk');
             this.firefighter.body.velocity.x = FIREMAN_WALK_SPEED;
             this.weapon.trackSprite(this.firefighter,35,0,false);
             this.weapon.fireAngle = -30;//Phaser.ANGLE_RIGHT;
@@ -519,21 +527,26 @@ class PlayGame{
           if (this.cursors.down.shiftKey){
             //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
             //this.firefighter.y += FIREMAN_RUN_SPEED;
+            this.firefighter.animations.play('run-down');
             this.firefighter.body.velocity.y = FIREMAN_RUN_SPEED;
           }
           //this.firefighter.y += FIREMAN_RUN_SPEED;
           //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
+          this.firefighter.animations.play('down');
           this.firefighter.body.velocity.y = FIREMAN_WALK_SPEED;
           this.weapon.trackSprite(this.firefighter,25,105,false);
           this.weapon.fireAngle = Phaser.ANGLE_DOWN;
           this.weapon2.trackSprite(this.firefighter,25,105,false);
           this.weapon2.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
+            this.firefighter.scale.x = -FTR_SCALE_X;
           if(this.cursors.left.shiftKey){
-            //this.firefighter.x -= FIREMAN_RUN_SPEED;
+            //this.firefighter.x -= FIREMAN_RUN_SPEED
+            this.firefighter.animations.play('run');
             this.firefighter.body.velocity.x = -FIREMAN_RUN_SPEED;
           }
           //this.firefighter.x -= FIREMAN_WALK_SPEED;
+          this.firefighter.animations.play('walk');
           this.firefighter.body.velocity.x = - FIREMAN_WALK_SPEED;
           this.weapon.trackSprite(this.firefighter,-30,0,false);
           this.weapon.fireAngle = 210;
@@ -600,6 +613,7 @@ class PlayGame{
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
         } else if (this.firefighter.y<240 && this.myHealth.width >0){
+                release_pig(this.firefighter, this.icon);
                 caughtNumber = 0;
                 if(this.myHealth.width + 30 > 500){
                     return this.myHealth.width = 500;
@@ -641,7 +655,9 @@ function f_fighting(fire, state, attack, destroy_fire) {
     //adding of smoke emmitter
     if (!destroy_fire && !state) {
         state = true;
-        var s_emitter = game.add.emitter(fire.x + 100, fire.y + 200, 300);
+        var s_emitter = game.add.emitter(fire.x + 100, fire.y + 200, 150);
+        s_emitter.x = fire.x;
+        s_emitter.y = fire.y - 120;
         s_emitter.makeParticles('smoke');
         s_emitter.setScale(0.01, 0.26, 0.01, 0.26, 800);
         s_emitter.gravity = -200;
@@ -653,7 +669,7 @@ function f_fighting(fire, state, attack, destroy_fire) {
         s_emitter.start(false, 0, 0);
     }
    else if(state && attack) {
-        fire.damage(2);
+        fire.damage(1);
         game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(
             game.add.tween(fire).to({ tint : 0xffffff }, 10, "Linear", true) );
         var sx = fire.scale.x - 0.05;
@@ -665,8 +681,12 @@ function f_fighting(fire, state, attack, destroy_fire) {
         grd.addColorStop(0, '#8ED6FF');
         grd.addColorStop(1, '#004CB3');
         t.fill = grd;
-        game.add.tween(t).to({y: fire.y -200},1000, "Linear", true);
-        game.add.tween(t).to({alpha: 0.2},2000, "Linear", true);        //???
+        var twn = game.add.tween(t);
+        twn.to({y: fire.y -200},1000, "Linear", true);
+        twn.to({alpha: 0},2000, "Linear", true)    
+        twn.onComplete.add(function(){
+            t.destroy();
+        }, this);   
 
    }
     //else if()//2 sec later, heal to 100
@@ -737,11 +757,12 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
 }
 
 function man_die(man, back){
+        man.animations.stop();
         man.anchor.setTo(0,0);
         game.add.tween(man).to({angle: -90}, 1000, "Linear", true);
         game.add.tween(man.scale).to({x: 5, y: 5}, 2000, "Linear", true, 200);
         game.add.tween(man).to({x: game.world.centerX, y: game.world.centerY}, 2000, "Linear", true , 200);
-        man.animations.stop();
+        
         
         filter = game.add.filter('Fire', 800, 600);
         filter.alpha = 0.0;
@@ -759,17 +780,25 @@ function pig_icon(man, icon){
     game.add.tween(icon.scale).to({x:1.1, y:1.1}, 1000, "Linear", true, 0,-1, true);
 }
 
-function release_pig(man, icon){
-    for(var i = 0; i <icon.length; i ++){
-        game.add.sprite(game.rnd.integerInRange(game.world.centerX - 50,game.world.centerX + 50),
-        game.rnd.integerInRange(200, 230), 's_pigs');
-    }
-        var p = game.add.sprite(game.world.centerX,220, 's_pig');
-        game.add.tween(p).to({x:500, y:70}, 2000, "Linear", true );
-        game.add.tween(p).to({y:50}, 2000, "Linear", true, 500, -1, true );
-
+function release_pig(man, icon) {
+    if (icon.length > 0) {
+        var p;
+        for (var i = 0; i < icon.length; i++) {
+            p = game.add.sprite(game.rnd.integerInRange(game.world.centerX - 50, game.world.centerX + 50),
+                game.rnd.integerInRange(200, 230), 's_pigs');
+            p.scale.x = SPIG_SCALE_X;
+            p.scale.y = SPIG_SCALE_Y;
+            game.add.tween(p).to({ x: 500, y: 150 }, 1000, "Linear", true);
+            p.y = 150;
+            game.add.tween(p).to({ y: 120 }, 500, Phaser.Easing.Quartic.Out, true, 500, -1, true);
+            
+        }
+        
+        
+        
         icon.destroy();
-
+        console.log(icon);
+    }
 
 }
 
