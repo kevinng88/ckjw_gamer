@@ -347,18 +347,19 @@ class PlayGame{
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
                 }
-            
+
 
         }, null, this)
-
+        var hitfire=true;
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
-
+            if (hitfire){
             var hittingfireSound = game.add.audio("hitfire");
+            hittingfireSound.onStop.add(hitfire, this);
             hittingfireSound.volume=0.1;
-            hittingfireSound.totalDuration=1;
-            hittingfireSound.play();
+            hittingfireSound.play();}
+            return hitfire=false;
 
                 if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
@@ -557,7 +558,7 @@ function f_fighting(fire, state, attack, destroy_fire) {
     }
    else if(state && attack) {
         fire.damage(0.5);
-        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(    
+        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(
             game.add.tween(fire).to({ tint : 0xffffff }, 10, "Linear", true) );
         var sx = fire.scale.x - 0.05;
         var sy = fire.scale.y - 0.1;
