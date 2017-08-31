@@ -10,7 +10,7 @@ const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 3;
 const FIRE_COUNT = 5;
 let PIG_HEALTH = 50;
-const PIG_HIT_FIRE_HURT = 1;
+const PIG_HIT_FIRE_HURT = 0.5;
 let OXYGEN_STARTING_VOLUMN = 500;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
@@ -190,8 +190,8 @@ class PlayGame{
         this.pigss_alive = game.add.group();
 
         for (var i = 0; i < SMALL_PIG_COUNT; i ++){
-                var RANDOMX = game.world.randomX;
-                var RANDOMY = game.world.randomY;
+                var RANDOMX = game.rnd.integerInRange(32,618);
+                var RANDOMY = game.rnd.integerInRange(240,900);
             //for group: use create instead of add.sprite
             this.smallpig.create(RANDOMX, RANDOMY, 's_pigs', 0);
             this.smallpig.children[i].scale.x = SPIG_SCALE_X;
@@ -216,7 +216,7 @@ class PlayGame{
 
                 for (var i = 0; i < 5; i ++){
                     //for group: use create instead of add.sprite
-                    this.s_fire.create(game.world.randomX, game.world.randomY, 'fire', 0);
+                    this.s_fire.create(game.rnd.integerInRange(32,618), game.rnd.integerInRange(300,900), 'fire', 0);
                     this.s_fire.children[i].scale.x = FRE_SCALE_X;
                     this.s_fire.children[i].scale.Y = FRE_SCALE_Y;
                     this.water_state.push(false);
@@ -319,11 +319,10 @@ class PlayGame{
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
 
-        game.physics.arcade.collide(this.firefighter, this.walls, function(firefighter, wall){
-            firefighter.body.velocity.x = 0;
-            firefighter.body.velocity.y = 0;
-            console.log('the firefighter is hitting a wall');
-        }); // T7
+        game.physics.arcade.collide(this.s_fire, this.walls, function(fire, walls){
+            fire.x += game.rnd.integerInRange(-1,1);
+            fire.y += game.rnd.integerInRange(-1,1);
+        });// T7
         ////////////////Kevin's section/////////////////////////////
         // game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
 
@@ -345,6 +344,11 @@ class PlayGame{
         // this.bigpig.body.velocity.x = 0;
         // this.bigpig.body.velocity.y = 0;
 
+        // game.game.physics.arcade.collide(this.s_fire, this.walls, function(){
+        //     this.s_fire.x += game.rnd.integerInRange(-20, 20);
+        //     this.s_fire.y += game.rnd.integerInRange(-20, 20);
+        // })
+
         
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
             
@@ -361,6 +365,7 @@ class PlayGame{
             // console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
+                        pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
                 }
             //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
            
@@ -518,7 +523,6 @@ class PlayGame{
     render(){
         game.debug.text("Time left: " + timeLeft, 32,32);
         game.debug.text("You are carrying "+ caughtNumber+ " of pig, so your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber), 32, 940);
-
     }
 
     updateOxygen(){
@@ -647,12 +651,14 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
     
     var t = game.rnd.integerInRange(1000, 7000);
     // console.log(t);
-    // game.time.events.add(t, function () {
-        var px = game.world.randomX;
+    game.time.events.add(t, function () {
+        var px = game.rnd.integerInRange(32, 618);
         var py = game.world.randomY;
         pig.reset(px, py);
         red_bar.children[pig_grp.getIndex(pig)].reset(px, py);
         green_bar.children[pig_grp.getIndex(pig)].reset(px, py);
+        }
+        , this);
         game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
         game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
