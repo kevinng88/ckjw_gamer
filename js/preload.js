@@ -28,6 +28,7 @@ class Preload{
         game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
         game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
         game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
+        game.load.image("fireTruck", "/assets/sprites/fireTruck.png", 64, 64);
         game.load.atlasJSONHash('s_pigv', '/assets/sprites/red-pig-2.png', '/assets/sprites/red-pig-2.json');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         /////////////////Jimmy's section(audio)////////////////////////////
