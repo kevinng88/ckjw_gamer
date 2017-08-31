@@ -52,7 +52,7 @@ class PlayGame{
         this.bgMusic = game.add.audio("background");
         this.bgMusic.loopFull(1);
         this.pigMusic = game.add.audio("pig");
-        this.pigMusic.loopFull(0.1);
+        this.pigMusic.loopFull(0.2);
         this.fireMusic = game.add.audio("fire");
         this.fireMusic.loopFull(0.3);
         //////////additional variables go here/////////////
@@ -165,6 +165,7 @@ class PlayGame{
         this.getpig=true;
         this.hitfire=true;
         this.deletefire=true;
+        this.needOxygen=true;
         ////////////////////////////////////////////////////////////
 
 
@@ -404,7 +405,7 @@ class PlayGame{
             this.hitfire = false;
             var hittingfireSound = game.add.audio("hitfire");
             hittingfireSound.onStop.add(function(){this.hitfire = true;}, this);
-            hittingfireSound.volume=0.1;
+            hittingfireSound.volume=0.3;
             hittingfireSound.play();
           }
             // return hitfire=false;
@@ -423,13 +424,6 @@ class PlayGame{
                         OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 };
-            if (hitfire){
-            var hittingfireSound = game.add.audio("hitfire");
-            // hittingfireSound.onStop.add(hitfire, this);
-            hittingfireSound.volume=0.1;
-            hittingfireSound.play();}
-            return hitfire=false;
-
         }, null, this)
 
 
@@ -530,7 +524,7 @@ class PlayGame{
 
             var deletefireSound= game.add.audio("deletefire")
             deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
-            deletefireSound.sound=0.1;
+            deletefireSound.sound=0.5;
             deletefireSound.play();
            }
             this.weapon.fire();
@@ -567,11 +561,24 @@ class PlayGame{
     }
 
     updateOxygen(){
+      if (this.needOxygen && OXYGEN_STARTING_VOLUMN<= 250){
+        this.needOxygen=false;
+        var needoxygenSound = game.add.audio("needoxygen");
+        needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
+        needoxygenSound.sound=0.5;
+        needoxygenSound.play();
+      }
         if(this.firefighter.y > 240){
                 if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
                         game.time.events.stop();
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
+                        var gameoverSound = game.add.audio("gameover");
+                        gameoverSound.play();
+                        game.state.start("GameOverScreen");
                 } else if(OXYGEN_STARTING_VOLUMN>= 0){
                         OXYGEN_STARTING_VOLUMN -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
                         // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
@@ -587,6 +594,7 @@ class PlayGame{
                 }
                 return OXYGEN_CONSUMPTION = 20;
         }
+
      }
 
      updateTimeLeft(){
