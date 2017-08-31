@@ -325,7 +325,7 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
             
             //this function will kill 1 pig, then reset in another position, return the number of pig
-            this.score_s_pig = pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
+            this.score_s_pig = pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             var gettingpigSound = game.add.audio("gettingpig");
             gettingpigSound.play();
         }, null, this);
