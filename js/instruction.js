@@ -4,13 +4,13 @@
 class Instruction{
 	create(){
           game.stage.backgroundColor = "#434343";
-          var barn = game.add.image(game.world.width /2 - 120, 20, "piglet");
+          var barn = game.add.image(game.world.width /2 - 120, 40, "piglet");
           barn.maxWidth = game.world.width - 200;
-          var instructionText = "Use arrows to move \r\rUse spacebar to extinguish fire \r\rPay attention to your oxygen volumn \r\rAvoid staying over fire to save oxygen"
-          var instruction = game.add.bitmapText(60, 300, 'carrier_command', instructionText, 20)
+          var instructionText = "1. Use arrows to move \r\r2. Use spacebar to \r\r   extinguish blaze \r\r3. Pay attention to your \r\r   oxygen volume \r\r4. Stay awat from fire\r\r5. Recover yourself around \r\r   the fire truck"
+          // instructionText.lineSpacing = 20;
+          var instruction = game.add.bitmapText(50, 400, 'carrier_command', instructionText, 18)
           instruction.maxWidth = game.world.width - 60;
-          var bmpText= game.add.bitmapText(50, game.world.height - 280, 'carrier_command', 'Rescue pigs!', 35);
-      //  Jimmy's section: playbutton
+          instruction.lineSpacing = 100;
           var playButton = game.add.button(game.width / 2, game.height - 150, "playbutton", this.startGame);
           playButton.anchor.set(0.5);
           var tween = game.add.tween(playButton).to({

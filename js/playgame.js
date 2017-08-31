@@ -38,12 +38,15 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        // gridification
         var grid = game.world.width / 20;
-        this.firefighter = game.add.sprite(60, 100, 'fighter');      //sprite: our player in the game
+        //build object
+        this.firefighter = game.add.sprite(10.5 * grid, 6 * grid, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.walls = game.add.group();
+        this.farmer = game.add.sprite(13 * grid, 5 * grid, 'farmer');
         this.fence = game.add.sprite(game.world.width / 2, 250);
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water_state = [];            //sprite: the fire fightering state
