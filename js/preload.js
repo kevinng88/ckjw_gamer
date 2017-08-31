@@ -5,9 +5,9 @@ class Preload{
 
     preload(){
         //////////////original loading bar////////////////
-        // var loadingBar = this.add.sprite(game.width/2, game.height/2, "loading");
-        // loadingBar.anchor.setTo(0.5,0.5);
-        // game.load.setPreloadSprite(loadingBar);
+        var loadingBar = this.add.sprite(game.width/2, game.height/2, "loading");
+        loadingBar.anchor.setTo(0.5,0.5);
+        game.load.setPreloadSprite(loadingBar);
         // Jimmy's section: background image
         game.load.bitmapFont('carrier_command', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/bitmapFonts/carrier_command.xml');
         // Jimmy's section: playbutton
@@ -27,6 +27,7 @@ class Preload{
         game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
         game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
         game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
+        game.load.image("fireTruck", "/assets/sprites/fireTruck.png", 64, 64);
         game.load.atlasJSONHash('s_pigv', '/assets/sprites/red-pig-2.png', '/assets/sprites/red-pig-2.json');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         /////////////////Jimmy's section(audio)////////////////////////////

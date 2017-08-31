@@ -36,6 +36,7 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        var grid = game.world.width / 20;
         this.firefighter = game.add.sprite(60, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
@@ -46,6 +47,9 @@ class PlayGame{
         this.weapon = game.add.weapon(60, 'water'); //weapon is the water
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
+        this.fireTruck = game.add.sprite( 3 * grid, 3 * grid, "fireTruck");
+        this.fireTruck.scale.setTo(0.07, 0.07);
+
         this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //background music
@@ -269,7 +273,7 @@ class PlayGame{
 
         // ---------------- maze ------------------- //
         // first, gridify the whole map. each grid should be 32px wide thus the 640px-wide map is divided into 20 grid in width.
-        var grid = game.world.width / 20;
+        // var grid = game.world.width / 20;
         // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
