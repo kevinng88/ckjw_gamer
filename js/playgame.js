@@ -18,7 +18,13 @@ var timeLeft = 300;
 const OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * SMALL_PIG_COUNT + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT;
 //////////additional constants setting go here/////////////
 
-
+    // game.physics.startSystem(Phaser.Physics.ARCADE); ok
+    // platforms = game.add.group(); ok
+    // platforms.enableBody = true; ok
+    // game.physics.arcade.enable(player); ok
+    // player.body.gravity.y = 0; ok
+    // player.body.collideWorldBounds = true; ok
+    // game.physics.arcade.collide(player, platforms); ok
 
 class PlayGame{
 
@@ -28,7 +34,7 @@ class PlayGame{
         this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
-        this.walls = game.add.physicsGroup();
+        this.walls = game.add.group();
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(300, 'water'); //weapon is the water
@@ -46,7 +52,8 @@ class PlayGame{
         this.s_fire.enableBody = true;
         this.weapon.enableBody = true;
         this.walls.enableBody = true;
-        this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
+        this.game.physics.arcade.enable(this.firefighter);
+        // this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
         this.smallpig.physicsBodyType = Phaser.Physics.ARCADE;
         this.bigpig.physicsBodyType = Phaser.Physics.ARCADE;
         this.s_fire.physicsBodyType = Phaser.Physics.ARCADE;
@@ -236,6 +243,7 @@ class PlayGame{
         // this.game.world.bounds = true;
         this.firefighter.body.collideWorldBounds = true;
         this.smallpig.setAll('body.collideWorldBounds', true);
+        this.firefighter.body.gravity.y = 0;
         // -------------- wall impassible --------- //
 
 
@@ -286,12 +294,10 @@ class PlayGame{
         // Watson's code /
         game.physics.arcade.collide(this.firefighter, this.walls, function(){
             console.log('the firefighter is hitting a wall');
-        });
-
-
-        //game.physics.arcade.collide(this.firefighter, this.walls);        
+        });       
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
+
 
             //this function will kill 1 pig, then reset in another position, return the number of pig
 
@@ -308,7 +314,7 @@ class PlayGame{
             // console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
-
+                }
             //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
                         pig.kill();
