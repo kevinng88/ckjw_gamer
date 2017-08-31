@@ -31,6 +31,13 @@ class PlayGame{
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
+        //background music
+        this.bgMusic = game.add.audio("background");
+        this.bgMusic.loopFull(1);
+        this.pigMusic = game.add.audio("pig");
+        this.pigMusic.loopFull(0.2);
+        this.fireMusic = game.add.audio("fire");
+        this.fireMusic.loopFull(0.5);
         //////////additional variables go here/////////////
 
         //////////grobal physics setting///////////////
@@ -86,43 +93,34 @@ class PlayGame{
 
 
 
-        /////////////////Jimmy's section////////////////////////////
-        game.load.audio("background", ["assets/sounds/background.mp3"]);
-        game.load.audio("pig", ["assets/sounds/pig.mp3"]);
-        game.load.audio("fire", ["assets/sounds/fire.mp3"]);
-        game.load.audio("deletefire", ["assets/sounds/deletefire.mp3"]);
-        game.load.audio("gameover", ["assets/sounds/gameover.mp3"]);
-        game.load.audio("hittingfire", ["assets/sounds/hittingfire.mp3"]);
-        game.load.audio("needoxygen", ["assets/sounds/needoxygen.mp3"]);
-        game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
-// The sound of background, pig and fire occurs at the same time.
-        this.bgMusic = game.add.audio("background");
-        this.bgMusic.loopFull(1);
-        this.pigMusic = game.add.audio("pig");
-        this.pigMusic.loopFull(1);
-        this.fireMusic = game.add.audio("fire");
-        this.fireMusic.loopFull(1);
-// The sound occurs when fireman deletes the fire.
-        this.fireMusic.stop();
-        var deletefireSound = game.add.audio("deletefire");
-	      deletefireSound.play();
-// The sound occurs when fireman hits the fire.
-        this.fireMusic.stop();
-        var hittingfireSound = game.add.audio("hittingfire");
-	      hittingfireSound.play();
-// The sound occurs when fireman needs oxygen.
-        var needoxygenSound = game.add.audio("needoxygen");
-	      needoxygenSound.play();
-// The sound occurs when fireman catchs the pig.
-        this.pigMusic.stop();
-        var gettingpigSound = game.add.audio("gettingpig");
-	      gettingpigSound.play();
-// Game Over Sound.
-        this.bgMusic.stop();
-        this.pigMusic.stop();
-        this.fireMusic.stop();
-        var gameoverSound = game.add.audio("gameover");
-	      gameoverSound.play();
+// //Jimmy's section
+// // The sound of background, pig and fire occurs at the same time.
+//
+//
+// // The sound occurs when fireman deletes the fire.
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var deletefireSound = game.add.audio("deletefire");
+// 	       deletefireSound.play();
+// // The sound occurs when fireman hits the fire.
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var hittingfireSound = game.add.audio("hittingfire");
+// 	       hittingfireSound.play();
+// // The sound occurs when fireman needs oxygen.
+//         var needoxygenSound = game.add.audio("needoxygen");
+// 	       needoxygenSound.play();
+// // The sound occurs when fireman catchs the pig.
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var gettingpigSound = game.add.audio("gettingpig");
+// 	      gettingpigSound.play();
+// // Game Over Sound.
+//         this.bgMusic.stop();
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var gameoverSound = game.add.audio("gameover");
+// 	       gameoverSound.play();
 // Game Over section
 // Weapon
         ///this.weapon = game.add.weapon(30, 'water');      //by Kevin: Jimmy I move it up so that I can add physics
@@ -275,7 +273,8 @@ class PlayGame{
 
             //this function will kill 1 pig, then reset in another position, return the number of pig
             this.score_s_pig = pig_regeneration(pig, this.score_s_pig, this.show_score);
-
+            var gettingpigSound = game.add.audio("gettingpig");
+            gettingpigSound.play();
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
@@ -297,6 +296,10 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
+            var hittingfireSound = game.add.audio("hitfire");
+            hittingfireSound.volume=0.1;
+            hittingfireSound.totalDuration=1;
+            hittingfireSound.play();
         }, null, this)
 
         game.physics.arcade.overlap(this.weapon, this.s_fire, function(){
@@ -402,12 +405,9 @@ class PlayGame{
 
 
     }
-    render(){
-        this.weapon.debug();
-
-
-    }
-
+    // render(){
+    //
+    // }
      updateOxygen(){
         if(this.firefighter.y > 300){
                 if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION < 0){
