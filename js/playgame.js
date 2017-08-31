@@ -338,14 +338,14 @@ class PlayGame{
 
         if (thisGameTimeLeft===0) {
           this.myHealth.width === 0;
-          console.log("GAME OVER");
+          console.log("GAME Wins");
           game.time.events.stop();
           this.bgMusic.stop();
           this.pigMusic.stop();
           this.fireMusic.stop();
           var gameoverSound = game.add.audio("gameover");
           gameoverSound.play();
-          game.state.start("GameOverScreen");
+          game.state.start("WinningGame");
         }
         if (this.needOxygen && OXYGEN_NOW <= 250){
           this.needOxygen=false;
