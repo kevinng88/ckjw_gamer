@@ -1,5 +1,5 @@
 const FIREMAN_WALK_SPEED = 100;
-const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 1.5;
+const FIREMAN_RUN_SPEED = FIREMAN_WALK_SPEED * 10;
 const SMALL_PIG_SPEED = 80;
 const BIG_PIG_SPEED = SMALL_PIG_SPEED * 0.7;
 
@@ -16,7 +16,7 @@ const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
 var timeLeft = 300;
 let caughtNumber = 0;
-let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN + SMALL_PIG_CONSUME_OXYGEN * caughtNumber /*+ BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
+let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 0.9;
 const FTR_SCALE_Y = 0.9;
@@ -29,19 +29,18 @@ const FRE_SCALE_Y = 0.4;
 
 
 
-
 class PlayGame{
 
     create(){
         this.background = game.add.tileSprite(0,255,640,740,"background");
-        this.background.alpha = 0.7;
+        this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         this.firefighter = game.add.sprite(60, 100, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
-        this.walls = game.add.physicsGroup();
+        this.walls = game.add.group();
         this.b_fire = "";           //sprite: the big screen width fire on the bottom. Will going up on screen when time pass
         this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(60, 'water'); //weapon is the water
@@ -66,6 +65,8 @@ class PlayGame{
         this.s_fire.enableBody = true;
         this.weapon.enableBody = true;
         this.walls.enableBody = true;
+
+        //this.game.physics.arcade.enable(this.firefighter);
         // this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
         // this.smallpig.physicsBodyType = Phaser.Physics.ARCADE;
         // this.bigpig.physicsBodyType = Phaser.Physics.ARCADE;
@@ -73,10 +74,8 @@ class PlayGame{
         // this.weapon.physicsBodyType = Phaser.Physics.ARCADE;
         // this.walls.physicsBodyType = Phaser.Physics.ARCADE;
 
-        //Watson's code
-          // game.physics.arcade.enable(this.firefighter);
-        //   this.firefighter.body.bounce.y = 0;
-        // this.firefighter.body.bounce.x = 0;
+
+
 
 
         /////////////////Ching's section////////////////////////////
@@ -187,8 +186,10 @@ class PlayGame{
             this.smallpig.create(RANDOMX, RANDOMY, 's_pigs', 0);
             this.smallpig.children[i].scale.x = SPIG_SCALE_X;
             this.smallpig.children[i].scale.Y = SPIG_SCALE_Y;
-            this.pig_random_walk[i] = ([this.smallpig.children[i].x - game.rnd.integerInRange(0, 200),
-                this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
+            this.smallpig.children[i].body.velocity.x = game.rnd.integerInRange(-100,100);
+            this.smallpig.children[i].body.velocity.y = game.rnd.integerInRange(-100,100);
+            // this.pig_random_walk[i] = ([this.smallpig.children[i].x - game.rnd.integerInRange(0, 200),
+            //     this.smallpig.children[i].x + game.rnd.integerInRange(0, 200), true]);
             this.pigHealthBG = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthRed);
             this.pigss_BG.add(this.pigHealthBG);
             this.PigHealth = game.add.sprite(RANDOMX, RANDOMY, this.pigHealthGreen);
@@ -253,12 +254,11 @@ class PlayGame{
 
 
         /////////////////Watson's section////////////////////////////
-        // ---------------- physics  ---------------- //
-        //game.physics.startSystem(Phaser.Physics.ARCADE);
         // ---------------- world bounds  ---------------- //
         // this.game.world.bounds = true;
         this.firefighter.body.collideWorldBounds = true;
         this.smallpig.setAll('body.collideWorldBounds', true);
+        this.firefighter.body.gravity.y = 0;
         // -------------- wall impassible --------- //
 
 
@@ -273,29 +273,45 @@ class PlayGame{
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
         // namely, [wall.x, wall.y, wall.scale.x, wall.scale.y, wallName(if any)]
-        var wallPositionSize = [
-          //the external wall
-            [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
-            // interior wall - left top corner
-            [6, 8, 1, 3],[9, 10, 1, 3],[3, 10, 1, 3],[3, 13, 7, 1],
-            // interior - left mid
-            [0, 16, 5, 1],[7, 14, 1, 5],[3, 19, 5, 1],
-            //[0, 23, 1, 8],
-            // interior - left bottom
-            [6, 26, 4, 1],[3, 20, 1, 7],[6, 22, 1, 4],
-            // interior center
-            [8, 19, 4, 1],[9, 20, 1, 4],[10, 16, 6, 1],
-            // interior - right bottom
-            [9, 26, 1, 3],[12, 19, 1, 7],[12, 26, 5, 1],[15, 23, 4, 1],[12, 20, 5, 1],
-            // interior - right top and mid
-            [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
-        ];
+      var wallPositionSize = [
+                //the external wall
+                [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
+                // interior wall - left top corner
+                [6, 8, 1, 3],[9, 10, 1, 1],[3, 10, 1, 3],[3, 13, 7, 1],
+                // interior - left mid
+                [0, 16, 5, 1],[7, 14, 1, 5],[3, 19, 5, 1],
+                //[0, 23, 1, 8],
+                // interior - left bottom
+                [6, 26, 4, 1],[3, 20, 1, 7],[6, 22, 1, 4],
+                // interior center
+                [8, 19, 2, 1],[9, 20, 1, 4],[10, 16, 6, 1],
+                // interior - right bottom
+                [9, 26, 1, 3],[12, 19, 1, 7],[12, 26, 5, 1],[15, 23, 4, 1],[12, 20, 5, 1],
+                // interior - right top and mid
+                [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
+      ]
 
         for(var i = 0; i < wallPositionSize.length; i++){
-          var wall = this.walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
-          wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
-          wall.body.immovable = true;
-          game.physics.arcade.enable(wall);
+            var wall = this.walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
+            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+            wall.body.immovable = true;
+            game.physics.arcade.enable(wall);
+        }
+
+        // decorating east and westwall
+        for(var i = 7; i < 30; i++){
+            this.roof = game.add.image(0 * grid, i * grid, "westRoof");
+            this.roof = game.add.image(19 * grid, i * grid, "eastRoof");
+            // this.roof.angle = 180;
+        }
+        //decorating southWall
+        for(var i = 0; i < 20; i++){
+            this.roof = game.add.image(i * grid, 29 * grid, "roof");
+        }
+        //decorating northWall
+        for(var i = 0; i < 10; i++){
+            this.roof = game.add.image(i * grid, 7 * grid, "roof");
+            this.roof = game.add.image((12 + i) * grid, 7 * grid, "roof");
         }
 
 
@@ -303,19 +319,35 @@ class PlayGame{
     }
 
 
+
     update(){
 
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
-        game.physics.arcade.collide(this.firefighter, this.walls);
-        this.firefighter.body.velocity.x = 0;
-        this.firefighter.body.velocity.y = 0;
+
+
+        game.physics.arcade.collide(this.firefighter, this.walls, function(){
+            console.log('the firefighter is hitting a wall');
+        });
+
+
+        ////////////////Kevin's section/////////////////////////////
+        game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
+
+
+        }, null, this);
+        ////////////////Kevin's section/////////////////////////////
+
+            //this function will kill 1 pig, then reset in another position, return the number of pig
+
 
 
         //game.physics.arcade.collide(this.firefighter, this.walls);
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.collide(this.smallpig, this.walls, function(pig, walls){
             //pig rotation
+            pig.body.velocity.x = game.rnd.integerInRange(-100,100);
+            pig.body.velocity.y = game.rnd.integerInRange(-100,100);
         });
         // this.smallpig.callAll('body.velocity.x', 0);
         // this.smallpig.callAll('body.velocity.y', 0);
@@ -351,7 +383,12 @@ class PlayGame{
                         pig.kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
+
                         pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
+
+
+
+
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
@@ -385,7 +422,13 @@ class PlayGame{
                 } else if(OXYGEN_STARTING_VOLUMN >= 0){
                         OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
-                }
+                };
+            if (hitfire){
+            var hittingfireSound = game.add.audio("hitfire");
+            // hittingfireSound.onStop.add(hitfire, this);
+            hittingfireSound.volume=0.1;
+            hittingfireSound.play();}
+            return hitfire=false;
 
         }, null, this)
 
@@ -403,35 +446,40 @@ class PlayGame{
 
 
 
-        this.smallpig.forEach(function(m){
+        // this.smallpig.forEach(function(m){
 
-            var i = this.smallpig.getIndex(m);
+        //     var i = this.smallpig.getIndex(m);
 
-            if(m.x < this.pig_random_walk[i][0]){
-                this.pig_random_walk[i][2] = false;
-            }
-            else if (m.x > this.pig_random_walk[i][1])
-            {
-                this.pig_random_walk[i][2] =true;
-            }
+        //     if(m.x < this.pig_random_walk[i][0]){
+        //         this.pig_random_walk[i][2] = false;
+        //     }
+        //     else if (m.x > this.pig_random_walk[i][1])
+        //     {
+        //         this.pig_random_walk[i][2] =true;
+        //     }
 
-            if (this.pig_random_walk[i][2]){
-                m.anchor.setTo(0.5,0.5);
-                m.scale.x = -SPIG_SCALE_X;
-                m.body.velocity.x = -SMALL_PIG_SPEED;
-            }
-            else{
-                m.anchor.setTo(0.5,0.5);
-                m.scale.x = SPIG_SCALE_X;
-                m.body.velocity.x = SMALL_PIG_SPEED;
-            }
-        },this, true)
+        //     if (this.pig_random_walk[i][2]){
+        //         m.anchor.setTo(0.5,0.5);
+        //         m.scale.x = -SPIG_SCALE_X;
+        //         m.body.velocity.x = -SMALL_PIG_SPEED;
+        //     }
+        //     else{
+        //         m.anchor.setTo(0.5,0.5);
+        //         m.scale.x = SPIG_SCALE_X;
+        //         m.body.velocity.x = SMALL_PIG_SPEED;
+        //     }
+        // },this, true)
         ////////////////////////////////////////////////////////////
+
+
 
 
 
         // Watson's code
           // fireman moving around
+            this.firefighter.body.velocity.x = 0;
+            this.firefighter.body.velocity.y = 0;
+
         if(this.cursors.up.isDown){
           if (this.cursors.up.shiftKey){
             //this.firefighter.y -= FIREMAN_RUN_SPEED;
@@ -511,13 +559,14 @@ class PlayGame{
 
 
     }
+
     render(){
         game.debug.text("Time left: " + timeLeft, 32,32);
-
+        game.debug.text("You are carrying "+ caughtNumber+ " of pig, so your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber), 32, 940);
 
     }
 
-     updateOxygen(){
+    updateOxygen(){
         if(this.firefighter.y > 240){
                 if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
@@ -555,12 +604,11 @@ class PlayGame{
 
 function pig_burn(pig){
     pig.animations.play("burn", 10, true);
-    pig.anchor.setTo(0.5,1);
     game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true).chain(
         game.add.tween(pig).to({ tint : 0xffffff }, 10, "Linear", true)  // can't test out??
     ) ;
-    game.add.tween(pig).to({y: pig.y - 10}, 500, Phaser.Easing.Circular.Out, true)
-    game.add.tween(pig).to({y: pig.y + 10}, 1000, Phaser.Easing.Bounce.Out, true,500);
+    game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
+    game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
     //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
 
 }
@@ -631,11 +679,15 @@ function pig_kill(pig, pig_grp, score, text, green_bar, red_bar){
 
     red_bar.children[pig_grp.getIndex(pig)].kill();
     green_bar.children[pig_grp.getIndex(pig)].kill();
+
     pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar);
+
     return score;
 }
 
+
 function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
+
     //regenerate the pig again.....
     //////////////////////REGENERATE INTERVAL IS 1s to 7s)
     //for animation start (
@@ -643,7 +695,7 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
 
     var t = game.rnd.integerInRange(1000, 7000);
     // console.log(t);
-    game.time.events.add(t, function () {
+    // game.time.events.add(t, function () {
         var px = game.world.randomX;
         var py = game.world.randomY;
         pig.reset(px, py);
@@ -652,8 +704,8 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
         game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
         game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
-    }
-        , this);
+    // }
+    //     , this);
         console.log("one pig is regenerated");
 
     if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
