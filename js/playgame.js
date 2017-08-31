@@ -314,7 +314,6 @@ class PlayGame{
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.collide(this.smallpig, this.walls, function(pig, walls){
             //pig rotation
-            pig.body.velocity.x -= pig.body.velocity.x * 2;
         });
         // this.smallpig.callAll('body.velocity.x', 0);
         // this.smallpig.callAll('body.velocity.y', 0);
@@ -326,7 +325,7 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
             
             //this function will kill 1 pig, then reset in another position, return the number of pig
-            this.score_s_pig = pig_regeneration(pig, this.score_s_pig, this.show_score);
+            this.score_s_pig = pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             var gettingpigSound = game.add.audio("gettingpig");
             gettingpigSound.play();
         }, null, this);
@@ -345,24 +344,24 @@ class PlayGame{
                         pig.kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
-                        
-                        pig_regeneration(pig, this.smallpig, this.pigss_BG, this.pigss_alive);
+                        pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
                 }
-            
+
 
         }, null, this)
-
+        var hitfire=true;
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
-
+            if (hitfire){
             var hittingfireSound = game.add.audio("hitfire");
+            hittingfireSound.onStop.add(hitfire, this);
             hittingfireSound.volume=0.1;
-            hittingfireSound.totalDuration=1;
-            hittingfireSound.play();
+            hittingfireSound.play();}
+            return hitfire=false;
 
                 if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
@@ -562,7 +561,7 @@ function f_fighting(fire, state, attack, destroy_fire) {
     }
    else if(state && attack) {
         fire.damage(0.5);
-        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(    
+        game.add.tween(fire).to({tint: Math.random() * 0xffffff}, 500, "Linear", true,0,0,true).chain(
             game.add.tween(fire).to({ tint : 0xffffff }, 10, "Linear", true) );
         var sx = fire.scale.x - 0.05;
         var sy = fire.scale.y - 0.1;
@@ -594,7 +593,7 @@ function man_burn(man){
     //game.add.tween(man).from({tint: 0xffffff}, 100, Phaser.Easing.Linear.None, true);
 }
 
-function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
+function pig_kill(pig, pig_grp, score, text, green_bar, red_bar){
 
     //use kill because the array actually won't change in length, only alive() switch to false
     pig.kill();
@@ -609,11 +608,11 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
 
     red_bar.children[pig_grp.getIndex(pig)].kill();
     green_bar.children[pig_grp.getIndex(pig)].kill();
-    pig_regeneration(pig, pig_grp, score, text, red_bar, green_bar);
+    pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar);
     return score;
 }
 
-function pig_regeneration(pig, pig_grp, score, text, red_bar, green_bar){
+function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
     //regenerate the pig again.....
     //////////////////////REGENERATE INTERVAL IS 1s to 7s)
     //for animation start (
@@ -632,6 +631,7 @@ function pig_regeneration(pig, pig_grp, score, text, red_bar, green_bar){
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
     }
         , this);
+        console.log("one pig is regenerated");
 
     if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
             return green_bar.children[pig_grp.getIndex(pig)].width = 50;
