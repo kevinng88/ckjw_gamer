@@ -12,10 +12,9 @@ class Preload{
         game.load.bitmapFont('carrier_command', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/bitmapFonts/carrier_command.xml');
         // Jimmy's section: playbutton
         game.load.image("playbutton", "assets/sprites/playbutton.png");
-
         // Jimmy's section: water image
         //game.load.image("water", "assets/sprites/water.png");
-
+        game.load.image("sausage", "assets/sprites/saussage.png");
 
         //Kevin's section: image, spritesheet & text
         game.load.image("water", "assets/sprites/split.png");
@@ -42,7 +41,7 @@ class Preload{
     create(){
         //game.state.start("TitleScreen");
         game.state.start("PlayGame");
-        
+
     }
 
 }

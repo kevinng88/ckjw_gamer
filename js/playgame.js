@@ -53,9 +53,9 @@ class PlayGame{
         this.bgMusic = game.add.audio("background");
         this.bgMusic.loopFull(1);
         this.pigMusic = game.add.audio("pig");
-        this.pigMusic.loopFull(0.2);
+        this.pigMusic.loopFull(0.1);
         this.fireMusic = game.add.audio("fire");
-        this.fireMusic.loopFull(0.5);
+        this.fireMusic.loopFull(0.3);
         //////////additional variables go here/////////////
 
         //////////grobal physics setting///////////////
@@ -163,7 +163,9 @@ class PlayGame{
         this.weapon.bulletGravity.y = 200;
 
         this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
+        this.getpig=true;
+        this.hitfire=true;
+        this.deletefire=true;
         ////////////////////////////////////////////////////////////
 
 
@@ -321,25 +323,30 @@ class PlayGame{
         // this.bigpig.body.velocity.x = 0;
         // this.bigpig.body.velocity.y = 0;
 
-        
+
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
-            
+
             //this function will kill 1 pig, then reset in another position, return the number of pig
             this.score_s_pig = pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
+            if (this.getpig){
+            this.getpig=false;
             var gettingpigSound = game.add.audio("gettingpig");
+            gettingpigSound.onStop.add(function(){this.getpig = true;}, this);
+            gettingpigSound.sound=0.1;
             gettingpigSound.play();
+          }
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
            //console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
-           
+
             // console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
                 if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
                 }
             //console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
-           
+
                 if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
                         pig.kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
@@ -352,21 +359,29 @@ class PlayGame{
 
 
         }, null, this)
-        var hitfire=true;
+
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
-            if (hitfire){
+            if (this.hitfire){
+            this.hitfire = false;
             var hittingfireSound = game.add.audio("hitfire");
-            hittingfireSound.onStop.add(hitfire, this);
+            hittingfireSound.onStop.add(function(){this.hitfire = true;}, this);
             hittingfireSound.volume=0.1;
-            hittingfireSound.play();}
-            return hitfire=false;
+            hittingfireSound.play();
+          }
+            // return hitfire=false;
 
                 if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
                         game.time.events.stop();
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
+                        var gameoverSound = game.add.audio("gameover");
+                        gameoverSound.play();
+                        game.state.start("GameOverScreen");
                 } else if(OXYGEN_STARTING_VOLUMN >= 0){
                         OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
@@ -462,6 +477,14 @@ class PlayGame{
 
 
           if (this.waterButton.isDown){
+            if (this.deletefire){
+            this.deletefire=false;
+
+            var deletefireSound= game.add.audio("deletefire")
+            deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
+            deletefireSound.sound=0.1;
+            deletefireSound.play();
+           }
             this.weapon.fire();
           }
 
@@ -617,7 +640,7 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
     //////////////////////REGENERATE INTERVAL IS 1s to 7s)
     //for animation start (
 
-    
+
     var t = game.rnd.integerInRange(1000, 7000);
     // console.log(t);
     game.time.events.add(t, function () {
