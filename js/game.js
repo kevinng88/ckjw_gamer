@@ -16,7 +16,7 @@ window.onload = function(){
 
 class Boot{
     preload(){
-        //this.game.load.image("loading", "assets/sprites/loading.png");
+        this.game.load.image("loading", "assets/sprites/loading.png");
 
     }
 

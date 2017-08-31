@@ -5,9 +5,9 @@ class Preload{
 
     preload(){
         //////////////original loading bar////////////////
-        // var loadingBar = this.add.sprite(game.width/2, game.height/2, "loading");
-        // loadingBar.anchor.setTo(0.5,0.5);
-        // game.load.setPreloadSprite(loadingBar);
+        var loadingBar = this.add.sprite(game.width/2, game.height/2, "loading");
+        loadingBar.anchor.setTo(0.5,0.5);
+        game.load.setPreloadSprite(loadingBar);
         // Jimmy's section: background image
         game.load.bitmapFont('carrier_command', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/bitmapFonts/carrier_command.xml');
         // Jimmy's section: playbutton
