@@ -377,7 +377,6 @@ class PlayGame{
             man_burn(fighter);
             if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
-                        man_die(this.firefighter);
                         console.log("GAME OVER");
                         game.time.events.stop();
                 } else if(OXYGEN_STARTING_VOLUMN >= 0){
@@ -540,10 +539,10 @@ class PlayGame{
      };
 
 
-
-
-
 }
+
+
+
 ///////////////////////////Kevin's function///////////////////////////////////
 
 
@@ -657,12 +656,6 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
 
 
 
-}
-
-function man_die(man){
-    man.angle = -90;
-    man.animations.frame = 0;
-    //game.add.tween(this.firefighter).to({angle: 90}, 2000, Phaser.Easing.Back.In, true, 500);
 }
 
 
