@@ -24,10 +24,6 @@ class GameOverScreen {
             // this.myHealth.reset();
 
             game.state.start("TitleScreen", true, false);
-<<<<<<< HEAD
+
           }
         }
-=======
-            }
-}
->>>>>>> 6401794310893894313d39fae4e801dc84c4f96f
