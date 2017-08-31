@@ -332,7 +332,16 @@ class PlayGame{
     update(){
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
-
+        // for (var i =0; i<5; i++){
+        //     if(this.smallpig.children[i].body.velocity.x  > 0){
+        //         this.smallpig.children[i].scale.x = 1;
+        //         console.log(this.smallpig.children[i].x);
+        //     } else if(this.smallpig.children[i].body.velocity.x < 0){
+        //             this.smallpig.children[i].scale.x = -1;
+        //             // this.smallpig.children[i].x = this.smallpig.children[i].x - 50;
+        //         console.log(this.smallpig.children[i].x);
+        //         }
+        // }
         game.physics.arcade.collide(this.firefighter, this.walls, function(){
             console.log('the firefighter is hitting a wall');
         });
@@ -548,6 +557,7 @@ class PlayGame{
         }
 
 
+    
 
 
     ////////////////Additional classes go here/////////////////////////
@@ -573,6 +583,7 @@ class PlayGame{
                         this.myHealth.kill();
                         console.log("GAME OVER");
                         game.time.events.stop();
+                        game.state.start("GameOverScreen");
                 } else if(OXYGEN_NOW>= 0){
                         OXYGEN_NOW -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
                         // console.log("it now consume: ", OXYGEN_NOW);
@@ -596,6 +607,8 @@ class PlayGame{
                         return this.myHealth.width = OXYGEN_NOW;
                 }
                 return OXYGEN_CONSUMPTION = 20;
+        } else if (this.firefighter.y < 240){
+            caughtNumber = 0;
         }
 
      }
