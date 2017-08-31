@@ -1,5 +1,5 @@
 class GameOverScreen {
-          create(){
+        create(){
             game.stage.backgroundColor = "#434343";
             
             var image= game.add.image(game.width/2, game.height/2 ,'sausage');
@@ -14,9 +14,14 @@ class GameOverScreen {
             }, 1500, "Linear", true, 0, -1);
             tween.yoyo(true);
             }
+<<<<<<< HEAD
           startGame(){
             // this.myHealth.reset();
 
             game.state.start("TitleScreen", true, false);
+=======
+        startGame(){
+            game.state.start("Boot");
+>>>>>>> 95f210f1361aca91bc9ba8297cb68fa3fdb0c959
             }
 }

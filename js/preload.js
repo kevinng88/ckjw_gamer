@@ -24,10 +24,7 @@ class Preload{
         game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
         game.load.spritesheet("s_pigs", "/assets/sprites/red_pig.png",80, 62, 12);
         // game.load.spritesheet("s_pigs_up", "/assets/sprites/red_pig_vertical.png", 54, 76, 3);
-        game.load.spritesheet("wall", "/assets/sprites/wall.png", 32, 32);
-        game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
-        game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
-        game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
+
         game.load.atlasJSONHash('s_pigv', '/assets/sprites/red-pig-2.png', '/assets/sprites/red-pig-2.json');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         /////////////////Jimmy's section(audio)////////////////////////////
@@ -39,12 +36,22 @@ class Preload{
         game.load.audio("hitfire", ["assets/sounds/hitfire.mp3"]);
         game.load.audio("needoxygen", ["assets/sounds/needoxygen.mp3"]);
         game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
+        //////////////// Watson's section /////////////////////////
+        game.load.spritesheet("wall", "/assets/sprites/wall.png", 32, 32);
+        game.load.spritesheet("wall", "/assets/sprites/fence.png", 32, 32);
+        game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
+        game.load.spritesheet("piglet", "/assets/sprites/piglet1.jpg", 300, 300);
+        game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
+        game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
+        game.load.image("pigBeggingRescue", "/assets/sprites/pigBeggingRescue.png");
+        game.load.image("grilledSausage", "/assets/sprites/grilledSausage.png");
+        game.load.image("fireTruck", "/assets/sprites/fireTruck.png", 128, 128);
+        game.load.image("barn", "/assets/sprites/barn.png");
     }
 
 
     create(){
-        //game.state.start("TitleScreen");
-        game.state.start("PlayGame");
+        game.state.start("TitleScreen");
 
     }
 
