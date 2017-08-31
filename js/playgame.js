@@ -33,9 +33,12 @@ const FRE_SCALE_Y = 0.4;
 class PlayGame{
 
     create(){
+        this.background = game.add.tileSprite(0,255,640,740,"background");
+        this.background.alpha = 0.7;
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         this.firefighter = game.add.sprite(60, 100, 'fighter');      //sprite: our player in the game
-        this.smallpig = game.add.group();         //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
+        this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
         this.walls = game.add.physicsGroup();
@@ -309,8 +312,9 @@ class PlayGame{
 
         //game.physics.arcade.collide(this.firefighter, this.walls);
         ////////////////Kevin's section/////////////////////////////
-        game.physics.arcade.collide(this.smallpig, this.walls, function(){
+        game.physics.arcade.collide(this.smallpig, this.walls, function(pig, walls){
             //pig rotation
+            pig.body.velocity.x -= pig.body.velocity.x * 2;
         });
         // this.smallpig.callAll('body.velocity.x', 0);
         // this.smallpig.callAll('body.velocity.y', 0);
@@ -375,7 +379,7 @@ class PlayGame{
 
 
             var i = this.s_fire.getIndex(fire);
-            this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);
+           // this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);      //**TEMP CLOSE**
             console.log(this.water_state);
 
         }, null, this);
@@ -490,7 +494,7 @@ class PlayGame{
     }
 
      updateOxygen(){
-        if(this.firefighter.y > 300){
+        if(this.firefighter.y > 240){
                 if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
@@ -500,7 +504,7 @@ class PlayGame{
                         // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
-        } else if (this.firefighter.y<300 && this.myHealth.width >0){
+        } else if (this.firefighter.y<240 && this.myHealth.width >0){
                 caughtNumber = 0;
                 if(this.myHealth.width + 30 > 500){
                     return this.myHealth.width = 500;

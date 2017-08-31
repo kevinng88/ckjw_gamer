@@ -20,6 +20,7 @@ class Preload{
         //Kevin's section: image, spritesheet & text
         game.load.image("water", "assets/sprites/split.png");
         game.load.image("smoke", "assets/sprites/smoke.png");
+        game.load.image("background", "assets/sprites/background.png");
         game.load.spritesheet("fighter","/assets/sprites/firefighter.png", 37, 45, 18);
         game.load.spritesheet("fire","/assets/sprites/fire_imgs.png",112, 114, 24);
         game.load.spritesheet("s_pigs", "/assets/sprites/red_pig.png",80, 62, 12);
