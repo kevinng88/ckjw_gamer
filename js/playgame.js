@@ -354,21 +354,20 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
-            if (hitfire){
-            var hittingfireSound = game.add.audio("hitfire");
-            hittingfireSound.onStop.add(hitfire, this);
-            hittingfireSound.volume=0.1;
-            hittingfireSound.play();}
-            return hitfire=false;
-
-                if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
+            if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
                         game.time.events.stop();
                 } else if(OXYGEN_STARTING_VOLUMN >= 0){
                         OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
-                }
+                };
+            if (hitfire){
+            var hittingfireSound = game.add.audio("hitfire");
+            // hittingfireSound.onStop.add(hitfire, this);
+            hittingfireSound.volume=0.1;
+            hittingfireSound.play();}
+            return hitfire=false;
 
         }, null, this)
 
@@ -615,7 +614,7 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
     //for animation start (
     var t = game.rnd.integerInRange(1000, 7000);
     // console.log(t);
-    game.time.events.add(t, function () {
+    // game.time.events.add(t, function () {
         var px = game.world.randomX;
         var py = game.world.randomY;
         pig.reset(px, py);
@@ -624,8 +623,8 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
         game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
         game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
-    }
-        , this);
+    // }
+    //     , this);
         console.log("one pig is regenerated");
 
     if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
