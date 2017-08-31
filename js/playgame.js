@@ -14,7 +14,8 @@ const PIG_HIT_FIRE_HURT = 1;
 let OXYGEN_STARTING_VOLUMN = 500;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
-var timeLeft = 300;
+const timeLeft = 180;
+let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
@@ -328,9 +329,30 @@ class PlayGame{
         //Please always console teammate to put conflicts to minimum///////
         // Watson's code /
 
-        game.physics.arcade.collide(this.firefighter, this.walls, function(firefighter, wall){
+        if (thisGameTimeLeft===0) {
+          this.myHealth.width === 0;
+          console.log("GAME Wins");
+          game.time.events.stop();
+          this.bgMusic.stop();
+          this.pigMusic.stop();
+          this.fireMusic.stop();
+          var gameoverSound = game.add.audio("gameover");
+          gameoverSound.play();
+          game.state.start("WinningGame");
+        }
+        if (this.needOxygen && OXYGEN_NOW <= 250){
+          this.needOxygen=false;
+          var needoxygenSound = game.add.audio("needoxygen");
+          needoxygenSound.onStop.add(function(){this.needOxygen = true;}, this);
+          needoxygenSound.sound=0.5;
+          needoxygenSound.play();
+        }
+        game.physics.arcade.collide(this.firefighter, this.walls, function(){
+            console.log('the firefighter is hitting a wall');
+        });
 
-        }); // T7
+
+        
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
 
@@ -401,9 +423,15 @@ class PlayGame{
                         console.log("GAME OVER");
                         man_die(this.firefighter, this.background);
                         game.time.events.stop();
-                } else if(OXYGEN_STARTING_VOLUMN >= 0){
-                        OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
-                        return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
+                        var gameoverSound = game.add.audio("gameover");
+                        gameoverSound.play();
+                        game.state.start("GameOverScreen");
+                } else if(OXYGEN_NOW >= 0){
+                        OXYGEN_NOW -= GET_HIT_FIRE;
+                        this.myHealth.width = OXYGEN_NOW;
                 };
             if (hitfire){
             var hittingfireSound = game.add.audio("hitfire");

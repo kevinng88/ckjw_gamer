@@ -8,7 +8,7 @@ window.onload = function(){
     game.state.add("PlayGame", PlayGame);
     game.state.add("GameOverScreen", GameOverScreen);
     game.state.add("Instruction", Instruction);
-    //game.state.add("WinGame", WinGame);
+    game.state.add("WinningGame", WinningGame);
     game.state.start("Boot");
 
 

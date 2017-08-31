@@ -15,6 +15,7 @@ class Preload{
         // Jimmy's section: water image
         //game.load.image("water", "assets/sprites/water.png");
         game.load.image("sausage", "assets/sprites/saussage.png");
+        game.load.image("flax", "assets/sprites/flax.png");
 
         //Kevin's section: image, spritesheet & text
         game.load.image("water", "assets/sprites/split.png");
@@ -47,7 +48,7 @@ class Preload{
         game.load.spritesheet("wall", "/assets/sprites/fence.png", 32, 32);
         game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
         game.load.spritesheet("farmer", "/assets/sprites/farmer.png", 64, 64);
-        game.load.spritesheet("piglet", "/assets/sprites/piglet1.jpg", 300, 300);
+        game.load.spritesheet("piglet", "/assets/sprites/piglet.gif_c200", 300, 300);
         game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
         game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
         game.load.image("pigBeggingRescue", "/assets/sprites/pigBeggingRescue.png");
