@@ -27,6 +27,15 @@ class Preload{
         game.load.spritesheet("wall", "/assets/sprites/wall.png", 32, 32);
         game.load.atlasJSONHash('s_pigv', '/assets/sprites/red-pig-2.png', '/assets/sprites/red-pig-2.json');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+        /////////////////Jimmy's section(audio)////////////////////////////
+        game.load.audio("background", ["assets/sounds/background.mp3"]);
+        game.load.audio("pig", ["assets/sounds/pig.mp3"]);
+        game.load.audio("fire", ["assets/sounds/fire.mp3"]);
+        game.load.audio("deletefire", ["assets/sounds/deletefire.mp3"]);
+        game.load.audio("gameover", ["assets/sounds/gameover.mp3"]);
+        game.load.audio("hitfire", ["assets/sounds/hitfire.mp3"]);
+        game.load.audio("needoxygen", ["assets/sounds/needoxygen.mp3"]);
+        game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
     }
 
 

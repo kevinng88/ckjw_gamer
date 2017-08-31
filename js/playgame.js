@@ -49,6 +49,13 @@ class PlayGame{
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
+        //background music
+        this.bgMusic = game.add.audio("background");
+        this.bgMusic.loopFull(1);
+        this.pigMusic = game.add.audio("pig");
+        this.pigMusic.loopFull(0.2);
+        this.fireMusic = game.add.audio("fire");
+        this.fireMusic.loopFull(0.5);
         //////////additional variables go here/////////////
 
         //////////grobal physics setting///////////////
@@ -115,43 +122,34 @@ class PlayGame{
 
 
 
-        /////////////////Jimmy's section////////////////////////////
-        game.load.audio("background", ["assets/sounds/background.mp3"]);
-        game.load.audio("pig", ["assets/sounds/pig.mp3"]);
-        game.load.audio("fire", ["assets/sounds/fire.mp3"]);
-        game.load.audio("deletefire", ["assets/sounds/deletefire.mp3"]);
-        game.load.audio("gameover", ["assets/sounds/gameover.mp3"]);
-        game.load.audio("hittingfire", ["assets/sounds/hittingfire.mp3"]);
-        game.load.audio("needoxygen", ["assets/sounds/needoxygen.mp3"]);
-        game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
-// The sound of background, pig and fire occurs at the same time.
-        this.bgMusic = game.add.audio("background");
-        this.bgMusic.loopFull(1);
-        this.pigMusic = game.add.audio("pig");
-        this.pigMusic.loopFull(1);
-        this.fireMusic = game.add.audio("fire");
-        this.fireMusic.loopFull(1);
-// The sound occurs when fireman deletes the fire.
-        this.fireMusic.stop();
-        var deletefireSound = game.add.audio("deletefire");
-	      deletefireSound.play();
-// The sound occurs when fireman hits the fire.
-        this.fireMusic.stop();
-        var hittingfireSound = game.add.audio("hittingfire");
-	      hittingfireSound.play();
-// The sound occurs when fireman needs oxygen.
-        var needoxygenSound = game.add.audio("needoxygen");
-	      needoxygenSound.play();
-// The sound occurs when fireman catchs the pig.
-        this.pigMusic.stop();
-        var gettingpigSound = game.add.audio("gettingpig");
-	      gettingpigSound.play();
-// Game Over Sound.
-        this.bgMusic.stop();
-        this.pigMusic.stop();
-        this.fireMusic.stop();
-        var gameoverSound = game.add.audio("gameover");
-	      gameoverSound.play();
+// //Jimmy's section
+// // The sound of background, pig and fire occurs at the same time.
+//
+//
+// // The sound occurs when fireman deletes the fire.
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var deletefireSound = game.add.audio("deletefire");
+// 	       deletefireSound.play();
+// // The sound occurs when fireman hits the fire.
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var hittingfireSound = game.add.audio("hittingfire");
+// 	       hittingfireSound.play();
+// // The sound occurs when fireman needs oxygen.
+//         var needoxygenSound = game.add.audio("needoxygen");
+// 	       needoxygenSound.play();
+// // The sound occurs when fireman catchs the pig.
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var gettingpigSound = game.add.audio("gettingpig");
+// 	      gettingpigSound.play();
+// // Game Over Sound.
+//         this.bgMusic.stop();
+//         this.pigMusic.stop();
+//         this.fireMusic.stop();
+//         var gameoverSound = game.add.audio("gameover");
+// 	       gameoverSound.play();
 // Game Over section
 // Weapon
         ///this.weapon = game.add.weapon(30, 'water');      //by Kevin: Jimmy I move it up so that I can add physics
@@ -163,7 +161,7 @@ class PlayGame{
         this.weapon.bulletSpeedVariance = 20;
         this.weapon.bulletAngleVariance=10;
         this.weapon.bulletGravity.y = 200;
-        
+
         this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
         ////////////////////////////////////////////////////////////
@@ -212,9 +210,9 @@ class PlayGame{
                     this.s_fire.children[i].setHealth(500);
                     this.s_fire.children[i].anchor.setTo(0.5,1);        //needed for making scale work
                 }
-                
+
                 //set health of fire
-                
+
                 //animate ALL fire
                 this.s_fire.callAll('animations.add', 'animations', 'burn', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , 50, true);
                 this.s_fire.callAll('animations.play', 'animations', 'burn');
@@ -312,7 +310,7 @@ class PlayGame{
         this.firefighter.body.velocity.y = 0;
 
 
-        //game.physics.arcade.collide(this.firefighter, this.walls);        
+        //game.physics.arcade.collide(this.firefighter, this.walls);
         ////////////////Kevin's section/////////////////////////////
         game.physics.arcade.collide(this.smallpig, this.walls, function(pig, walls){
             //pig rotation
@@ -328,11 +326,9 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.smallpig, function(fighter, pig){
 
             //this function will kill 1 pig, then reset in another position, return the number of pig
-
-            this.score_s_pig = pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_BG, this.pigss_alive);
-            
-            
-
+            this.score_s_pig = pig_regeneration(pig, this.score_s_pig, this.show_score);
+            var gettingpigSound = game.add.audio("gettingpig");
+            gettingpigSound.play();
         }, null, this);
 
         game.physics.arcade.overlap(this.smallpig, this.s_fire, function(pig, fire){
@@ -358,6 +354,12 @@ class PlayGame{
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
+
+            var hittingfireSound = game.add.audio("hitfire");
+            hittingfireSound.volume=0.1;
+            hittingfireSound.totalDuration=1;
+            hittingfireSound.play();
+
                 if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
@@ -366,24 +368,25 @@ class PlayGame{
                         OXYGEN_STARTING_VOLUMN -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }
+
         }, null, this)
 
 
         var wf = game.physics.arcade.overlap(this.weapon.bullets, this.s_fire, function(weapon, fire){
             console.log("FIGHTING WATEEEEEEEEEEEEEEEEEEER!!!!!!!!", this.s_fire.getIndex(fire));
 
-            
+
             var i = this.s_fire.getIndex(fire);
             this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);
             console.log(this.water_state);
 
         }, null, this);
-        
+
 
 
 
         this.smallpig.forEach(function(m){
-            
+
             var i = this.smallpig.getIndex(m);
 
             if(m.x < this.pig_random_walk[i][0]){
@@ -453,8 +456,8 @@ class PlayGame{
           this.weapon.trackSprite(this.firefighter,-30,0,false);
           this.weapon.fireAngle = 210;
         }
-        
-        
+
+
           if (this.waterButton.isDown){
             this.weapon.fire();
           }
@@ -527,7 +530,7 @@ class PlayGame{
 function pig_burn(pig){
     pig.animations.play("burn", 10, true);
     game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true).chain(
-        game.add.tween(pig).to({ tint : 0xffffff }, 10, "Linear", true)  // can't test out??       
+        game.add.tween(pig).to({ tint : 0xffffff }, 10, "Linear", true)  // can't test out??
     ) ;
     game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
     game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
@@ -558,11 +561,11 @@ function f_fighting(fire, state, attack, destroy_fire) {
             game.add.tween(fire).to({ tint : 0xffffff }, 10, "Linear", true) );
         var sx = fire.scale.x - 0.05;
         var sy = fire.scale.y - 0.1;
-        console.log("scale: ",sx,sy);    
+        console.log("scale: ",sx,sy);
         game.add.tween(fire.scale).to({y: sy, x: sx },10, "Linear", true );
         var t = game.add.text(fire.x + 50, fire.y -100, fire.health);
         var grd = t.context.createLinearGradient(0, 0, 0, t.canvas.height);
-        grd.addColorStop(0, '#8ED6FF');   
+        grd.addColorStop(0, '#8ED6FF');
         grd.addColorStop(1, '#004CB3');
         t.fill = grd;
         game.add.tween(t).to({y: fire.y -200},1000, "Linear", true);
@@ -590,7 +593,7 @@ function pig_kill(pig, pig_grp, score, text, red_bar, green_bar){
 
     //use kill because the array actually won't change in length, only alive() switch to false
     pig.kill();
-    
+
     score ++;
     // console.log(score);
     console.log("this pig is caught");
@@ -626,7 +629,7 @@ function pig_regeneration(pig, pig_grp, /*score, text,*/ red_bar, green_bar){
     if (green_bar.children[pig_grp.getIndex(pig)].width !== 50) {
             return green_bar.children[pig_grp.getIndex(pig)].width = 50;
         }
-        
+
 
 
 }
