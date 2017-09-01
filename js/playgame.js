@@ -17,11 +17,11 @@ let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 0.2;
 const SPEED_ADD_PIG = 3000;
 const timeLeft = 180;   /*temp kevin*/
-let thisGameTimeLeft = timeLeft;
+let thisGameTimeLeft = 180;
 let caughtNumber = 0;
 let PIG_DIED_DUE_TO_FIRE = 0;
 let fireScore = 0;
-let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
+let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 1.2;
 const FTR_SCALE_Y = 1.2;
@@ -64,7 +64,7 @@ class PlayGame{
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
 
-        this.bar = game.add.text(100, 100, "Time left: " + thisGameTimeLeft + "    Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"})
+        this.bar = game.add.text(100, 100, "Time left: " + thisGameTimeLeft + "    Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"});
         // this.show_score = game.add.text(100,100,"Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"});    //the text on top screen to show score
         // this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
@@ -390,7 +390,6 @@ class PlayGame{
     update(){
 
         //Please always console teammate to put conflicts to minimum///////
-
         // Watson's code /
 
         if (thisGameTimeLeft===0) {
