@@ -21,7 +21,7 @@ class Preload{
         game.load.image("water", "assets/sprites/split.png");
         game.load.image("hidden", "assets/sprites/water.png");
         game.load.image("smoke", "assets/sprites/smoke.png");
-        game.load.image("background", "assets/sprites/mud.png");
+        game.load.image("background", "assets/sprites/green.png");
         game.load.image("topback", "assets/sprites/top_pic1.jpg");
         game.load.image("p_head", "assets/sprites/pig_head.png");
         game.load.image("ton", "assets/sprites/weight.png");
@@ -33,7 +33,7 @@ class Preload{
         game.load.atlasJSONHash('s_pigv', '/assets/sprites/red-pig-2.png', '/assets/sprites/red-pig-2.json');
         game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         game.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/Fire.js');
-        
+
         /////////////////Jimmy's section(audio)////////////////////////////
         game.load.audio("background", ["assets/sounds/background.mp3"]);
         game.load.audio("pig", ["assets/sounds/pig.mp3"]);
