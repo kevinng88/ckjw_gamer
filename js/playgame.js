@@ -886,7 +886,7 @@ function release_pig(man, icon) {
                 game.rnd.integerInRange(200, 230), 's_pigs');
             p.scale.x = SPIG_SCALE_X;
             p.scale.y = SPIG_SCALE_Y;
-            game.add.tween(p).to({ x: 500, y: 150 }, 1000, "Linear", true);
+            game.add.tween(p).to({ x: game.rnd.integerInRange(350,450), y: 160 }, 1000, "Linear", true);
             p.y = 150;
             game.add.tween(p).to({ y: 120 }, 500, Phaser.Easing.Quartic.Out, true, 500, -1, true);
 
