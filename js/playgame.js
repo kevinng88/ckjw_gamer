@@ -317,14 +317,14 @@ class PlayGame{
           //the external wall
             [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
             // interior wall - left top corner
-            [6, 8, 1, 3],[9, 10, 1, 3],[3, 10, 1, 3],[3, 13, 7, 1],
+            [6, 8, 1, 3],[9, 10, 1, 1],[3, 10, 1, 3],[3, 13, 7, 1],
             // interior - left mid
             [0, 16, 5, 1],[7, 14, 1, 5],[3, 19, 5, 1],
             //[0, 23, 1, 8],
             // interior - left bottom
             [6, 26, 4, 1],[3, 20, 1, 7],[6, 22, 1, 4],
             // interior center
-            [8, 19, 4, 1],[9, 20, 1, 4],[10, 16, 6, 1],
+            [8, 19, 2, 1],[9, 20, 1, 4],[10, 16, 6, 1],
             // interior - right bottom
             [9, 26, 1, 3],[12, 19, 1, 7],[12, 26, 5, 1],[15, 23, 4, 1],[12, 20, 5, 1],
             // interior - right top and mid
