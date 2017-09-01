@@ -68,7 +68,7 @@ class PlayGame{
         this.fireMusic.loopFull(0.5);
         //////////additional variables go here/////////////
         this.icon = game.add.group();       //sprite: the icon
-        
+
 
         //////////grobal physics setting///////////////
         game.physics.arcade.enable([this.firefighter, this.smallpig, this.bigpig, this.s_fire, this.weapon,this.walls], Phaser.Physics.ARCADE); // T4
@@ -79,7 +79,7 @@ class PlayGame{
         this.weapon2.enableBody = true;
         this.walls.enableBody = true; // T3
 
-        
+
 
         //this.game.physics.arcade.enable(this.firefighter);
         // this.firefighter.physicsBodyType = Phaser.Physics.ARCADE;
@@ -89,7 +89,7 @@ class PlayGame{
         // this.weapon.physicsBodyType = Phaser.Physics.ARCADE;
         // this.walls.physicsBodyType = Phaser.Physics.ARCADE;
 
-     
+
 
 
 
@@ -181,10 +181,15 @@ class PlayGame{
         this.weapon2.bulletSpeed=150;
         this.weapon2.fireRate=2;
         this.weapon2.bulletGravity.y = 200;
-        //create hidden bullet
-        
-
         this.waterButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+        this.getpig=true;
+        this.hitfire=true;
+        this.deletefire=true;
+        this.needOxygen=true;
+        //create hidden bullet
+
+
+
 
         ////////////////////////////////////////////////////////////
 
@@ -255,7 +260,7 @@ class PlayGame{
 
         //this.smallpig.add(300,300, 's_pigv', 0);
 
-        
+
 
         //animate the firefighter
         this.firefighter.scale.x = FTR_SCALE_X;
@@ -267,9 +272,9 @@ class PlayGame{
         this.firefighter.animations.add('run-up', [6,7,8,9,10,11],30, true);
         this.firefighter.animations.add('down', [12,13,14,15,16,17],10, true);
         this.firefighter.animations.add('run-down', [12,13,14,15,16,17],30, true);
-        
-        
-        
+
+
+
 
         //timer to make attack in good update rate
         this.attack = true;
@@ -289,7 +294,7 @@ class PlayGame{
         this.firefighter.body.collideWorldBounds = true; // T6
         this.smallpig.setAll('body.collideWorldBounds', true);
         this.firefighter.body.gravity.y = 0; //T5
-        // -------------- wall impassible --------- // 
+        // -------------- wall impassible --------- //
 
 
         // keyboard control
@@ -331,7 +336,7 @@ class PlayGame{
 
         ////////////////////////////////////////////////////////////
     }
-    
+
 
 
     update(){
@@ -362,8 +367,8 @@ class PlayGame{
         });
 
 
-        
-    
+
+
 
 
         //game.physics.arcade.collide(this.firefighter, this.walls);
@@ -406,8 +411,8 @@ class PlayGame{
 
                         pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
 
-                        
-                       
+
+
 
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
@@ -451,7 +456,7 @@ class PlayGame{
 
             var i = this.s_fire.getIndex(fire);
             this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);      //**TEMP CLOSE**
-            
+
 
         }, null, this);
 
@@ -484,14 +489,14 @@ class PlayGame{
         ////////////////////////////////////////////////////////////
 
 
-        
+
 
 
         // Watson's code
           // fireman moving around
             this.firefighter.body.velocity.x = 0;
             this.firefighter.body.velocity.y = 0;
-    
+
         if(this.cursors.up.isDown){
           if (this.cursors.up.shiftKey){
             //this.firefighter.y -= FIREMAN_RUN_SPEED;
@@ -509,7 +514,7 @@ class PlayGame{
             // console.log("right: ",FIREMAN_WALK_SPEED );
             this.firefighter.scale.x = FTR_SCALE_X;
             if(this.cursors.right.shiftKey){
-            
+
             //this.firefighter.x += FIREMAN_RUN_SPEED;
             this.firefighter.animations.play('run');
             this.firefighter.body.velocity.x = FIREMAN_RUN_SPEED;
@@ -580,7 +585,7 @@ class PlayGame{
 
 
     ////////////////Additional classes go here/////////////////////////
-        
+
             //Kevin update icons:
             if (this.icon.length > 0){
             for (i = 0; i < this.icon.length; i++){
@@ -589,9 +594,9 @@ class PlayGame{
                 o.y = this.firefighter.y - this.icon.getIndex(o)*15 - 30;
                 }
             };
-            
-            
-            
+
+
+
     }
 
     render(){
@@ -605,7 +610,7 @@ class PlayGame{
                 if(OXYGEN_STARTING_VOLUMN - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
-                        
+
                         game.time.events.stop();
                 } else if(OXYGEN_STARTING_VOLUMN>= 0){
                         OXYGEN_STARTING_VOLUMN -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
@@ -683,10 +688,10 @@ function f_fighting(fire, state, attack, destroy_fire) {
         t.fill = grd;
         var twn = game.add.tween(t);
         twn.to({y: fire.y -200},1000, "Linear", true);
-        twn.to({alpha: 0},2000, "Linear", true)    
+        twn.to({alpha: 0},2000, "Linear", true)
         twn.onComplete.add(function(){
             t.destroy();
-        }, this);   
+        }, this);
 
    }
     //else if()//2 sec later, heal to 100
@@ -762,13 +767,13 @@ function man_die(man, back){
         game.add.tween(man).to({angle: -90}, 1000, "Linear", true);
         game.add.tween(man.scale).to({x: 5, y: 5}, 2000, "Linear", true, 200);
         game.add.tween(man).to({x: game.world.centerX, y: game.world.centerY}, 2000, "Linear", true , 200);
-        
-        
+
+
         filter = game.add.filter('Fire', 800, 600);
         filter.alpha = 0.0;
         back.filters = [filter];
         game.add.tween(filter).to({alpha: 0.7}, 2000, "Linear", true);
-        
+
         game.time.events.add(3000, function(){game.paused = true}, this);
         //game.paused
 }
@@ -776,7 +781,7 @@ function man_die(man, back){
 function pig_icon(man, icon){
     icon.create(man.x + 30, man.y - icon.length*15 -30, 'p_head', 0);
     //game.add.tween(icon).to({y:10}, 1000, "Linear", true, 0,-1, true);
-    
+
     game.add.tween(icon.scale).to({x:1.1, y:1.1}, 1000, "Linear", true, 0,-1, true);
 }
 
@@ -791,11 +796,11 @@ function release_pig(man, icon) {
             game.add.tween(p).to({ x: 500, y: 150 }, 1000, "Linear", true);
             p.y = 150;
             game.add.tween(p).to({ y: 120 }, 500, Phaser.Easing.Quartic.Out, true, 500, -1, true);
-            
+
         }
-        
-        
-        
+
+
+
         icon.destroy();
         console.log(icon);
     }
