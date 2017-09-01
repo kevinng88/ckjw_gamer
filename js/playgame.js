@@ -383,7 +383,7 @@ class PlayGame{
             this.roof = game.add.image(i * grid, 7 * grid, "roof");
             this.roof = game.add.image((12 + i) * grid, 7 * grid, "roof");
         }
-        
+
 
         ////////////////////////////////////////////////////////////
     }
@@ -480,10 +480,10 @@ class PlayGame{
                         this.myHealth.width -= OXYGEN_NOW;
                         console.log("GAME OVER");
                         man_die(this.firefighter, this.background);
-                        // game.time.events.stop();
-                        // this.bgMusic.stop();
-                        // this.pigMusic.stop();
-                        // this.fireMusic.stop();
+                        game.time.events.stop();
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
                         var gameoverSound = game.add.audio("gameover");
                         gameoverSound.play();
                         game.state.start("GameOverScreen");
@@ -624,8 +624,8 @@ class PlayGame{
                 console.log("fireman is running left");
             }else{
                 this.firefighter.body.velocity.x = - FIREMAN_WALK_SPEED;
-                this.firefighter.animations.play('walk');   
-                console.log("fireman is walking left"); 
+                this.firefighter.animations.play('walk');
+                console.log("fireman is walking left");
             }
             this.weapon.trackSprite(this.firefighter,-30,0,false);
             this.weapon.fireAngle = 210;
