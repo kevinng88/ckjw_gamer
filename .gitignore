@@ -3,3 +3,4 @@ my_resource/*
 node_modules/*
 .gitnore
 .DS_Store
+assets/.DS_Store
