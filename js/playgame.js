@@ -17,12 +17,12 @@ let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 0.2;
 const SPEED_ADD_PIG = 3000;
 const timeLeft = 180;   /*temp kevin*/
-let thisGameTimeLeft = timeLeft;
+let thisGameTimeLeft = 180;
 let caughtNumber = 0;
 let PIG_DIED_DUE_TO_FIRE = 0;
 let fireScore = 0;
 let pigScore = 0;
-let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
+let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 1.2;
 const FTR_SCALE_Y = 1.2;
@@ -42,7 +42,7 @@ class PlayGame{
         // gridifcation
         var grid = game.world.width / 20;
         this.background = game.add.tileSprite(0,255,640,740,"background");
-        this.background = game.add.tileSprite(0,0,640, 255,"topback");
+        this.background2 = game.add.tileSprite(0,0,640, 255,"topback");
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE); // T1
@@ -105,7 +105,7 @@ class PlayGame{
         // this.walls.physicsBodyType = Phaser.Physics.ARCADE;
 
 
-
+       
 
 
         /////////////////Ching's section////////////////////////////
@@ -267,7 +267,7 @@ class PlayGame{
 
                 //--------------------------------------------------------------//
 
-
+                
 
         //////// template of animation /////////////////
         //pig BURN animation
@@ -398,7 +398,6 @@ class PlayGame{
     update(){
 
         //Please always console teammate to put conflicts to minimum///////
-
         // Watson's code /
 
         if (thisGameTimeLeft===0) {
@@ -701,15 +700,19 @@ class PlayGame{
                 if(OXYGEN_NOW - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
-
                         game.time.events.stop();
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
+                        var gameoverSound = game.add.audio("gameover");
+                        gameoverSound.play();
                         game.state.start("GameOverScreen");
                 } else if(OXYGEN_NOW>= 0){
                         OXYGEN_NOW -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
                         // console.log("it now consume: ", OXYGEN_STARTING_VOLUMN);
                         return this.myHealth.width = OXYGEN_NOW;
                 }
-        } else if (this.firefighter.y<240 && this.myHealth.width >0){
+        } else if (this.firefighter.y<240){
                 release_pig(this.firefighter, this.icon);
                 caughtNumber = 0;
                 if(OXYGEN_NOW + 30 > OXYGEN_STARTING_VOLUMN){
@@ -886,7 +889,7 @@ function release_pig(man, icon) {
                 game.rnd.integerInRange(200, 230), 's_pigs');
             p.scale.x = SPIG_SCALE_X;
             p.scale.y = SPIG_SCALE_Y;
-            game.add.tween(p).to({ x: 500, y: 150 }, 1000, "Linear", true);
+            game.add.tween(p).to({ x: game.rnd.integerInRange(350,450), y: 160 }, 1000, "Linear", true);
             p.y = 150;
             game.add.tween(p).to({ y: 120 }, 500, Phaser.Easing.Quartic.Out, true, 500, -1, true);
 

@@ -11,7 +11,7 @@ class GameOverScreen {
         // winning statement
         var title = game.add.bitmapText(120, 100, font, "You Die!", 40)
         // var extinguishedBlaze = game.add.bitmapText(game.width/2-100, 430, font, fireScore, 50);
-        var losingDescription = `You die,\r\ralthough you saved ${pigScore} piglets.`;
+        var losingDescription = `You die,\r\r ${PIG_DIED_DUE_TO_FIRE} pigs was died before you save them,\r\ralthough you saved ${pigScore} piglets \r\rand you saved ${fireScore} fire`;
 
         var losingStory = game.add.bitmapText(60, 550, font, losingDescription, 18);
         losingStory.maxWidth = 540;
