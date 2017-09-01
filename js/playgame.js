@@ -6,7 +6,7 @@ const BIG_PIG_SPEED = SMALL_PIG_SPEED * 0.7;
 const FIREMAN_CONSUME_OXYGEN = 1; // decrease per 0.5 seconds
 const SMALL_PIG_CONSUME_OXYGEN = 2;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
-const SMALL_PIG_COUNT = 5;
+const SMALL_PIG_COUNT = 10;
 const BIG_PIG_COUNT = 5;
 const FIRE_COUNT = 10;
 const ALL_THE_PIG_HEALTH = 70;
@@ -51,7 +51,7 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE); // T1
-        this.firefighter = game.add.sprite(6 * grid, 10.5 * grid, 'fighter');      //sprite: our player in the game
+        this.firefighter = game.add.sprite(10.5 * grid, 6 * grid, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
