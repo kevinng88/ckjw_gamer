@@ -30,6 +30,9 @@ class GameOverScreen {
         caughtNumber=0;
         OXYGEN_NOW=500;
         thisGameTimeLeft = 180;
+        fireScore=0;
+        this.score_s_pig=0;
+        PIG_DIED_DUE_TO_FIRE = 0;
     }
 
     startGame(){

@@ -476,10 +476,10 @@ class PlayGame{
                         this.myHealth.width -= OXYGEN_NOW;
                         console.log("GAME OVER");
                         man_die(this.firefighter, this.background);
-                        // game.time.events.stop();
-                        // this.bgMusic.stop();
-                        // this.pigMusic.stop();
-                        // this.fireMusic.stop();
+                        game.time.events.stop();
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
                         var gameoverSound = game.add.audio("gameover");
                         gameoverSound.play();
                         game.state.start("GameOverScreen");
@@ -608,9 +608,9 @@ class PlayGame{
                 this.firefighter.animations.play('down');
                 console.log("fireman is walking down");
             }
-            this.weapon.trackSprite(this.firefighter,35,0,false);
+            this.weapon.trackSprite(this.firefighter,0,0,false);
             this.weapon.fireAngle = Phaser.ANGLE_DOWN;
-            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.trackSprite(this.firefighter,0,0,false);
             this.weapon2.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
             this.firefighter.scale.x = -FTR_SCALE_X;
