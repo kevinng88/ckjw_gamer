@@ -21,6 +21,7 @@ let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let PIG_DIED_DUE_TO_FIRE = 0;
 let fireScore = 0;
+let pigScore = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 1.2;
@@ -60,7 +61,7 @@ class PlayGame{
         this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(60, 'water'); //weapon is the water
         this.weapon2 = game.add.weapon(2, 'hidden');
-        this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
+        this.score_s_pig = 0;      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
 
@@ -442,6 +443,7 @@ class PlayGame{
             //this function will kill 1 pig, then reset in another position, return the number of pig
             this.score_s_pig = pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             var gettingpigSound = game.add.audio("gettingpig");
+            pigScore = this.score_s_pig;
             gettingpigSound.play();
         }, null, this);
 
