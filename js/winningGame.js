@@ -11,11 +11,11 @@ class WinningGame {
             var font = 'carrier_command';
 
             // winning statement
-            var sausageNumber = caughtNumber * 3;
+            var sausageNumber = pigScore * 3;
             var title = game.add.bitmapText(120, 100, font, "Good Job!", 40)
             var sausageResult = game.add.bitmapText(game.width/2-100, 230, font, sausageNumber, 40);
             var extinguishedBlaze = game.add.bitmapText(game.width/2-100, 430, font, fireScore, 50);
-            var winningDescription = `You saved ${this.score_s_pig} piglets. \r\rThe farmer served them up\r\ras ${sausageNumber} sausages to you. \r\rEnjoy!`;
+            var winningDescription = `You saved ${pigScore} piglets. \r\rThe farmer served them up\r\ras ${sausageNumber} sausages to you. \r\rEnjoy!`;
             var winningStory = game.add.bitmapText(60, 550, font, winningDescription, 18);
             winningStory.maxWidth = 540;
 
