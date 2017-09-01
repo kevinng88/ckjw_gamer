@@ -1,11 +1,25 @@
 class WinningGame {
-        create(){
+    create(){
+            console.log("entered win game screen");
+
+            // style: images, background, color
             game.stage.backgroundColor = "#434343";
-            
-            var image= game.add.image(game.width/2, game.height/2 ,'sausage');
-            image.anchor.set(0.5);
-            // var bmpText1= game.add.bitmapText(game.width / 2, 50 , "font", "Small Pig Collected: ", 48).anchor.x = 0.5;
-            // var bmpText2= game.add.bitmapText(game.width / 2, 150 , "font", score.toString(), 72).anchor.x = 0.5;
+            var image1= game.add.image(game.width/2 + 100, 230,'sausage');
+            image1.anchor.set(0.5);
+            var image2= game.add.image(game.width/2 + 100, 430,'flax');
+            image2.anchor.set(0.5);
+            var font = 'carrier_command';
+
+            // winning statement
+            var sausageNumber = caughtNumber * 3;
+            var title = game.add.bitmapText(120, 100, font, "Good Job!", 40)
+            var sausageResult = game.add.bitmapText(game.width/2-100, 230, font, sausageNumber, 40);
+            var extinguishedBlaze = game.add.bitmapText(game.width/2-100, 430, font, fireScore, 50);
+            var winningDescription = `You saved ${this.score_s_pig} piglets. \r\rThe farmer served them up\r\ras ${sausageNumber} sausages to you. \r\rEnjoy!`;
+            var winningStory = game.add.bitmapText(60, 550, font, winningDescription, 18);
+            winningStory.maxWidth = 540;
+
+            //bottun
             const playButton = game.add.button(game.width / 2, game.height - 150, "playbutton", this.startGame);
             playButton.anchor.set(0.5);
             const tween = game.add.tween(playButton).to({
@@ -13,11 +27,15 @@ class WinningGame {
             height:220
             }, 1500, "Linear", true, 0, -1);
             tween.yoyo(true);
-            }
 
-          startGame(){
-            // this.myHealth.reset();
+            // reset game
+            caughtNumber=0;
+            OXYGEN_NOW=500;
+            thisGameTimeLeft = 180;
+    }
 
-            game.state.start("TitleScreen", true, false);
-            }
+    startGame(){
+        game.state.start("TitleScreen", true, false);
+
+    }
 }
