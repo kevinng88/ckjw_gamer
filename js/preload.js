@@ -45,6 +45,7 @@ class Preload{
         game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
         //////////////// Watson's section /////////////////////////
         game.load.spritesheet("wall", "/assets/sprites/wall.png", 32, 32);
+        game.load.spritesheet("deadFirefighter", "/assets/sprites/deadFirefighter.png", 256, 256);
         game.load.spritesheet("fence", "/assets/sprites/fence.png", 32, 32);
         game.load.spritesheet("fence2", "/assets/sprites/fence2.png", 32, 32);
         game.load.spritesheet("fence3", "/assets/sprites/fence3.png", 32, 32);

@@ -4,16 +4,12 @@ class GameOverScreen {
 
         // style: images, background, color
         game.stage.backgroundColor = "#434343";
-        var image1= game.add.image(game.width/2 + 100, 230,'sausage');
+        var image1= game.add.image(game.width/2 - 64, 300,'deadFirefighter');
         image1.anchor.set(0.5);
-        var image2= game.add.image(game.width/2 + 100, 430,'flax');
-        image2.anchor.set(0.5);
         var font = 'carrier_command';
 
         // winning statement
-        var sausageNumber = caughtNumber * 3;
-        var title = game.add.bitmapText(120, 100, font, "Good Job!", 40)
-        var sausageResult = game.add.bitmapText(game.width/2-100, 230, font, sausageNumber, 40);
+        var title = game.add.bitmapText(120, 100, font, "You Die!", 40)
         var extinguishedBlaze = game.add.bitmapText(game.width/2-100, 430, font, fireScore, 50);
         var losingDescription = `You die,\r\ralthough you saved ${this.score_s_pig} piglets.`;
         var losingStory = game.add.bitmapText(60, 550, font, losingDescription, 18);
