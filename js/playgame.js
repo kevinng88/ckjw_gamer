@@ -8,7 +8,7 @@ const SMALL_PIG_CONSUME_OXYGEN = 2;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
 const SMALL_PIG_COUNT = 3;
 const BIG_PIG_COUNT = 5;
-const FIRE_COUNT = 5;
+const FIRE_COUNT = 10;
 const ALL_THE_PIG_HEALTH = 70;
 let PIG_HEALTH = ALL_THE_PIG_HEALTH;
 const PIG_HIT_FIRE_HURT = 1;
@@ -19,6 +19,8 @@ const SPEED_ADD_PIG = 3000;
 const timeLeft = 180;   /*temp kevin*/
 let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
+let PIG_DIED_DUE_TO_FIRE = 0;
+let fireScore = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 1.2;
@@ -238,7 +240,7 @@ class PlayGame{
         //-------------------group of fire------------------------//
 
 
-                for (var i = 0; i < 5; i ++){
+                for (var i = 0; i < FIRE_COUNT; i ++){
                     //for group: use create instead of add.sprite
                     this.s_fire.create(game.rnd.integerInRange(32,618), game.rnd.integerInRange(420,900), 'fire', 0);
                     this.s_fire.children[i].anchor.setTo(FRE_SCALE_X/2,FRE_SCALE_Y/2);
@@ -450,9 +452,8 @@ class PlayGame{
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
-
                         pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
-
+                        PIG_DIED_DUE_TO_FIRE ++;
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
@@ -498,7 +499,10 @@ class PlayGame{
 
             var i = this.s_fire.getIndex(fire);
             this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);      //**TEMP CLOSE**
-
+            console.log(fire.health);
+            if(fire.health === 0){
+                fireScore ++;
+            }
 
         }, null, this);
 
@@ -571,6 +575,8 @@ class PlayGame{
             }
             this.weapon.trackSprite(this.firefighter,30,-30,false);
             this.weapon.fireAngle = Phaser.ANGLE_UP;
+            this.weapon2.trackSprite(this.firefighter,30,-30,false);
+            this.weapon2.fireAngle = Phaser.ANGLE_UP;
         }else if(this.cursors.right.isDown){
             this.firefighter.scale.x = FTR_SCALE_X;
             if(this.cursors.right.shiftKey){
@@ -584,6 +590,8 @@ class PlayGame{
             }
             this.weapon.trackSprite(this.firefighter,35,0,false);
             this.weapon.fireAngle = -30;
+            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.fireAngle = -30;
         }else if (this.cursors.down.isDown){
             if (this.cursors.down.shiftKey){
                 this.firefighter.body.velocity.y = 200;
@@ -594,8 +602,10 @@ class PlayGame{
                 this.firefighter.animations.play('down');
                 console.log("fireman is walking down");
             }
-            this.weapon.trackSprite(this.firefighter,25,105,false);
+            this.weapon.trackSprite(this.firefighter,35,0,false);
             this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
             this.firefighter.scale.x = -FTR_SCALE_X;
             if(this.cursors.left.shiftKey){
@@ -609,6 +619,8 @@ class PlayGame{
             }
             this.weapon.trackSprite(this.firefighter,-30,0,false);
             this.weapon.fireAngle = 210;
+            this.weapon2.trackSprite(this.firefighter,-30,0,false);
+            this.weapon2.fireAngle = 210;
         }
 
 
@@ -622,6 +634,7 @@ class PlayGame{
             }
             this.weapon.fire();
             this.weapon2.fire();
+            console.log(this.weapon2);
         }
 
         this.weapon.forEach(function(weapon) {
@@ -661,6 +674,8 @@ class PlayGame{
     render(){
         game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
         game.debug.text("You are carrying "+ caughtNumber+ " pigs, your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber)*2 + "per second", 32, 940);
+        game.debug.text(PIG_DIED_DUE_TO_FIRE + " pigs died due to fire before you save them", 200, 32);
+        game.debug.text("You now saved " + fireScore + "of fire", 32, 80);
     }
 
     updateOxygen(){
