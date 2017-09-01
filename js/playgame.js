@@ -34,13 +34,7 @@ const FRE_SCALE_X = 0.8;
 const FRE_SCALE_Y = 0.8;
 
 
-    // game.physics.startSystem(Phaser.Physics.ARCADE);  T1 ok
-    // platforms = game.add.group(); T2 ok
-    // platforms.enableBody = true; T3 ok
-    // game.physics.arcade.enable(player); T4 ok
-    // player.body.gravity.y = 0; T5 ok
-    // player.body.collideWorldBounds = true; T6 ok
-    // game.physics.arcade.collide(player, platforms); T7 ok
+ 
 
 class PlayGame{
 
@@ -52,7 +46,7 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE); // T1
-        this.firefighter = game.add.sprite(10.5 * grid, 6 * grid, 'fighter');      //sprite: our player in the game
+        this.firefighter = game.add.sprite(11 * grid, 6 * grid, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
@@ -63,9 +57,20 @@ class PlayGame{
         this.weapon2 = game.add.weapon(2, 'hidden');
         this.score_s_pig = 0;      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
-        this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
 
-        this.bar = game.add.text(100, 100, "Time left: " + thisGameTimeLeft + "    Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"});
+        //decoration
+        //this.fireTruck = game.add.sprite( 10 * grid, 1.5 * grid, "fireTruck");
+        this.farmer = game.add.sprite(10 * grid, 4 * grid, "farmer");
+
+        // update info
+        this.bar = game.add.text(60, 80, "Time left: " + thisGameTimeLeft + "\r\rPiglets Saved: " + this.score_s_pig + "\r\rFire stopped: " + fireScore, {
+            font: "30px arial",
+            fontWeight: "bold",
+            fill: "#fff",
+            });
+        this.bar.storke = "#000";
+        this.bar.strokeThickness = 2;
+        this.bar.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
         // this.show_score = game.add.text(100,100,"Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"});    //the text on top screen to show score
         // this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
@@ -319,7 +324,7 @@ class PlayGame{
         // namely, [wall.x, wall.y, wall.scale.x, wall.scale.y, wallName(if any)]
         var wallPositionSize = [
           //the external wall
-            [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 10, 1, "leftNorthWall"],[12, 7, 10, 1, "rightNorthWall"],
+            [0, 7, 1, 23, "westWall"],[19, 7, 1.2, 23, "eastWall"],[0, 29, 22, 1, "southWall"],[0, 7, 9.5, 1, "leftNorthWall"],[12.5, 7, 10, 1, "rightNorthWall"],
             // interior wall - left top corner
             [6, 8, 1, 3],[9, 10, 1, 1],[3, 10, 1, 3],[3, 13, 7, 1],
             // interior - left mid
@@ -418,6 +423,8 @@ class PlayGame{
 
 
 
+        //
+        this.bar.setText("Time left: " + thisGameTimeLeft + "\rPiglets Saved: " + this.score_s_pig + "\rFire stopped: " + fireScore);
 
 
         //game.physics.arcade.collide(this.firefighter, this.walls);
@@ -680,20 +687,25 @@ class PlayGame{
 
     }
 
-    render(){
-        game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
-        game.debug.text("You are carrying "+ caughtNumber+ " pigs, your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber)*2 + "per second", 32, 940);
-        game.debug.text(PIG_DIED_DUE_TO_FIRE + " pigs died due to fire before you save them", 200, 32);
-        game.debug.text("You now saved " + fireScore + "of fire", 32, 80);
-    }
+    // render(){
+    //     game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
+    //     game.debug.text("You are carrying "+ caughtNumber+ " pigs, your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber)*2 + "per second", 32, 940);
+    //     game.debug.text(PIG_DIED_DUE_TO_FIRE + " pigs died due to fire before you save them", 200, 32);
+    //     game.debug.text("You now saved " + fireScore + "of fire", 32, 80);
+    // }
 
     updateOxygen(){
+
         if(this.firefighter.y > 240){
                 if(OXYGEN_NOW - OXYGEN_CONSUMPTION - SMALL_PIG_CONSUME_OXYGEN*caughtNumber < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
-
                         game.time.events.stop();
+                        this.bgMusic.stop();
+                        this.pigMusic.stop();
+                        this.fireMusic.stop();
+                        var gameoverSound = game.add.audio("gameover");
+                        gameoverSound.play();
                         game.state.start("GameOverScreen");
                 } else if(OXYGEN_NOW>= 0){
                         OXYGEN_NOW -= (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber);
