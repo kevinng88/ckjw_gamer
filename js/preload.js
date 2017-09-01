@@ -45,10 +45,13 @@ class Preload{
         game.load.audio("gettingpig", ["assets/sounds/gettingpig.mp3"]);
         //////////////// Watson's section /////////////////////////
         game.load.spritesheet("wall", "/assets/sprites/wall.png", 32, 32);
-        game.load.spritesheet("wall", "/assets/sprites/fence.png", 32, 32);
+        game.load.spritesheet("fence", "/assets/sprites/fence.png", 32, 32);
+        game.load.spritesheet("fence2", "/assets/sprites/fence2.png", 32, 32);
+        game.load.spritesheet("fence3", "/assets/sprites/fence3.png", 32, 32);
         game.load.spritesheet("roof", "/assets/sprites/roof.png", 32, 32);
+        game.load.spritesheet("firefighterPixel", "/assets/sprites/firefighterPixel.png", 256, 256);
         game.load.spritesheet("farmer", "/assets/sprites/farmer.png", 64, 64);
-        game.load.spritesheet("piglet", "/assets/sprites/piglet.gif_c200", 300, 300);
+        game.load.spritesheet("piglet", "/assets/sprites/piglet.gif_c200", 256, 256);
         game.load.spritesheet("westRoof", "/assets/sprites/westRoof.png", 32, 32);
         game.load.spritesheet("eastRoof", "/assets/sprites/eastRoof.png", 32, 32);
         game.load.image("pigBeggingRescue", "/assets/sprites/pigBeggingRescue.png");

@@ -3,14 +3,20 @@
 // so he breaks them into two seperate game state
 class Instruction{
 	create(){
+          // style: image, color and background
           game.stage.backgroundColor = "#434343";
-          var barn = game.add.image(game.world.width /2 - 120, 40, "piglet");
-          barn.maxWidth = game.world.width - 200;
-          var instructionText = "1. Use arrows to move \r\r2. Use spacebar to \r\r   extinguish blaze \r\r3. Pay attention to your \r\r   oxygen volume \r\r4. Stay awat from fire\r\r5. Recover yourself around \r\r   the fire truck"
-          // instructionText.lineSpacing = 20;
-          var instruction = game.add.bitmapText(50, 400, 'carrier_command', instructionText, 18)
+          var piglet = game.add.image(game.world.width / 2 + 100, game.world.height - 250, "piglet");
+          piglet.maxWidth = game.world.width - 200;
+          var firefighterPixel = game.add.image(-30, game.world.height - 300, "firefighterPixel");
+          var font = 'carrier_command';
+          
+          // instruction text
+          var instructionText = "Instruction\r\r\r\r1. Use arrows to move \r\r   shift to run\r\r2. Use spacebar to \r\r   extinguish blaze \r\r3. Pay attention to your \r\r   oxygen volume \r\r4. Stay away from fire\r\r5. Recover yourself \r\r   around the fire truck\r\r6. Take piglets out of \r\r   the barn or they die \r\r   with you.  ";
+          var instruction = game.add.bitmapText(50, 100, font, instructionText, 18)
           instruction.maxWidth = game.world.width - 60;
-          instruction.lineSpacing = 100;
+
+          //button
+          var rescuePig = game.add.bitmapText(game.width / 2 - 150, game.height - 300, font, "Go Rescue Now!", 20);
           var playButton = game.add.button(game.width / 2, game.height - 150, "playbutton", this.startGame);
           playButton.anchor.set(0.5);
           var tween = game.add.tween(playButton).to({
