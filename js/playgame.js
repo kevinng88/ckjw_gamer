@@ -51,7 +51,7 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE); // T1
-        this.firefighter = game.add.sprite(60, 100, 'fighter');      //sprite: our player in the game
+        this.firefighter = game.add.sprite(6 * grid, 10.5 * grid, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
@@ -138,7 +138,6 @@ class PlayGame{
         this.time_finish_game = game.time.create(false);
         this.time_finish_game.loop(1000, this.updateTimeLeft, this);
         this.time_finish_game.start();
-
 
         ////////////////////////////////////////////////////////////
 
@@ -729,8 +728,9 @@ function pig_burn(pig){
     game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true).chain(
         game.add.tween(pig).to({ tint : 0xffffff }, 10, "Linear", true)  // can't test out??
     ) ;
-    game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
-    game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
+    pig.anchor.setTo(SPIG_SCALE_X/2, SPIG_SCALE_Y/2);
+    game.add.tween(pig).to({y: pig.y - 20}, 500, Phaser.Easing.Circular.Out, true)
+    game.add.tween(pig).to({y: pig.y + 20}, 1000, Phaser.Easing.Bounce.Out, true,500);
     //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
 
 }
@@ -879,10 +879,11 @@ function release_pig(man, icon) {
 
         }
 
-
-
-        icon.destroy();
+        for (var i=0; i<icon.length; i++){
+        console.log("this is for icon: " +icon);
+        icon.children[i].destroy();
         console.log(icon);
+        }
     }
 
 }
