@@ -5,10 +5,12 @@ class GameOverScreen {
             // pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             caughtNumber=0;
             OXYGEN_NOW=500;
-            var image1= game.add.image(game.width/2-200, game.height/2-300 ,'sausage');
+            var image1= game.add.image(game.width/2-200, game.height/2-100 ,'sausage');
             image1.anchor.set(0.5);
-            var image2= game.add.image(game.width/2-200, game.height/2 -50,'flax');
+            var image2= game.add.image(game.width/2-200, game.height/2 +100,'flax');
             image2.anchor.set(0.5);
+            var youLoseText= game.add.bitmapText(game.world.width/2+10, game.world.height/2-300, 'carrier_command', 'YOU LOSE !', 50);
+            youLoseText.anchor.set(0.5);
             // var bmpText1= game.add.bitmapText(game.width / 2, 50 , "font", "Small Pig Collected: ", 48).anchor.x = 0.5;
             // var bmpText2= game.add.bitmapText(game.width / 2, 150 , "font", score.toString(), 72).anchor.x = 0.5;
             const playButton = game.add.button(game.width / 2, game.height - 150, "playbutton", this.startGame);
