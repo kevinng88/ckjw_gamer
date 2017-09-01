@@ -6,7 +6,7 @@ const BIG_PIG_SPEED = SMALL_PIG_SPEED * 0.7;
 const FIREMAN_CONSUME_OXYGEN = 1; // decrease per 0.5 seconds
 const SMALL_PIG_CONSUME_OXYGEN = 2;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
-const SMALL_PIG_COUNT = 3;
+const SMALL_PIG_COUNT = 5;
 const BIG_PIG_COUNT = 5;
 const FIRE_COUNT = 10;
 const ALL_THE_PIG_HEALTH = 70;
@@ -521,6 +521,13 @@ class PlayGame{
                 m.anchor.setTo(0.5,0.5);
                 m.scale.x = SPIG_SCALE_X;
                 m.body.velocity.x = SMALL_PIG_SPEED;
+            }
+            if(m.x < 32){
+                m.anchor.setTo(0.5,0.5);
+                m.body.velocity.x = game.rnd.integerInRange(1,10);
+            } else if (m.x >608){
+                m.anchor.setTo(0.5,0.5);
+                m.body.velocity.x = game.rnd.integerInRange(-1,-10);
             }
         },this, true)
 
