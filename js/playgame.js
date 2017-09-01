@@ -139,7 +139,6 @@ class PlayGame{
         this.time_finish_game.loop(1000, this.updateTimeLeft, this);
         this.time_finish_game.start();
 
-
         ////////////////////////////////////////////////////////////
 
 
@@ -731,8 +730,9 @@ function pig_burn(pig){
     game.add.tween(pig).from({tint : Math.random() * 0xffffff}, 1000, Phaser.Easing.Linear.None, true).chain(
         game.add.tween(pig).to({ tint : 0xffffff }, 10, "Linear", true)  // can't test out??
     ) ;
-    game.add.tween(pig).to({y: pig.y - 50}, 500, Phaser.Easing.Circular.Out, true)
-    game.add.tween(pig).to({y: pig.y + 50}, 1000, Phaser.Easing.Bounce.Out, true,500);
+    pig.anchor.setTo(SPIG_SCALE_X/2, SPIG_SCALE_Y/2);
+    game.add.tween(pig).to({y: pig.y - 20}, 500, Phaser.Easing.Circular.Out, true)
+    game.add.tween(pig).to({y: pig.y + 20}, 1000, Phaser.Easing.Bounce.Out, true,500);
     //game.add.tween(pig).to({alpha: 0.5}, 1000, Phaser.Easing.Bounce.Out, true,2, true);
 
 }
@@ -882,10 +882,11 @@ function release_pig(man, icon) {
 
         }
 
-
-
-        icon.destroy();
+        for (var i=0; i<icon.length; i++){
+        console.log("this is for icon: " +icon);
+        icon.children[i].destroy();
         console.log(icon);
+        }
     }
 
 }
