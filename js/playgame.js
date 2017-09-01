@@ -333,6 +333,10 @@ class PlayGame{
 
     update(){
         //Please always console teammate to put conflicts to minimum///////
+        if(OXYGEN_NOW <= 0){
+            game.state.start("GameOverScreen");
+        }
+
         // Watson's code /
 
         if (this.needOxygen && OXYGEN_NOW <= 250){
@@ -419,9 +423,8 @@ class PlayGame{
             hittingfireSound.play();
           }
             // return hitfire=false;
-
                 if(OXYGEN_NOW - GET_HIT_FIRE < 0){
-                        this.myHealth.width === 0;
+                        this.myHealth.width -= this.myHealth.width;
                         console.log("GAME OVER");
                         game.time.events.stop();
                         this.bgMusic.stop();
@@ -429,11 +432,11 @@ class PlayGame{
                         this.fireMusic.stop();
                         var gameoverSound = game.add.audio("gameover");
                         gameoverSound.play();
-                        game.state.start("GameOverScreen");
+                        // game.state.start("GameOverScreen");
                 } else if(OXYGEN_NOW >= 0){
                         OXYGEN_NOW -= GET_HIT_FIRE;
                         return this.myHealth.width = OXYGEN_NOW;
-                };
+                }
         }, null, this)
 
 
@@ -448,6 +451,22 @@ class PlayGame{
         }, null, this);
 
 
+
+        this.smallpig.forEach(function(m){
+
+            var i = this.smallpig.getIndex(m);
+
+            if (m.body.velocity.x < 0){
+                m.anchor.setTo(0.5,0.5);
+                m.scale.x = -SPIG_SCALE_X;
+                m.body.velocity.x = -SMALL_PIG_SPEED;
+            }
+            else{
+                m.anchor.setTo(0.5,0.5);
+                m.scale.x = SPIG_SCALE_X;
+                m.body.velocity.x = SMALL_PIG_SPEED;
+            }
+        },this, true)
 
 
         // this.smallpig.forEach(function(m){
@@ -596,7 +615,7 @@ class PlayGame{
                 if(this.myHealth.width + 30 > 500){
                     return this.myHealth.width = 500;
                 }else if(this.myHealth.width <500){
-                        OXYGEN_NOW += 30;
+                        OXYGEN_NOW += 50;
                         return this.myHealth.width = OXYGEN_NOW;
                 }
                 return OXYGEN_CONSUMPTION = 20;
