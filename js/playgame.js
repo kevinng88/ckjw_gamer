@@ -11,7 +11,7 @@ const BIG_PIG_COUNT = 3;
 const FIRE_COUNT = 5;
 const ALL_THE_PIG_HEALTH = 70;
 let PIG_HEALTH = ALL_THE_PIG_HEALTH;
-const PIG_HIT_FIRE_HURT = 2;
+const PIG_HIT_FIRE_HURT = 1;
 const OXYGEN_STARTING_VOLUMN = 500;
 let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 0.2;
@@ -402,10 +402,8 @@ class PlayGame{
            //console.log("燒豬肉: " + this.smallpig.getIndex(pig) + "火: " + this.s_fire.getIndex(fire));
             pig_burn(pig);
             // console.log( this.pigss_alive.children[this.smallpig.getIndex(pig)].width - 0.1);
-                if(PIG_HEALTH - PIG_HIT_FIRE_HURT < 0){
+               if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
-                } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width - PIG_HIT_FIRE_HURT < 0){
-                        pig.kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
 
@@ -764,12 +762,12 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
     //for animation start (
     var t = game.rnd.integerInRange(1000, 7000);
     // console.log(t);
-    // game.time.events.add(t, function () {
+    game.time.events.add(t, function () {
         var px = game.rnd.integerInRange(32,618);
         var py = game.rnd.integerInRange(300,900);
         pig.reset(px, py);
         red_bar.children[pig_grp.getIndex(pig)].reset(px, py);
-        green_bar.children[pig_grp.getIndex(pig)].reset(px, py);
+        green_bar.children[pig_grp.getIndex(pig)].reset(px, py)} , this);
         game.add.tween(pig).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
         game.add.tween(red_bar.children[pig_grp.getIndex(pig)]).from({alpha:0},500,Phaser.Easing.Bounce.Out,true,t);
         game.add.tween(green_bar.children[pig_grp.getIndex(pig)]).from({ alpha: 0 }, 500, Phaser.Easing.Bounce.Out, true, t);
@@ -777,8 +775,8 @@ function pig_regeneration(pig, pig_grp, score, text, green_bar, red_bar){
     //     , this);
         console.log("one pig is regenerated");
 
-    if (green_bar.children[pig_grp.getIndex(pig)].width < 50) {
-            return green_bar.children[pig_grp.getIndex(pig)].width = 50;
+    if (green_bar.children[pig_grp.getIndex(pig)].width < ALL_THE_PIG_HEALTH) {
+            green_bar.children[pig_grp.getIndex(pig)].width = ALL_THE_PIG_HEALTH;
         }
 
 
