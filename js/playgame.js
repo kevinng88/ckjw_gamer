@@ -21,6 +21,7 @@ let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let PIG_DIED_DUE_TO_FIRE = 0;
 let fireScore = 0;
+let pigScore = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 1.2;
@@ -51,7 +52,7 @@ class PlayGame{
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE); // T1
-        this.firefighter = game.add.sprite(6 * grid, 10.5 * grid, 'fighter');      //sprite: our player in the game
+        this.firefighter = game.add.sprite(10.5 * grid, 6 * grid, 'fighter');      //sprite: our player in the game
         this.smallpig = game.add.group();          //sprite: the small-size pig - have less energy to fire burnt, will consume small amount of oxygen when picked by fireman
         this.bigpig = game.add.group();//game.add.sprite(100, 100, 's_pigv');  //[[test]]          //sprite: the big-size pig - have more energy to fire burnt, will consume more amount of oxygen when picked by fireman
         this.s_fire = game.add.group();          //sprite: the random fire on the map
@@ -60,7 +61,7 @@ class PlayGame{
         this.water_state = [];            //sprite: the fire fightering state
         this.weapon = game.add.weapon(60, 'water'); //weapon is the water
         this.weapon2 = game.add.weapon(2, 'hidden');
-        this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
+        this.score_s_pig = 0;      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
 
@@ -232,7 +233,9 @@ class PlayGame{
 
         }
         //animate ALL pigs
-        this.smallpig.callAll('animations.add', 'animations', 'walk', [0,1,2,3,4,5,6,7] , 10, true);
+        this.smallpig.callAll('animations.add', 'animations', 'walk', [0,1,2,3,4,5,6,7,8,9,10,11] , 50, true);
+        //this.smallpig.callAll('animations.add', 'animations', 'up', [12] , 10, true);
+       
         this.smallpig.callAll('animations.play', 'animations', 'walk');
         //--------------------------------------------------------------//
 
@@ -287,7 +290,7 @@ class PlayGame{
         //timer to make attack in good update rate
         this.attack = true;
         var timer = game.time.create(false);
-        timer.loop(500,function(){if(this.attack){this.attack = false;}else{this.attack = true}console.log("attack: ", this.attack)},this)
+        timer.loop(500,function(){if(this.attack){this.attack = false;}else{this.attack = true}},this)
         timer.start();
 
         //test fighter physics
@@ -440,6 +443,7 @@ class PlayGame{
             //this function will kill 1 pig, then reset in another position, return the number of pig
             this.score_s_pig = pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             var gettingpigSound = game.add.audio("gettingpig");
+            pigScore = this.score_s_pig;
             gettingpigSound.play();
         }, null, this);
 
@@ -787,9 +791,10 @@ function f_fighting(fire, state, attack, destroy_fire) {
 }
 
 function man_burn(man){
-    game.add.tween(man).from({tint: Math.random() * 0xffffff}, 100, "Linear", true).chain(
-        game.add.tween(man).to({tint: 0xffffff},10, "Linear",true));
-    //game.add.tween(man).from({tint: 0xffffff}, 100, Phaser.Easing.Linear.None, true);
+    
+    game.add.tween(man).to({tint: Math.random() * 0xffffff}, 100, "Linear", true,0,0,true)
+    .chain(game.add.tween(man).to({tint: 0xffffff},100, "Linear",true,100));
+    
 }
 
 function pig_kill(pig, pig_grp, score, text, green_bar, red_bar){

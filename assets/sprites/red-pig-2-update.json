@@ -334,16 +334,16 @@
         {
             "filename": "pig15",
             "frame": {
-                "x": 9,
-                "y": 6,
+                "x": 0,
+                "y": 350,
                 "w": 55,
                 "h": 86
             },
             "rotated": false,
             "trimmed": true,
             "spriteSourceSize": {
-                "x": 9,
-                "y": 6,
+                "x": 0,
+                "y": 350,
                 "w": 55,
                 "h": 86
             },
@@ -463,9 +463,9 @@
         "image": "red-pig-2.png",
         "format": "RGBA8888",
         "size": {
-            "w": 200,
-            "h": 170
+            "w": 240,
+            "h": 490
         },
-        "scale": "0.2"
+        "scale": "1"
     }
 }
