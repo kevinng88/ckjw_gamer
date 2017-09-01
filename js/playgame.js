@@ -42,7 +42,7 @@ class PlayGame{
         // gridifcation
         var grid = game.world.width / 20;
         this.background = game.add.tileSprite(0,255,640,740,"background");
-        this.background = game.add.tileSprite(0,0,640, 255,"topback");
+        this.background2 = game.add.tileSprite(0,0,640, 255,"topback");
         this.background.alpha = 0.9;
 
         game.physics.startSystem(Phaser.Physics.ARCADE); // T1
@@ -105,7 +105,7 @@ class PlayGame{
         // this.walls.physicsBodyType = Phaser.Physics.ARCADE;
 
 
-
+       
 
 
         /////////////////Ching's section////////////////////////////
@@ -267,7 +267,7 @@ class PlayGame{
 
                 //--------------------------------------------------------------//
 
-
+                
 
         //////// template of animation /////////////////
         //pig BURN animation
@@ -889,7 +889,7 @@ function release_pig(man, icon) {
                 game.rnd.integerInRange(200, 230), 's_pigs');
             p.scale.x = SPIG_SCALE_X;
             p.scale.y = SPIG_SCALE_Y;
-            game.add.tween(p).to({ x: 500, y: 150 }, 1000, "Linear", true);
+            game.add.tween(p).to({ x: game.rnd.integerInRange(350,450), y: 160 }, 1000, "Linear", true);
             p.y = 150;
             game.add.tween(p).to({ y: 120 }, 500, Phaser.Easing.Quartic.Out, true, 500, -1, true);
 
