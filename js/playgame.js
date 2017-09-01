@@ -583,9 +583,9 @@ class PlayGame{
                 this.firefighter.animations.play('up');
                 console.log("fireman is walking up");
             }
-            this.weapon.trackSprite(this.firefighter,30,-30,false);
+            this.weapon.trackSprite(this.firefighter,0,-30,false);
             this.weapon.fireAngle = Phaser.ANGLE_UP;
-            this.weapon2.trackSprite(this.firefighter,30,-30,false);
+            this.weapon2.trackSprite(this.firefighter,0,-30,false);
             this.weapon2.fireAngle = Phaser.ANGLE_UP;
         }else if(this.cursors.right.isDown){
             this.firefighter.scale.x = FTR_SCALE_X;
@@ -598,9 +598,9 @@ class PlayGame{
                 this.firefighter.animations.play('walk');
                 console.log("fireman is walking right");
             }
-            this.weapon.trackSprite(this.firefighter,35,0,false);
+            this.weapon.trackSprite(this.firefighter,25,-20,false);
             this.weapon.fireAngle = -30;
-            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.trackSprite(this.firefighter,25,-20,false);
             this.weapon2.fireAngle = -30;
         }else if (this.cursors.down.isDown){
             if (this.cursors.down.shiftKey){
@@ -612,9 +612,9 @@ class PlayGame{
                 this.firefighter.animations.play('down');
                 console.log("fireman is walking down");
             }
-            this.weapon.trackSprite(this.firefighter,35,0,false);
+            this.weapon.trackSprite(this.firefighter,0,40,false);
             this.weapon.fireAngle = Phaser.ANGLE_DOWN;
-            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.trackSprite(this.firefighter,0,40,false);
             this.weapon2.fireAngle = Phaser.ANGLE_DOWN;
         }else if (this.cursors.left.isDown){
             this.firefighter.scale.x = -FTR_SCALE_X;
