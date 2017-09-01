@@ -289,7 +289,7 @@ class PlayGame{
         this.firefighter.body.collideWorldBounds = true; // T6
         this.smallpig.setAll('body.collideWorldBounds', true);
         this.firefighter.body.gravity.y = 0; //T5
-        // -------------- wall impassible --------- //
+        // -------------- wall impassible --------- // 
 
 
         // keyboard control
