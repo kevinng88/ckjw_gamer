@@ -1,10 +1,10 @@
 class GameOverScreen {
         create(){
             game.stage.backgroundColor = "#434343";
-            thisGameTimeLeft=180;
+            thisGameTimeLeft=timeLeft;
             // pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             caughtNumber=0;
-            OXYGEN_NOW=500;
+            OXYGEN_NOW=OXYGEN_STARTING_VOLUMN;
             var image1= game.add.image(game.width/2-200, game.height/2-100 ,'sausage');
             image1.anchor.set(0.5);
             var image2= game.add.image(game.width/2-200, game.height/2 +100,'flax');
