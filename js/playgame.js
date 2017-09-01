@@ -19,6 +19,8 @@ const SPEED_ADD_PIG = 3000;
 const timeLeft = 180;   /*temp kevin*/
 let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
+let PIG_DIED_DUE_TO_FIRE = 0;
+let fireScore = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
 //////////additional constants setting go here/////////////
 const FTR_SCALE_X = 1.2;
@@ -406,9 +408,8 @@ class PlayGame{
                         this.smallpig.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_alive.children[this.smallpig.getIndex(pig)].kill();
                         this.pigss_BG.children[this.smallpig.getIndex(pig)].kill();
-
                         pig_regeneration(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
-
+                        PIG_DIED_DUE_TO_FIRE ++;
                         console.log("PIG DIED DUE TO FIRE");
                 } else if(this.pigss_alive.children[this.smallpig.getIndex(pig)].width >= 0){
                         return this.pigss_alive.children[this.smallpig.getIndex(pig)].width -= PIG_HIT_FIRE_HURT;
@@ -454,7 +455,10 @@ class PlayGame{
 
             var i = this.s_fire.getIndex(fire);
             this.water_state[i] = f_fighting(fire, this.water_state[i], this.attack, false);      //**TEMP CLOSE**
-
+            console.log(fire.health);
+            if(fire.health === 0){
+                fireScore ++;
+            }
 
         }, null, this);
 
@@ -623,7 +627,8 @@ class PlayGame{
     render(){
         game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
         game.debug.text("You are carrying "+ caughtNumber+ " pigs, your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber)*2 + "per second", 32, 940);
-
+        game.debug.text(PIG_DIED_DUE_TO_FIRE + " pigs died due to fire before you save them", 200, 32);
+        game.debug.text("You now saved " + fireScore + "of fire", 32, 80);
     }
 
     updateOxygen(){

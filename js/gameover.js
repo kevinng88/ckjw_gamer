@@ -4,6 +4,7 @@ class GameOverScreen {
             thisGameTimeLeft=timeLeft;
             // pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
             caughtNumber=0;
+            PIG_DIED_DUE_TO_FIRE = 0;
             OXYGEN_NOW=OXYGEN_STARTING_VOLUMN;
             var image1= game.add.image(game.width/2-200, game.height/2-100 ,'sausage');
             image1.anchor.set(0.5);
