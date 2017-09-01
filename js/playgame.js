@@ -224,7 +224,9 @@ class PlayGame{
 
         }
         //animate ALL pigs
-        this.smallpig.callAll('animations.add', 'animations', 'walk', [0,1,2,3,4,5,6,7] , 10, true);
+        this.smallpig.callAll('animations.add', 'animations', 'walk', [0,1,2,3,4,5,6,7,8,9,10,11] , 50, true);
+        //this.smallpig.callAll('animations.add', 'animations', 'up', [12] , 10, true);
+       
         this.smallpig.callAll('animations.play', 'animations', 'walk');
         //--------------------------------------------------------------//
 
@@ -279,7 +281,7 @@ class PlayGame{
         //timer to make attack in good update rate
         this.attack = true;
         var timer = game.time.create(false);
-        timer.loop(500,function(){if(this.attack){this.attack = false;}else{this.attack = true}console.log("attack: ", this.attack)},this)
+        timer.loop(500,function(){if(this.attack){this.attack = false;}else{this.attack = true}},this)
         timer.start();
 
         //test fighter physics
@@ -715,9 +717,10 @@ function f_fighting(fire, state, attack, destroy_fire) {
 }
 
 function man_burn(man){
-    game.add.tween(man).from({tint: Math.random() * 0xffffff}, 100, "Linear", true).chain(
-        game.add.tween(man).to({tint: 0xffffff},10, "Linear",true));
-    //game.add.tween(man).from({tint: 0xffffff}, 100, Phaser.Easing.Linear.None, true);
+    
+    game.add.tween(man).to({tint: Math.random() * 0xffffff}, 100, "Linear", true,0,0,true)
+    .chain(game.add.tween(man).to({tint: 0xffffff},100, "Linear",true,100));
+    
 }
 
 function pig_kill(pig, pig_grp, score, text, green_bar, red_bar){
