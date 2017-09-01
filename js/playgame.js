@@ -6,8 +6,8 @@ const BIG_PIG_SPEED = SMALL_PIG_SPEED * 0.7;
 const FIREMAN_CONSUME_OXYGEN = 20; // decrease per 3 seconds
 const SMALL_PIG_CONSUME_OXYGEN = 5;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
-const SMALL_PIG_COUNT = 5;
-const BIG_PIG_COUNT = 3;
+const SMALL_PIG_COUNT = 3;
+const BIG_PIG_COUNT = 5;
 const FIRE_COUNT = 5;
 let PIG_HEALTH = 50;
 const PIG_HIT_FIRE_HURT = 0.5;
@@ -15,7 +15,7 @@ const OXYGEN_STARTING_VOLUMN = 500;
 let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
-const timeLeft = 180;
+const timeLeft = 10;
 let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
@@ -343,8 +343,8 @@ class PlayGame{
           this.bgMusic.stop();
           this.pigMusic.stop();
           this.fireMusic.stop();
-          var gameoverSound = game.add.audio("gameover");
-          gameoverSound.play();
+          // var gameoverSound = game.add.audio("gameover");
+          // gameoverSound.play();
           game.state.start("WinningGame");
         }
         if (this.needOxygen && OXYGEN_NOW <= 250){
@@ -493,64 +493,67 @@ class PlayGame{
 
         // Watson's code
           // fireman moving around
+        if(this.cursors.up.isUp || this.cursors.right.isUp || this.cursors.down.isUp || this.cursors.left.isUp){
             this.firefighter.body.velocity.x = 0;
             this.firefighter.body.velocity.y = 0;
-
-        if(this.cursors.up.isDown){
-          if (this.cursors.up.shiftKey){
-            //this.firefighter.y -= FIREMAN_RUN_SPEED;
-            this.firefighter.body.velocity.y = -FIREMAN_RUN_SPEED;
-          }
-          //this.firefighter.y -= FIREMAN_WALK_SPEED;
-          this.firefighter.body.velocity.y = -FIREMAN_WALK_SPEED;
-          this.weapon.trackSprite(this.firefighter,30,-30,false);
-          this.weapon.fireAngle = Phaser.ANGLE_UP;
-        }else if(this.cursors.right.isDown){
-            // console.log("right: ",FIREMAN_WALK_SPEED );
-            if(this.cursors.right.shiftKey){
-            //this.firefighter.x += FIREMAN_RUN_SPEED;
-            this.firefighter.body.velocity.x = FIREMAN_RUN_SPEED;
-
-          }
-           // this.firefighter.x += FIREMAN_WALK_SPEED;
-         // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
-            this.firefighter.body.velocity.x = FIREMAN_WALK_SPEED;
-            this.weapon.trackSprite(this.firefighter,35,0,false);
-            this.weapon.fireAngle = -30;//Phaser.ANGLE_RIGHT;
-        }else if (this.cursors.down.isDown){
-          if (this.cursors.down.shiftKey){
-            //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
-            //this.firefighter.y += FIREMAN_RUN_SPEED;
-            this.firefighter.body.velocity.y = FIREMAN_RUN_SPEED;
-          }
-          //this.firefighter.y += FIREMAN_RUN_SPEED;
-          //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
-          this.firefighter.body.velocity.y = FIREMAN_WALK_SPEED;
-          this.weapon.trackSprite(this.firefighter,25,105,false);
-          this.weapon.fireAngle = Phaser.ANGLE_DOWN;
-        }else if (this.cursors.left.isDown){
-          if(this.cursors.left.shiftKey){
-            //this.firefighter.x -= FIREMAN_RUN_SPEED;
-            this.firefighter.body.velocity.x = -FIREMAN_RUN_SPEED;
-          }
-          //this.firefighter.x -= FIREMAN_WALK_SPEED;
-          this.firefighter.body.velocity.x = - FIREMAN_WALK_SPEED;
-          this.weapon.trackSprite(this.firefighter,-30,0,false);
-          this.weapon.fireAngle = 210;
         }
 
 
-          if (this.waterButton.isDown){
-            if (this.deletefire){
-            this.deletefire=false;
 
-            var deletefireSound= game.add.audio("deletefire")
-            deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
-            deletefireSound.sound=0.5;
-            deletefireSound.play();
-           }
+        if(this.cursors.up.isDown){
+            if (this.cursors.up.shiftKey){
+                this.firefighter.body.velocity.y = -200;
+                console.log("fireman is running up");
+            }else{
+                this.firefighter.body.velocity.y = -FIREMAN_WALK_SPEED;
+                console.log("fireman is walking up");
+            }
+            this.weapon.trackSprite(this.firefighter,30,-30,false);
+            this.weapon.fireAngle = Phaser.ANGLE_UP;
+        }else if(this.cursors.right.isDown){
+            if(this.cursors.right.shiftKey){
+                this.firefighter.body.velocity.x = 200;
+                console.log("fireman is running right");
+            }else{
+                this.firefighter.body.velocity.x = FIREMAN_WALK_SPEED;
+                console.log("fireman is walking right");
+            }
+            this.weapon.trackSprite(this.firefighter,35,0,false);
+            this.weapon.fireAngle = -30;
+        }else if (this.cursors.down.isDown){
+            if (this.cursors.down.shiftKey){
+                this.firefighter.body.velocity.y = 200;
+                console.log("fireman is running down");
+            }else{
+                this.firefighter.body.velocity.y = FIREMAN_WALK_SPEED;
+                console.log("fireman is walking down");
+            }
+            this.weapon.trackSprite(this.firefighter,25,105,false);
+            this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+        }else if (this.cursors.left.isDown){
+            if(this.cursors.left.shiftKey){
+                this.firefighter.body.velocity.x = -200;
+                console.log("fireman is running left");
+            }else{
+                this.firefighter.body.velocity.x = - FIREMAN_WALK_SPEED;   
+                console.log("fireman is walking left"); 
+            }
+            this.weapon.trackSprite(this.firefighter,-30,0,false);
+            this.weapon.fireAngle = 210;
+        }
+
+
+        if (this.waterButton.isDown){
+            if (this.deletefire){
+                this.deletefire=false;
+
+                var deletefireSound= game.add.audio("deletefire")
+                deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
+                deletefireSound.sound=0.5;
+                deletefireSound.play();
+            }
             this.weapon.fire();
-          }
+        }
 
           this.weapon.forEach(function(weapon) {
             weapon.scale.setTo(1.7,1.7);

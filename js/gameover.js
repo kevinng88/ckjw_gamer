@@ -1,5 +1,6 @@
 class GameOverScreen {
         create(){
+            console.log("enter lose game screen");
             game.stage.backgroundColor = "#434343";
             thisGameTimeLeft=180;
             // pig_kill(pig, this.smallpig, this.score_s_pig, this.show_score, this.pigss_alive, this.pigss_BG);
