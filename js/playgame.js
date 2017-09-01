@@ -15,7 +15,7 @@ const OXYGEN_STARTING_VOLUMN = 500;
 let OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
 const GET_HIT_FIRE = 1;
 const SPEED_ADD_PIG = 3000;
-const timeLeft = 10;
+const timeLeft = 180;
 let thisGameTimeLeft = timeLeft;
 let caughtNumber = 0;
 let OXYGEN_CONSUMPTION = FIREMAN_CONSUME_OXYGEN/* + SMALL_PIG_CONSUME_OXYGEN * caughtNumber + BIG_PIG_CONSUME_OXYGEN * BIG_PIG_COUNT*/;
@@ -55,8 +55,8 @@ class PlayGame{
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
         this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
 
-
-        this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
+        this.bar = game.add.text(100, 100, "Time left: " + thisGameTimeLeft + "    Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"})
+        // this.show_score = game.add.text(100,100,"Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //background music
         this.bgMusic = game.add.audio("background");
@@ -269,18 +269,16 @@ class PlayGame{
 
         /////////////////Watson's section////////////////////////////
         // ---------------- world bounds  ---------------- //
-        // this.game.world.bounds = true;
         this.firefighter.body.collideWorldBounds = true;
         this.smallpig.setAll('body.collideWorldBounds', true);
         this.firefighter.body.gravity.y = 0;
 
-        // keyboard control
+        // keyboard control build up
         this.cursors = game.input.keyboard.createCursorKeys();
-        //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
-        // first, gridify the whole map. each grid should be 32px wide thus the 640px-wide map is divided into 20 grid in width.
-        // var grid = game.world.width / 20;
+        // the map is gridified into 32px * 32px square
+        // the setup is done in the beginning of create function
         // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
@@ -303,13 +301,39 @@ class PlayGame{
                 [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
       ]
 
+        // Watson: dont delete the following comments
+        // for(var i = 0; i < wallPositionSize.length; i++){
+        //     var wall = this.walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'fence3');
+        //     wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+        // wall.body.immovable = true;
+        // game.physics.arcade.enable(wall);
+        //     // decorating interior wall
+        //     // if (wallPositionSize[i][3] === 1){
+        //     //     for(var j = 0; j < wallPositionSize[i][2]; j++){
+        //     //         var fence = game.add.image(wallPositionSize[i][0] * grid, wallPositionSize[i][1] * grid, 'fence');
+        //     //     }
+        //     // }
+        // }
+
+
         for(var i = 0; i < wallPositionSize.length; i++){
-            var wall = this.walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
-            wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
-            wall.body.immovable = true;
-            game.physics.arcade.enable(wall);
+            if (wallPositionSize[i][2] === 1){ // it is bar
+                for(var j = 0; j < wallPositionSize[i][3]; j++){
+                var wall = this.walls.create(wallPositionSize[i][0] * grid, (wallPositionSize[i][1] + j) * grid, 'fence3');
+                wall.body.immovable = true;
+                game.physics.arcade.enable(wall);
+                }
+            }
+            if (wallPositionSize[i][3] === 1){ // it is column
+                for(var j = 0; j < wallPositionSize[i][2]; j++){
+                var wall = this.walls.create((wallPositionSize[i][0] + j) * grid, wallPositionSize[i][1] * grid, 'fence3');
+                wall.body.immovable = true;
+                game.physics.arcade.enable(wall);
+                }
+            }
         }
 
+        // the external wall should be decorated with roof for a more authentic barn
         // decorating east and westwall
         for(var i = 7; i < 30; i++){
             this.roof = game.add.image(0 * grid, i * grid, "westRoof");
@@ -325,7 +349,7 @@ class PlayGame{
             this.roof = game.add.image(i * grid, 7 * grid, "roof");
             this.roof = game.add.image((12 + i) * grid, 7 * grid, "roof");
         }
-
+        
 
         ////////////////////////////////////////////////////////////
     }
@@ -343,8 +367,6 @@ class PlayGame{
           this.bgMusic.stop();
           this.pigMusic.stop();
           this.fireMusic.stop();
-          // var gameoverSound = game.add.audio("gameover");
-          // gameoverSound.play();
           game.state.start("WinningGame");
         }
         if (this.needOxygen && OXYGEN_NOW <= 250){
@@ -580,7 +602,7 @@ class PlayGame{
     }
 
     render(){
-        game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
+        // game.debug.text("Time left: " + thisGameTimeLeft, 32,32);
         game.debug.text("You are carrying "+ caughtNumber+ " of pig, so your oxygen consumption is "+ (OXYGEN_CONSUMPTION + SMALL_PIG_CONSUME_OXYGEN * caughtNumber), 32, 940);
     }
 
@@ -702,8 +724,7 @@ function pig_kill(pig, pig_grp, score, text, green_bar, red_bar){
     console.log("this pig is caught");
     caughtNumber += 1;
     // console.log("Number of pig caught: ",caughtNumber);
-
-    text.setText("SMALL PIG COLLECTED: " + score);
+    //text.setText("SMALL PIG COLLECTED: " + score);
 
     red_bar.children[pig_grp.getIndex(pig)].kill();
     green_bar.children[pig_grp.getIndex(pig)].kill();
