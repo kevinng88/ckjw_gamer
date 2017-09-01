@@ -6,9 +6,9 @@ const BIG_PIG_SPEED = SMALL_PIG_SPEED * 0.7;
 const FIREMAN_CONSUME_OXYGEN = 1; // decrease per 0.5 seconds
 const SMALL_PIG_CONSUME_OXYGEN = 2;
 const BIG_PIG_CONSUME_OXYGEN = SMALL_PIG_CONSUME_OXYGEN  * 2;
-const SMALL_PIG_COUNT = 5;
-const BIG_PIG_COUNT = 3;
-const FIRE_COUNT = 5;
+const SMALL_PIG_COUNT = 3;
+const BIG_PIG_COUNT = 5;
+const FIRE_COUNT = 10;
 const ALL_THE_PIG_HEALTH = 70;
 let PIG_HEALTH = ALL_THE_PIG_HEALTH;
 const PIG_HIT_FIRE_HURT = 1;
@@ -44,6 +44,8 @@ const FRE_SCALE_Y = 0.8;
 class PlayGame{
 
     create(){
+        // gridifcation
+        var grid = game.world.width / 20;
         this.background = game.add.tileSprite(0,255,640,740,"background");
         this.background = game.add.tileSprite(0,0,640, 255,"topback");
         this.background.alpha = 0.9;
@@ -60,7 +62,11 @@ class PlayGame{
         this.weapon2 = game.add.weapon(2, 'hidden');
         this.score_s_pig = "";      //integer: number of small-size pig collected by firefighter
         this.score_b_pig = "";      //integer: number of big-size pig collected by firefighter
-        this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
+        this.fireTruck = game.add.sprite( 2 * grid, 3 * grid, "fireTruck");
+
+        this.bar = game.add.text(100, 100, "Time left: " + thisGameTimeLeft + "    Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"})
+        // this.show_score = game.add.text(100,100,"Piglets Saved: " + this.score_s_pig, {font: "30px webfont", fill: "#343434"});    //the text on top screen to show score
+        // this.show_score = game.add.text(100,100,"SMALL PIG COLLECTED: " + this.score_s_pig, {font: "30px webfont", fill: "#ff0044"});    //the text on top screen to show score
         game.stage.backgroundColor = '#337799';             //temp color to see effects
         //background music
         this.bgMusic = game.add.audio("background");
@@ -234,7 +240,7 @@ class PlayGame{
         //-------------------group of fire------------------------//
 
 
-                for (var i = 0; i < 5; i ++){
+                for (var i = 0; i < FIRE_COUNT; i ++){
                     //for group: use create instead of add.sprite
                     this.s_fire.create(game.rnd.integerInRange(32,618), game.rnd.integerInRange(420,900), 'fire', 0);
                     this.s_fire.children[i].anchor.setTo(FRE_SCALE_X/2,FRE_SCALE_Y/2);
@@ -293,6 +299,7 @@ class PlayGame{
 
         /////////////////Watson's section////////////////////////////
         // ---------------- world bounds  ---------------- //
+
         // this.game.world.bounds = true;
         this.firefighter.body.collideWorldBounds = true; // T6
         this.smallpig.setAll('body.collideWorldBounds', true);
@@ -300,13 +307,10 @@ class PlayGame{
         // -------------- wall impassible --------- //
 
 
-        // keyboard control
+        // keyboard control build up
         this.cursors = game.input.keyboard.createCursorKeys();
-        //var waterKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         // ---------------- maze ------------------- //
-        // first, gridify the whole map. each grid should be 32px wide thus the 640px-wide map is divided into 20 grid in width.
-        var grid = game.world.width / 20;
         // because there are tens of walls, we had better build a group for it and set it having body with fewer lines
         // using array to store each wall position and size and then build them through a for loop
         // an element in this arrat consists of four required values and one optional value:
@@ -329,13 +333,55 @@ class PlayGame{
             [10, 10, 7, 1],[16, 11, 1, 3],[13, 13, 1, 4],[12, 13, 1, 1],[15, 17, 4, 1],
         ];
 
+        // Watson: dont delete the following comments
+        // for(var i = 0; i < wallPositionSize.length; i++){
+        //     var wall = this.walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'fence3');
+        //     wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
+        // wall.body.immovable = true;
+        // game.physics.arcade.enable(wall);
+        //     // decorating interior wall
+        //     // if (wallPositionSize[i][3] === 1){
+        //     //     for(var j = 0; j < wallPositionSize[i][2]; j++){
+        //     //         var fence = game.add.image(wallPositionSize[i][0] * grid, wallPositionSize[i][1] * grid, 'fence');
+        //     //     }
+        //     // }
+        // }
+
+
         for(var i = 0; i < wallPositionSize.length; i++){
-          var wall = this.walls.create((wallPositionSize[i][0] * grid), (wallPositionSize[i][1] * grid), 'wall');
-          wall.scale.setTo(wallPositionSize[i][2], wallPositionSize[i][3]);
-          wall.body.immovable = true;
-          game.physics.arcade.enable(wall);
+            if (wallPositionSize[i][2] === 1){ // it is bar
+                for(var j = 0; j < wallPositionSize[i][3]; j++){
+                var wall = this.walls.create(wallPositionSize[i][0] * grid, (wallPositionSize[i][1] + j) * grid, 'fence3');
+                wall.body.immovable = true;
+                game.physics.arcade.enable(wall);
+                }
+            }
+            if (wallPositionSize[i][3] === 1){ // it is column
+                for(var j = 0; j < wallPositionSize[i][2]; j++){
+                var wall = this.walls.create((wallPositionSize[i][0] + j) * grid, wallPositionSize[i][1] * grid, 'fence3');
+                wall.body.immovable = true;
+                game.physics.arcade.enable(wall);
+                }
+            }
         }
 
+        // the external wall should be decorated with roof for a more authentic barn
+        // decorating east and westwall
+        for(var i = 7; i < 30; i++){
+            this.roof = game.add.image(0 * grid, i * grid, "westRoof");
+            this.roof = game.add.image(19 * grid, i * grid, "eastRoof");
+            // this.roof.angle = 180;
+        }
+        //decorating southWall
+        for(var i = 0; i < 20; i++){
+            this.roof = game.add.image(i * grid, 29 * grid, "roof");
+        }
+        //decorating northWall
+        for(var i = 0; i < 10; i++){
+            this.roof = game.add.image(i * grid, 7 * grid, "roof");
+            this.roof = game.add.image((12 + i) * grid, 7 * grid, "roof");
+        }
+        
 
         ////////////////////////////////////////////////////////////
     }
@@ -355,8 +401,6 @@ class PlayGame{
           this.bgMusic.stop();
           this.pigMusic.stop();
           this.fireMusic.stop();
-          var gameoverSound = game.add.audio("gameover");
-          gameoverSound.play();
           game.state.start("WinningGame");
         }
         if (this.needOxygen && OXYGEN_NOW <= 250){
@@ -512,87 +556,90 @@ class PlayGame{
 
         // Watson's code
           // fireman moving around
+        if(this.cursors.up.isUp || this.cursors.right.isUp || this.cursors.down.isUp || this.cursors.left.isUp){
             this.firefighter.body.velocity.x = 0;
             this.firefighter.body.velocity.y = 0;
-
-        if(this.cursors.up.isDown){
-          if (this.cursors.up.shiftKey){
-            //this.firefighter.y -= FIREMAN_RUN_SPEED;
-            this.firefighter.animations.play('run-up');
-            this.firefighter.body.velocity.y = -FIREMAN_RUN_SPEED;
-          }
-          //this.firefighter.y -= FIREMAN_WALK_SPEED;
-          this.firefighter.animations.play('up');
-          this.firefighter.body.velocity.y = -FIREMAN_WALK_SPEED;
-          this.weapon.trackSprite(this.firefighter,30,-30,false);
-          this.weapon.fireAngle = Phaser.ANGLE_UP;
-          this.weapon2.trackSprite(this.firefighter,-30,30,false);
-          this.weapon2.fireAngle = Phaser.ANGLE_UP;
-        }else if(this.cursors.right.isDown){
-            // console.log("right: ",FIREMAN_WALK_SPEED );
-            this.firefighter.scale.x = FTR_SCALE_X;
-            if(this.cursors.right.shiftKey){
-
-            //this.firefighter.x += FIREMAN_RUN_SPEED;
-            this.firefighter.animations.play('run');
-            this.firefighter.body.velocity.x = FIREMAN_RUN_SPEED;
-
-          }
-           // this.firefighter.x += FIREMAN_WALK_SPEED;
-         // this.firefighter.body.moveRight(FIREMAN_WALK_SPEED);
-            this.firefighter.animations.play('walk');
-            this.firefighter.body.velocity.x = FIREMAN_WALK_SPEED;
-            this.weapon.trackSprite(this.firefighter,35,0,false);
-            this.weapon.fireAngle = -30;//Phaser.ANGLE_RIGHT;
-            this.weapon2.trackSprite(this.firefighter,35,0,false);
-            this.weapon2.fireAngle = -30;
-        }else if (this.cursors.down.isDown){
-          if (this.cursors.down.shiftKey){
-            //this.firefighter.body.moveDown(FIREMAN_RUN_SPEED);
-            //this.firefighter.y += FIREMAN_RUN_SPEED;
-            this.firefighter.animations.play('run-down');
-            this.firefighter.body.velocity.y = FIREMAN_RUN_SPEED;
-          }
-          //this.firefighter.y += FIREMAN_RUN_SPEED;
-          //this.firefighter.body.moveDown(FIREMAN_WALK_SPEED);
-          this.firefighter.animations.play('down');
-          this.firefighter.body.velocity.y = FIREMAN_WALK_SPEED;
-          this.weapon.trackSprite(this.firefighter,25,105,false);
-          this.weapon.fireAngle = Phaser.ANGLE_DOWN;
-          this.weapon2.trackSprite(this.firefighter,25,105,false);
-          this.weapon2.fireAngle = Phaser.ANGLE_DOWN;
-        }else if (this.cursors.left.isDown){
-            this.firefighter.scale.x = -FTR_SCALE_X;
-          if(this.cursors.left.shiftKey){
-            //this.firefighter.x -= FIREMAN_RUN_SPEED
-            this.firefighter.animations.play('run');
-            this.firefighter.body.velocity.x = -FIREMAN_RUN_SPEED;
-          }
-          //this.firefighter.x -= FIREMAN_WALK_SPEED;
-          this.firefighter.animations.play('walk');
-          this.firefighter.body.velocity.x = - FIREMAN_WALK_SPEED;
-          this.weapon.trackSprite(this.firefighter,-30,0,false);
-          this.weapon.fireAngle = 210;
-          this.weapon2.trackSprite(this.firefighter,-30,0,false);
-          this.weapon2.fireAngle = 210;
         }
 
 
-          if (this.waterButton.isDown){
+
+        if(this.cursors.up.isDown){
+            if (this.cursors.up.shiftKey){
+                this.firefighter.body.velocity.y = -200;
+                this.firefighter.animations.play('run-up');
+                console.log("fireman is running up");
+            }else{
+                this.firefighter.body.velocity.y = -FIREMAN_WALK_SPEED;
+                this.firefighter.animations.play('up');
+                console.log("fireman is walking up");
+            }
+            this.weapon.trackSprite(this.firefighter,30,-30,false);
+            this.weapon.fireAngle = Phaser.ANGLE_UP;
+            this.weapon2.trackSprite(this.firefighter,30,-30,false);
+            this.weapon2.fireAngle = Phaser.ANGLE_UP;
+        }else if(this.cursors.right.isDown){
+            this.firefighter.scale.x = FTR_SCALE_X;
+            if(this.cursors.right.shiftKey){
+                this.firefighter.body.velocity.x = 200;
+                this.firefighter.animations.play('run');
+                console.log("fireman is running right");
+            }else{
+                this.firefighter.body.velocity.x = FIREMAN_WALK_SPEED;
+                this.firefighter.animations.play('walk');
+                console.log("fireman is walking right");
+            }
+            this.weapon.trackSprite(this.firefighter,35,0,false);
+            this.weapon.fireAngle = -30;
+            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.fireAngle = -30;
+        }else if (this.cursors.down.isDown){
+            if (this.cursors.down.shiftKey){
+                this.firefighter.body.velocity.y = 200;
+                this.firefighter.animations.play('run-down');
+                console.log("fireman is running down");
+            }else{
+                this.firefighter.body.velocity.y = FIREMAN_WALK_SPEED;
+                this.firefighter.animations.play('down');
+                console.log("fireman is walking down");
+            }
+            this.weapon.trackSprite(this.firefighter,35,0,false);
+            this.weapon.fireAngle = Phaser.ANGLE_DOWN;
+            this.weapon2.trackSprite(this.firefighter,35,0,false);
+            this.weapon2.fireAngle = Phaser.ANGLE_DOWN;
+        }else if (this.cursors.left.isDown){
+            this.firefighter.scale.x = -FTR_SCALE_X;
+            if(this.cursors.left.shiftKey){
+                this.firefighter.body.velocity.x = -200;
+                this.firefighter.animations.play('run');
+                console.log("fireman is running left");
+            }else{
+                this.firefighter.body.velocity.x = - FIREMAN_WALK_SPEED;
+                this.firefighter.animations.play('walk');   
+                console.log("fireman is walking left"); 
+            }
+            this.weapon.trackSprite(this.firefighter,-30,0,false);
+            this.weapon.fireAngle = 210;
+            this.weapon2.trackSprite(this.firefighter,-30,0,false);
+            this.weapon2.fireAngle = 210;
+        }
+
+
+        if (this.waterButton.isDown){
             if (this.deletefire){
-            this.deletefire=false;
-            var deletefireSound= game.add.audio("deletefire")
-            deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
-            deletefireSound.sound=0.5;
-            deletefireSound.play();
-           }
+                this.deletefire=false;
+                var deletefireSound= game.add.audio("deletefire")
+                deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
+                deletefireSound.sound=0.5;
+                deletefireSound.play();
+            }
             this.weapon.fire();
             this.weapon2.fire();
-          }
+            console.log(this.weapon2);
+        }
 
-          this.weapon.forEach(function(weapon) {
+        this.weapon.forEach(function(weapon) {
             weapon.scale.setTo(1.7,1.7);
-          })
+        })
 
 
         //Ching's : update the health bar position of the pig
@@ -748,8 +795,7 @@ function pig_kill(pig, pig_grp, score, text, green_bar, red_bar){
     console.log("this pig is caught");
     caughtNumber += 1;
     // console.log("Number of pig caught: ",caughtNumber);
-
-    text.setText("SMALL PIG COLLECTED: " + score);
+    //text.setText("SMALL PIG COLLECTED: " + score);
 
     red_bar.children[pig_grp.getIndex(pig)].kill();
     green_bar.children[pig_grp.getIndex(pig)].kill();
