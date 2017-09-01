@@ -28,7 +28,7 @@ const BPIG_SCALE_Y = 1.2;
 const FRE_SCALE_X = 0.8;
 const FRE_SCALE_Y = 0.8;
 
-/*temp kevin*/let OXYGEN_NOW = 100;
+/*temp kevin*/let OXYGEN_NOW = 500;
 
     // game.physics.startSystem(Phaser.Physics.ARCADE);  T1 ok
     // platforms = game.add.group(); T2 ok
@@ -421,10 +421,17 @@ class PlayGame{
 
 
         }, null, this)
-        var hitfire=true;
+
         game.physics.arcade.overlap(this.firefighter, this.s_fire, function(fighter, fire){
             //console.log("---------:(((((-------get hit!", this.s_fire.getIndex(fire));
             man_burn(fighter);
+            if (this.hitfire){
+            this.hitfire = false;
+            var hittingfireSound = game.add.audio("hitfire");
+            hittingfireSound.onStop.add(function(){this.hitfire = true;}, this);
+            hittingfireSound.volume=0.3;
+            hittingfireSound.play();
+          }
             if(OXYGEN_STARTING_VOLUMN - GET_HIT_FIRE < 0){
                         this.myHealth.destroy();
                         console.log("GAME OVER");
@@ -440,12 +447,7 @@ class PlayGame{
                         OXYGEN_NOW -= GET_HIT_FIRE;
                         this.myHealth.width = OXYGEN_NOW;
                 };
-            if (hitfire){
-            var hittingfireSound = game.add.audio("hitfire");
-            // hittingfireSound.onStop.add(hitfire, this);
-            hittingfireSound.volume=0.1;
-            hittingfireSound.play();}
-            return hitfire=false;
+
 
         }, null, this)
 
@@ -561,6 +563,13 @@ class PlayGame{
 
 
           if (this.waterButton.isDown){
+            if (this.deletefire){
+            this.deletefire=false;
+            var deletefireSound= game.add.audio("deletefire")
+            deletefireSound.onStop.add(function(){this.deletefire = true;}, this);
+            deletefireSound.sound=0.5;
+            deletefireSound.play();
+           }
             this.weapon.fire();
             this.weapon2.fire();
           }
