@@ -1,0 +1,3 @@
+[submodule "chowyuenching"]
+	path = chowyuenching
+	url = git@github.com:acceleratehk/chowyuenching.git

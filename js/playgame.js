@@ -716,6 +716,7 @@ class PlayGame{
                 release_pig(this.firefighter, this.icon);
                 caughtNumber = 0;
                 if(OXYGEN_NOW + 30 > OXYGEN_STARTING_VOLUMN){
+                    OXYGEN_NOW = OXYGEN_STARTING_VOLUMN;
                     return this.myHealth.width = OXYGEN_STARTING_VOLUMN;
                 }else if(OXYGEN_NOW + 30 <OXYGEN_STARTING_VOLUMN){
                         OXYGEN_NOW += 50;
